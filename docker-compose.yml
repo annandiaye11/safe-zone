@@ -1,0 +1,12 @@
+services:
+    mongodb:
+        image: mongo:latest
+        container_name: mongo-database
+        ports:
+            -   "27017:27017"
+        volumes:
+            -   ./data/db:/data/db
+        environment:
+            -   MONGO_INITDB_ROOT_USERNAME=fmokomba
+        networks:
+            -   buy01-network

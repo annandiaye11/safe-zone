@@ -1,0 +1,15 @@
+package com.cgl.userservice.web.dto;
+
+import jakarta.validation.constraints.Email;
+import lombok.*;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class ResponseDto {
+    private String token;
+    private String email;
+    private String string;
+}

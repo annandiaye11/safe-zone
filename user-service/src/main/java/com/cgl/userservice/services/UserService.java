@@ -6,6 +6,6 @@ public interface UserService {
     User getById(String id);
     User getByEmail(String email);
     User create(User user);
-    User update(User user);
-    User delete(String id);
+    User update(String id,User user);
+    boolean delete(String id);
 }

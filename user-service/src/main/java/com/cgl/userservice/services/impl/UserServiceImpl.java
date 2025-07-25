@@ -5,6 +5,8 @@ import com.cgl.userservice.data.repositories.UserRepository;
 import com.cgl.userservice.services.UserService;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -29,7 +31,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getByEmail(String email) {
-        return null;
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No user with this email"));
     }
 
     @Override
@@ -48,12 +51,29 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User update(User user) {
-        return null;
+    public User update(String id,User user) {
+        User updateUser = userRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No user with this id"));
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String userId = (String) auth.getPrincipal();
+
+        updateUser.setName(user.getName());
+        updateUser.setEmail(user.getEmail());
+        updateUser.setPassword(user.getPassword());
+        userRepository.save(updateUser);
+
+        return updateUser;
     }
 
     @Override
-    public User delete(String id) {
-        return null;
+    public boolean delete(String id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No user with this id"));
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String userId = (String) auth.getPrincipal();
+
+        userRepository.delete(user);
+        return true;
     }
 }

@@ -13,4 +13,5 @@ public class UserOneResponse {
     String id;
     String name;
     String email;
+    String avatar;
 }

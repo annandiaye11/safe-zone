@@ -1,6 +1,7 @@
 package com.cgl.userservice.web.controllers;
 
 import com.cgl.userservice.web.dto.RequestDto;
+import com.cgl.userservice.web.dto.UserDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,12 +21,12 @@ public interface UserController {
     ResponseEntity<Map<String, Object>> getUserById(@PathVariable String id);
 
     @PostMapping("/register")
-    ResponseEntity<Map<String, Object>> createUser(@RequestBody @Valid RequestDto requestDto);
+    ResponseEntity<Map<String, Object>> createUser(@RequestBody @Valid UserDto userDto);
 
 
     @PreAuthorize("#id == authentication.principal.id")
     @PutMapping("/{id}")
-    ResponseEntity<Map<String, Object>> updateUser(@PathVariable String id, @RequestBody @Valid RequestDto requestDto);
+    ResponseEntity<Map<String, Object>> updateUser(@PathVariable String id, @RequestBody @Valid UserDto userDto);
 
     @PreAuthorize("#id ==  authentication.principal.id")
     @DeleteMapping("/{id}")

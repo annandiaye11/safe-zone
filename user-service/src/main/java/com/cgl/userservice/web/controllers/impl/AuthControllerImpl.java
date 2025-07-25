@@ -3,6 +3,7 @@ package com.cgl.userservice.web.controllers.impl;
 import com.cgl.userservice.data.entities.User;
 import com.cgl.userservice.services.UserService;
 import com.cgl.userservice.utils.JwtTools;
+import com.cgl.userservice.utils.mapper.MapperUser;
 import com.cgl.userservice.web.controllers.AuthController;
 import com.cgl.userservice.web.dto.RegisterResponse;
 import com.cgl.userservice.web.dto.RequestDto;
@@ -55,7 +56,7 @@ public class AuthControllerImpl implements AuthController {
     @Override
     public ResponseEntity<RegisterResponse> register(UserDto userRegisterDTO) {
         System.out.println("\n********************START register");
-        RegisterResponse response = new RegisterResponse(userService.create(userRegisterDTO.toUser()));
+        RegisterResponse response = new RegisterResponse(userService.create(MapperUser.toEntity(userRegisterDTO)));
         return ResponseEntity.status(HttpStatus.CREATED)
                 .header(HttpHeaders.CACHE_CONTROL, "no-store")
                 .body(response);

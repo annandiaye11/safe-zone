@@ -32,7 +32,5 @@ public class UserDto {
 
     private String avatar;
 
-    public User toUser() {
-        return new User(name, email, password, role, avatar);
-    }
+
 }

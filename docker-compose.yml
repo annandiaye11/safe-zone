@@ -5,8 +5,21 @@ services:
         ports:
             -   "27017:27017"
         volumes:
-            -   ./data/db:/data/db
+            -   mongodb_data:/data/db
         environment:
-            -   MONGO_INITDB_ROOT_USERNAME=fmokomba
+            -   MONGO_INITDB_ROOT_USERNAME=${DB_USER}
+            -   MONGO_INITDB_ROOT_PASSWORD=${DB_PASSWORD}
+            -   MONGO_INITDB_DATABASE=${DB_NAME}
         networks:
             -   buy01-network
+        healthcheck:
+            test: echo 'db.runCommand("pring").ok' | mongosh localhost:27017/test -quiet
+            interval: 10s
+            timeout: 10s
+            retries: 2
+volumes:
+    mongodb_data:
+
+networks:
+    buy01-network:
+        driver: bridge

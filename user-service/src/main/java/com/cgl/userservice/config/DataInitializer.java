@@ -37,7 +37,7 @@ public class DataInitializer {
 
                 User client = User.builder()
                         .name("Anna Ndiaye")
-                        .email("annd@user.com")
+                        .email("anna@user.com")
                         .password(passwordEncoder.encode("client@123"))
                         .role(Role.CLIENT)
                         .build();

@@ -36,6 +36,13 @@ public class User implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
     }
+    public  User(String name, String email, String password, Role role, String avatar) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+        this.avatar = avatar;
+    }
     @Override
     public String getPassword() {
         return this.password;

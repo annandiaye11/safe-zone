@@ -3,6 +3,7 @@ package com.cgl.userservice.utils;
 
 import com.cgl.userservice.data.entities.User;
 import com.cgl.userservice.services.LoginService;
+import com.cgl.userservice.services.impl.LoginServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -33,7 +34,7 @@ public class JwtControl extends OncePerRequestFilter {
         String requestPath = request.getRequestURI();
         System.out.println("--- Request path: " + requestPath + "");
         // Ignorer le filtre JWT pour les endpoints publics
-        if ("/api/login".equals(requestPath) || "/users/register".equals(requestPath)) {
+        if ("/api/v1/auth/login".equals(requestPath) || "/api/v1/auth/register".equals(requestPath)) {
             filterChain.doFilter(request, response);
             return;
         }

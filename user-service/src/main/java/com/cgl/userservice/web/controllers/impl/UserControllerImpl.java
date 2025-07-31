@@ -89,7 +89,7 @@ public class UserControllerImpl implements UserController {
         if (user == null) {
             return ResponseEntity.notFound().build();
         }
-        userService.delete(id);
+        userService.delete(user);
         Map<String, Object> response = new HashMap<>();
         response.put("message", "User deleted");
         response.put("user", MapperUser.toDto(user));

@@ -1,0 +1,14 @@
+package com.example.productservice.service;
+
+import com.example.productservice.data.entities.Product;
+
+import java.util.List;
+
+public interface ProductService {
+    Product create(Product product);
+    Product getById(String id);
+    Product update(String id, Product product);
+    List<Product> getByUserId(String userId);
+    List<Product> getAllProducts();
+    boolean delete(String id);
+}

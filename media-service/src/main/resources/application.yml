@@ -1,0 +1,29 @@
+spring:
+  config:
+    import: optional:file:./.env.dev[.properties]
+
+  application:
+    name: media-service
+
+  web:
+    resources:
+      add-mappings: false
+
+  data:
+    mongodb:
+      uri: mongodb+srv://${DB_USER}:${DB_PASSWORD}@buy0x.mqr2hhc.mongodb.net/?retryWrites=true&w=majority&appName=buy0x
+      database: ${DB_NAME}
+      auto-index-creation: true
+
+
+
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+
+server:
+  port: 8081

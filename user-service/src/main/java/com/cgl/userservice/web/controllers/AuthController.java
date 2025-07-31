@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/v1/auth")
 public interface AuthController {
@@ -19,5 +21,5 @@ public interface AuthController {
     ResponseEntity<ResponseDto> login(@Valid @RequestBody RequestDto userLoginDTO);
 
     @PostMapping("/register")
-    ResponseEntity<RegisterResponse> register(@Valid @RequestBody UserDto userRegisterDTO);
+    ResponseEntity<Map<String, Object>> register(@Valid @RequestBody UserDto userRegisterDTO);
 }

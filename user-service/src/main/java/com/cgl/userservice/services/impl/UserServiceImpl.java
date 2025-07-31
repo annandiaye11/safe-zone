@@ -32,29 +32,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getById(String id) {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No user with this id"));
+        return userRepository.findById(id).orElse(null);
     }
 
     @Override
     public User getByEmail(String email) {
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No user with this email"));
+        return userRepository.findByEmail(email).orElse(null);
     }
 
     @Override
     public User create(User user) {
-        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already in use");
-        }
-
-        try {
-            String hashedPassword = passwordEncoder.encode(user.getPassword());
-            user.setPassword(hashedPassword);
-            return userRepository.save(user);
-        } catch (DataIntegrityViolationException e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already in use");
-        }
+      user.setPassword(passwordEncoder.encode(user.getPassword()));
+      userRepository.save(user);
+      return user;
     }
 
     @Override
@@ -64,13 +54,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean delete(String id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No user with this id"));
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String userId = (String) auth.getPrincipal();
-
+    public User delete(User user) {
         userRepository.delete(user);
-        return true;
+        return user;
     }
 }

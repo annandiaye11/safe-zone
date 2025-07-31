@@ -9,11 +9,13 @@ import com.cgl.userservice.web.dto.UserDto;
 import com.cgl.userservice.web.dto.UserOneResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@RestController
 public class UserControllerImpl implements UserController {
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
@@ -50,20 +52,6 @@ public class UserControllerImpl implements UserController {
         return ResponseEntity.status(200).body(response);
     }
 
-    @Override
-    public ResponseEntity<Map<String, Object>> createUser(UserDto userDto) {
-        Map<String, Object> response = new HashMap<>();
-        if (userService.getByEmail(userDto.getEmail()) != null) {
-            response.put("message", "User already exists");
-            return ResponseEntity.status(400).body(response);
-        }
-        User user = MapperUser.toEntity(userDto);
-        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
-        userService.create(user);
-        response.put("message", "User created");
-        response.put("user", MapperUser.toDto(user));
-        return ResponseEntity.status(201).body(response);
-    }
 
     @Override
     public ResponseEntity<Map<String, Object>> updateUser(String id, UserDto userDto) {
@@ -89,7 +77,7 @@ public class UserControllerImpl implements UserController {
         if (user == null) {
             return ResponseEntity.notFound().build();
         }
-        userService.delete(id);
+        userService.delete(user);
         Map<String, Object> response = new HashMap<>();
         response.put("message", "User deleted");
         response.put("user", MapperUser.toDto(user));

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
-@RestController
+
 @RequestMapping("/api/v1/users")
 public interface UserController {
     @GetMapping("")
@@ -20,15 +20,13 @@ public interface UserController {
     @GetMapping("/{id}")
     ResponseEntity<Map<String, Object>> getUserById(@PathVariable String id);
 
-    @PostMapping("/register")
-    ResponseEntity<Map<String, Object>> createUser(@RequestBody @Valid UserDto userDto);
 
 
-    @PreAuthorize("#id == authentication.principal.id")
+    //@PreAuthorize("#id == authentication.principal.id")
     @PutMapping("/{id}")
     ResponseEntity<Map<String, Object>> updateUser(@PathVariable String id, @RequestBody @Valid UserDto userDto);
 
-    @PreAuthorize("#id ==  authentication.principal.id")
+   // @PreAuthorize("#id ==  authentication.principal.id")
     @DeleteMapping("/{id}")
     ResponseEntity<Map<String, Object>> deleteUser(@PathVariable String id);
 

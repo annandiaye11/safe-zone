@@ -11,6 +11,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserDto {
+    private String id;
 
     @NotBlank(message = "Name is required")
     @Size(min = 3, max = 100, message = "The name should be have least 3 characters")

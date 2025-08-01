@@ -1,8 +1,10 @@
 package com.example.mediaservice.services;
 
 import com.example.mediaservice.data.entities.Media;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 
 public interface MediaService {
     List<Media> getAllMedias();
@@ -11,4 +13,5 @@ public interface MediaService {
     Media deleteMedia(Media media);
     Media updateMedia(Media media);
     Media getByProductId(String productId);
+
 }

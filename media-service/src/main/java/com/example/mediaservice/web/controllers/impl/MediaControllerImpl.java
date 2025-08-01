@@ -2,9 +2,11 @@ package com.example.mediaservice.web.controllers.impl;
 
 import com.example.mediaservice.data.entities.Media;
 import com.example.mediaservice.services.MediaService;
+import com.example.mediaservice.services.impl.S3Service;
 import com.example.mediaservice.utils.mappers.MapperMedia;
 import com.example.mediaservice.web.controllers.MediaController;
 import com.example.mediaservice.web.dto.requests.MediaDtoAll;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,8 +18,10 @@ import java.util.Map;
 @RestController
 public class MediaControllerImpl implements MediaController {
     private final MediaService mediaService;
-    public MediaControllerImpl(MediaService mediaService) {
+    private final S3Service s3Service;
+    public MediaControllerImpl(MediaService mediaService, S3Service s3Service) {
         this.mediaService = mediaService;
+        this.s3Service = s3Service;
     }
     @Override
     public ResponseEntity<Map<String, Object>> getAllMedias() {
@@ -73,7 +77,7 @@ public class MediaControllerImpl implements MediaController {
         if (media == null) {
             return ResponseEntity.notFound().build();
         }
-        media.setImagePath(mediaDtoAll.getImagePath());
+        media.setImagePath(s3Service.uploadFile(mediaDtoAll.getImagePath()));
         media.setProductId(mediaDtoAll.getProductId());
         Media mediaCreated = mediaService.updateMedia(media);
         HashMap<String, Object> response = new HashMap<>();

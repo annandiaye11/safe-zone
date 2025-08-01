@@ -15,9 +15,6 @@ spring:
       database: ${DB_NAME}
       auto-index-creation: true
 
-
-
-
 springdoc:
   api-docs:
     enabled: true
@@ -26,4 +23,12 @@ springdoc:
     path: /swagger-ui.html
 
 server:
-  port: 8081
+  port: 8083
+
+aws:
+  s3:
+    bucket: hackaton-groupe10
+  region: eu-north-1
+  credentials:
+    access-key: ${AWS_ACCESS_KEY_ID}
+    secret-key: ${AWS_SECRET_ACCESS_KEY}

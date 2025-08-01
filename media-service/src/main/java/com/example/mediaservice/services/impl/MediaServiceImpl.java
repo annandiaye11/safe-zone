@@ -4,8 +4,10 @@ import com.example.mediaservice.data.entities.Media;
 import com.example.mediaservice.data.repositories.MediaRepository;
 import com.example.mediaservice.services.MediaService;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class MediaServiceImpl implements MediaService {
@@ -44,4 +46,5 @@ public class MediaServiceImpl implements MediaService {
     public Media getByProductId(String productId) {
         return mediaRepository.findByProductId(productId).orElse(null);
     }
+
 }

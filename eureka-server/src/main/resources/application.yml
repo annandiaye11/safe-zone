@@ -1,0 +1,26 @@
+spring:
+    config:
+        import: optional:file:.env.dev[.properties]
+    application:
+        name: eureka-server
+    web:
+        resources:
+            add-mappings: false
+
+server:
+    port: ${EUREKA_SERVER_PORT}
+
+eureka:
+    instance:
+        hostname: localhost
+    client:
+        register-with-eureka: false
+        fetch-registry: false
+        service-url:
+            defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+
+management:
+    endpoints:
+        web:
+            exposure:
+                include: "*"

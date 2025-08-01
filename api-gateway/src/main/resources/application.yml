@@ -1,0 +1,77 @@
+spring:
+    config:
+        import: optional:file:.env.dev[.properties]
+    application:
+        name: api-gateway
+    web:
+        resources:
+            add-mappings: false
+
+    cloud:
+        gateway:
+            server:
+                webflux:
+                    routes:
+                        - id: user-service
+                          uri: lb://user-service
+                          predicates:
+                              - Path=/api/v1/users/**
+
+                        - id: user-service
+                          uri: lb://user-service
+                          predicates:
+                              - Path=/api/v1/auth/**
+
+#                        - id: user-docs
+#                          uri: lb://${USER_INSTANCE_HOSTNAME}
+#                          predicates:
+#                              - Path=/${USER_INSTANCE_HOSTNAME}/v3/api-docs
+
+                        - id: product-service
+                          uri: lb://product-service
+                          predicates:
+                              - Path=/api/v1/products/**
+
+#                        - id: product-docs
+#                          uri: lb://${PRODUCT_INSTANCE_HOSTNAME}
+#                          predicates:
+#                              - Path=/${PRODUCT_INSTANCE_HOSTNAME}/v3/api-docs
+
+                        - id: media-service
+                          uri: lb://media-service
+                          predicates:
+                              - Path=/api/v1/media/**
+
+#                        - id: media-docs
+#                          uri: lb://${MEDIA_INSTANCE_HOSTNAME}
+#                          predicates:
+#                              - Path=/${MEDIA_INSTANCE_HOSTNAME}/v3/api-docs
+                    globalcors:
+                        cors-configurations:
+                            '[/**]':
+                                allowed-origins:
+                                    - "http://localhost:4200"
+                                allowed-methods: "*"
+                                allowed-headers: "*"
+                                allow-credentials: true
+
+
+eureka:
+    client:
+        register-with-eureka: true
+        fetch-registry: true
+        service-url:
+            defaultZone: http://localhost:${EUREKA_SERVER_PORT}/eureka/
+management:
+    endpoints:
+        web:
+            exposure:
+                include: health,info
+
+server:
+    ssl:
+        enabled: true
+        key-store: classpath:keystore.p12
+        key-store-password: ${KEY_STORE_PASSWORD}
+        key-store-type: PKCS12
+        key-alias: ${KEY_ALIAS}

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RequestMapping("api/products")
+@RequestMapping("api/v1/products")
 public interface ProductController {
 
     @PostMapping

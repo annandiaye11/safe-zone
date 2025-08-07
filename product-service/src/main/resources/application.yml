@@ -14,6 +14,16 @@ spring:
       uri: mongodb+srv://${DB_USER}:${DB_PASSWORD}@buy0x.mqr2hhc.mongodb.net/?retryWrites=true&w=majority&appName=buy0x
       database: ${DB_NAME}
       auto-index-creation: true
+  kafka:
+    bootstrap-servers: localhost:9092, localhost:9093
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    consumer:
+      group-id: product-service
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
 
 eureka:
     client:

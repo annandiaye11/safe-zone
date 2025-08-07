@@ -2,9 +2,12 @@ package com.cgl.userservice.services.impl;
 
 import com.cgl.userservice.data.entities.User;
 import com.cgl.userservice.data.repositories.UserRepository;
+import com.cgl.userservice.services.UserEventPublisher;
 import com.cgl.userservice.services.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,13 +18,13 @@ import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
-
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    private final UserEventPublisher userEventPublisher;
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, UserEventPublisher userEventPublisher) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.userEventPublisher = userEventPublisher;
     }
 
 
@@ -56,6 +59,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public User delete(User user) {
         userRepository.delete(user);
+        userEventPublisher.sendDeleteEvent(user.getId());
         return user;
     }
+
 }

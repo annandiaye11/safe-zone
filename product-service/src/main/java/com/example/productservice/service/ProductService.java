@@ -11,4 +11,5 @@ public interface ProductService {
     List<Product> getByUserId(String userId);
     List<Product> getAllProducts();
     boolean delete(String id);
+    void deleteProductsByUser(String userId);
 }

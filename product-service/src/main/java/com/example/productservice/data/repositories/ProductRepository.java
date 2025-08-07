@@ -8,4 +8,10 @@ import java.util.Optional;
 
 public interface ProductRepository extends MongoRepository<Product, String> {
     List<Product> findByUserId(String userId);
+
+    void deleteProductByUserId(String userId);
+
+    void deleteProductsByUserId(String userId);
+
+    Product getProductByUserId(String userId);
 }

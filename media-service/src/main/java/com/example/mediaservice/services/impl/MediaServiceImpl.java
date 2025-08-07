@@ -47,4 +47,9 @@ public class MediaServiceImpl implements MediaService {
         return mediaRepository.findByProductId(productId).orElse(null);
     }
 
+    @Override
+    public void deleteMediaByProductId(String productId) {
+        mediaRepository.deleteMediaByProductId(productId);
+    }
+
 }

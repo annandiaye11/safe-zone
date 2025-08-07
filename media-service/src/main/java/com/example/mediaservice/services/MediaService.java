@@ -13,5 +13,6 @@ public interface MediaService {
     Media deleteMedia(Media media);
     Media updateMedia(Media media);
     Media getByProductId(String productId);
+    void deleteMediaByProductId(String productId);
 
 }

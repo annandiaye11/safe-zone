@@ -7,4 +7,6 @@ import java.util.Optional;
 
 public interface MediaRepository extends MongoRepository<Media, String> {
     Optional<Media> findByProductId(String productId);
+
+    void deleteMediaByProductId(String productId);
 }

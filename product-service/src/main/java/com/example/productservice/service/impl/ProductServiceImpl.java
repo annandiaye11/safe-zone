@@ -2,6 +2,7 @@ package com.example.productservice.service.impl;
 
 import com.example.productservice.data.entities.Product;
 import com.example.productservice.data.repositories.ProductRepository;
+import com.example.productservice.service.ProductEventPublisher;
 import com.example.productservice.service.ProductService;
 import io.swagger.v3.oas.annotations.servers.Server;
 import org.springframework.http.HttpStatus;
@@ -15,9 +16,10 @@ import java.util.Objects;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
-
-    public ProductServiceImpl(ProductRepository productRepository) {
+    private final ProductEventPublisher  productEventPublisher;
+    public ProductServiceImpl(ProductRepository productRepository, ProductEventPublisher productEventPublisher) {
         this.productRepository = productRepository;
+        this.productEventPublisher = productEventPublisher;
     }
     @Override
     public Product create(Product product) {
@@ -68,5 +70,14 @@ public class ProductServiceImpl implements ProductService {
 
         productRepository.delete(product);
         return true;
+    }
+
+    @Override
+    public void deleteProductsByUser(String userId) {
+        Product product = productRepository.getProductByUserId(userId);
+        if (product != null) {
+             productEventPublisher.sendDeleteEvent(product.getId());
+        }
+        productRepository.deleteProductsByUserId(userId);
     }
 }

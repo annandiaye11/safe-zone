@@ -4,13 +4,13 @@ WORKDIR /app
 COPY . .
 RUN mvn dependency:go-offline
 
-RUN mvn clean package -DskipTests -pl api-gateway -am
+RUN mvn clean package -DskipTests -pl eureka-service -am
 
 FROM eclipse-temurin:17-jdk-alpine
 RUN apk add --no-cache bash curl
 
 WORKDIR /app
 
-COPY --from=build /app/api-gateway/target/*.jar app.jar
+COPY --from=build /app/eureka-service/target/*.jar app.jar
 
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]

@@ -1,7 +1,6 @@
 package com.example.productservice.web.controllers;
 
-import com.example.productservice.web.dto.ProductBasicDTO;
-import com.example.productservice.web.dto.ProductResponseDTO;
+import com.example.productservice.web.dto.ProductDto;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,18 +11,20 @@ import java.util.List;
 public interface ProductController {
 
     @PostMapping
-    ResponseEntity<ProductResponseDTO> create(@RequestBody @Valid ProductBasicDTO productBasicDTO);
+    ResponseEntity<ProductDto> create(@RequestBody @Valid ProductDto productDto);
 
     @GetMapping
-    ResponseEntity<List<ProductResponseDTO>> getAll();
+    ResponseEntity<List<ProductDto>> getAll();
 
     @GetMapping("/{id}")
-    ResponseEntity<ProductResponseDTO> getById(@PathVariable String id);
+    ResponseEntity<ProductDto> getById(@PathVariable("id") String id);
 
     @PutMapping("/{id}")
-    ResponseEntity<ProductResponseDTO> update(@PathVariable String id,
-                                              @RequestBody @Valid ProductBasicDTO productBasicDTO);
+    ResponseEntity<ProductDto> update(@PathVariable("id") String id, @RequestBody @Valid ProductDto productDto);
 
     @DeleteMapping("/{id}")
-    ResponseEntity<Void> delete(@PathVariable String id);
+    ResponseEntity<Void> delete(@PathVariable("id") String id);
+
+    @GetMapping("/{userId}/user")
+    ResponseEntity<List<ProductDto>> getByUserId(@PathVariable("userId") String userId);
 }

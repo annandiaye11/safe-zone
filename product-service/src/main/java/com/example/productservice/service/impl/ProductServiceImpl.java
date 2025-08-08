@@ -2,82 +2,62 @@ package com.example.productservice.service.impl;
 
 import com.example.productservice.data.entities.Product;
 import com.example.productservice.data.repositories.ProductRepository;
-import com.example.productservice.service.ProductEventPublisher;
 import com.example.productservice.service.ProductService;
-import io.swagger.v3.oas.annotations.servers.Server;
-import org.springframework.http.HttpStatus;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.Objects;
-
 @Service
+@RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
 
-    private final ProductRepository productRepository;
-    private final ProductEventPublisher  productEventPublisher;
-    public ProductServiceImpl(ProductRepository productRepository, ProductEventPublisher productEventPublisher) {
-        this.productRepository = productRepository;
-        this.productEventPublisher = productEventPublisher;
-    }
-    @Override
+  private final ProductRepository productRepository;
+
+  @Override
     public Product create(Product product) {
-        return productRepository.save(product);
+      return productRepository.save(product);
     }
 
     @Override
     public Product getById(String id) {
-        return productRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
+       return productRepository.findById(id).orElse(null);
     }
 
     @Override
-    public Product update(String id, Product product) {
-        Product updateProduct = productRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
-
-
-        if (!Objects.equals(updateProduct.getUserId(), product.getUserId())) {
-            System.out.println("403-Forbidden (from updateProduct)");
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Can't update other's product");
-        }
-
-        updateProduct.setName(product.getName());
-        updateProduct.setDescription(product.getDescription());
-        updateProduct.setPrice(product.getPrice());
-        productRepository.save(updateProduct);
-        return updateProduct;
+    public Product update(Product product) {
+        return productRepository.save(product);
     }
 
     @Override
     public List<Product> getByUserId(String userId) {
-        if (!productRepository.existsById(userId)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found");
+       List<Product> products = productRepository.findByUserId(userId);
+        if (products.isEmpty()) {
+            return null;
         }
-        return productRepository.findByUserId(userId);
+        return products;
     }
 
     @Override
     public List<Product> getAllProducts() {
-        return productRepository.findAll();
+       List<Product> products = productRepository.findAll();
+        if (products.isEmpty()) {
+            return null;
+        }
+        return products;
     }
 
     @Override
-    public boolean delete(String id) {
-        Product product = productRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
-
-        productRepository.delete(product);
-        return true;
+    public void delete(String id) {
+        productRepository.deleteById(id);
     }
 
     @Override
     public void deleteProductsByUser(String userId) {
-        Product product = productRepository.getProductByUserId(userId);
-        if (product != null) {
-             productEventPublisher.sendDeleteEvent(product.getId());
-        }
         productRepository.deleteProductsByUserId(userId);
+    }
+
+    @Override
+    public Product getByName(String name) {
+        return productRepository.getByName(name);
     }
 }

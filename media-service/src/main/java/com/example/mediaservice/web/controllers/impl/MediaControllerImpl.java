@@ -6,7 +6,7 @@ import com.example.mediaservice.services.impl.S3Service;
 import com.example.mediaservice.utils.mappers.MapperMedia;
 import com.example.mediaservice.web.controllers.MediaController;
 import com.example.mediaservice.web.dto.requests.MediaDtoAll;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.mediaservice.web.dto.responses.MediaResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,7 +32,10 @@ public class MediaControllerImpl implements MediaController {
             return ResponseEntity.status(404).body(response);
         }
         response.put("message", "Medias found");
-        response.put("medias", medias);
+        List<MediaResponse> mediaDtoAlls = medias.stream()
+                .map(MapperMedia::toDto)
+                .toList();
+        response.put("medias", mediaDtoAlls);
         return ResponseEntity.status(200).body(response);
     }
 
@@ -56,7 +59,7 @@ public class MediaControllerImpl implements MediaController {
             return ResponseEntity.status(404).body(response);
         }
         response.put("message", "Media found");
-        response.put("media", media);
+        response.put("media", MapperMedia.toDto(media));
 
         return ResponseEntity.status(200).body(response);
     }
@@ -67,7 +70,7 @@ public class MediaControllerImpl implements MediaController {
         Media media = MapperMedia.toEntity(mediaDtoAll);
         Media mediaSaved = mediaService.saveMedia(media);
         response.put("message", "Media created");
-        response.put("media", mediaSaved);
+        response.put("media", MapperMedia.toDto(mediaSaved));
         return ResponseEntity.status(201).body(response);
     }
 
@@ -82,7 +85,7 @@ public class MediaControllerImpl implements MediaController {
         Media mediaCreated = mediaService.updateMedia(media);
         HashMap<String, Object> response = new HashMap<>();
         response.put("message", "Media updated");
-        response.put("media", mediaCreated);
+        response.put("media", MapperMedia.toDto(mediaCreated));
         return ResponseEntity.status(200).body(response);
     }
 
@@ -95,7 +98,7 @@ public class MediaControllerImpl implements MediaController {
         Media mediaDeleted = mediaService.deleteMedia(media);
         HashMap<String, Object> response = new HashMap<>();
         response.put("message", "Media deleted");
-        response.put("media", mediaDeleted);
+        response.put("media", MapperMedia.toDto(mediaDeleted));
         return ResponseEntity.status(200).body(response);
     }
 }

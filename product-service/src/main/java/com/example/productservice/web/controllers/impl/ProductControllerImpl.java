@@ -3,73 +3,86 @@ package com.example.productservice.web.controllers.impl;
 import com.example.productservice.data.entities.Product;
 import com.example.productservice.service.ProductService;
 import com.example.productservice.web.controllers.ProductController;
-import com.example.productservice.web.dto.ProductBasicDTO;
-import com.example.productservice.web.dto.ProductResponseDTO;
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
-import org.springframework.http.HttpHeaders;
+import com.example.productservice.web.dto.ProductDto;
+import com.example.productservice.web.mapper.ProductMapper;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 @RestController
+@RequiredArgsConstructor
 public class ProductControllerImpl implements ProductController {
+    private  final ProductService productService;
 
-    private final ProductService productService;
-    private final String maxAge ="300";
-
-    public ProductControllerImpl(ProductService productService) {
-        this.productService = productService;
-    }
     @Override
-    public ResponseEntity<ProductResponseDTO> create(ProductBasicDTO productBasicDTO) {
-        System.out.println("CREATE product : " + productBasicDTO);
-//        String userId = (String) auth.getPrincipal();
-//        System.out.println("userId(from createProduct): " + userId);
-        Product product = new Product();
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .header(HttpHeaders.CACHE_CONTROL, "public, max-age=" + maxAge)
-                .body(new ProductResponseDTO(productService.create(productBasicDTO.toProduct(product.getUserId()))));
+    public ResponseEntity<ProductDto> create(@RequestBody @Valid ProductDto productDto) {
+        Product product = ProductMapper.toEntity(productDto);
+        if (productService.getByName(product.getName()) != null) {
+            return ResponseEntity.badRequest().body(null);
+        }
+        Product productSaved = productService.create(product);
+        productDto.setId(productSaved.getId());
+        return new ResponseEntity<>(productDto, HttpStatus.CREATED);
     }
 
     @Override
-    public ResponseEntity<List<ProductResponseDTO>> getAll() {
-        System.out.println("GET(getAll) products");
-        List<ProductResponseDTO> allDtos = productService.getAllProducts().stream()
-                .map(ProductResponseDTO::new)
+    public ResponseEntity<List<ProductDto>> getAll() {
+        List<Product> products = productService.getAllProducts();
+        if (products.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        List<ProductDto> productDtos = products.stream()
+                .map(ProductMapper::toDto)
                 .toList();
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CACHE_CONTROL, "public, max-age=" + maxAge)
-                .body(allDtos);
+        return new ResponseEntity<>(productDtos, HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<ProductResponseDTO> getById(String id) {
-        System.out.println("GET(getById) product : " + id);
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CACHE_CONTROL, "public, max-age=" + maxAge)
-                .body(new ProductResponseDTO(productService.getById(id)));
+    public ResponseEntity<ProductDto> getById(@PathVariable("id") String id) {
+        Product product = productService.getById(id);
+        if (product == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        ProductDto productDto = ProductMapper.toDto(product);
+        return new ResponseEntity<>(productDto, HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<ProductResponseDTO> update(String id, ProductBasicDTO productBasicDTO) {
-        System.out.println("UPDATE product : " + productBasicDTO);
-//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//        String userId = (String) auth.getPrincipal();
-        Product product = new Product();
-        System.out.println("userId(from updateProduct): " + product.getUserId());
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CACHE_CONTROL, "public, max-age=" + maxAge)
-                .body(new ProductResponseDTO(
-                        productService.update(
-                                id, productBasicDTO.toProduct(product.getUserId()))));
+    public ResponseEntity<ProductDto> update(@PathVariable("id") String id, @RequestBody @Valid ProductDto productDto) {
+        Product existingProduct = productService.getById(id);
+        if (existingProduct == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        productDto.setId(id);
+        Product product = ProductMapper.toEntity(productDto);
+        productService.update(product);
+        return new ResponseEntity<>(productDto, HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<Void> delete(String id) {
-        System.out.println("DELETE product : " + id);
+    public ResponseEntity<Void> delete(@PathVariable("id") String id) {
+        Product existingProduct = productService.getById(id);
+        if (existingProduct == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
         productService.delete(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
+
+    @Override
+    public ResponseEntity<List<ProductDto>> getByUserId(@PathVariable("userId") String userId) {
+    List<Product> products = productService.getByUserId(userId);
+    if (products == null || products.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        List<ProductDto> productDtos = products.stream()
+            .map(ProductMapper::toDto)
+            .toList();
+        return new ResponseEntity<>(productDtos, HttpStatus.OK);
+    }
+
 }

@@ -1,0 +1,47 @@
+<div class="container form">
+    <form class="auth" autocomplete="off">
+        <div class="form-header">
+            <h1>Register</h1>
+            <p>Create a new account to get started.</p>
+        </div>
+
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" placeholder="John DOE">
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="johndoe@domain.com">
+        </div>
+
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" placeholder="*********">
+        </div>
+
+        <div class="form-group">
+            <label for="role">Are you?</label>
+            <select id="role" name="role">
+                <option value="client" selected>Client</option>
+                <option value="seller">Seller</option>
+            </select>
+        </div>
+
+        <div class="form-avatar">
+            <label for="avatar">
+                <span>Upload Avatar</span>
+                <input type="file" id="avatar" name="avatar" accept="image/*">
+            </label>
+            <p>Avatar link</p>
+        </div>
+
+        <div class="form-group">
+            <button type="submit">Register</button>
+        </div>
+
+        <div class="form-footer">
+            <p>Already have an account? <a routerLink="/login">Sign in</a></p>
+        </div>
+    </form>
+</div>

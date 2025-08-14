@@ -1,1 +1,146 @@
-<p>add works!</p>
+@if (isFormOpen) {
+    <div class="modal" >
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>{{ modalTitle }}</h2>
+                <button class="close-btn" (click)="closeForm()">×</button>
+            </div>
+    
+            <form (ngSubmit)="onSubmit()" #productForm="ngForm">
+                <div class="form-group">
+                    <label for="name">Nom du produit</label>
+                    <input 
+                        id="name"
+                        type="text" 
+                        [(ngModel)]="formData.name" 
+                        name="name" 
+                        required 
+                        placeholder="Nom du produit"
+                    />
+                </div>
+    
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea 
+                        id="description"
+                        [(ngModel)]="formData.description" 
+                        name="description" 
+                        required
+                        placeholder="Description du produit"
+                        rows="4"
+                    ></textarea>
+                </div>
+    
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="price">Prix (fcfa)</label>
+                        <input 
+                            id="price"
+                            type="number" 
+                            [(ngModel)]="formData.price" 
+                            name="price" 
+                            required 
+                            min="0"
+                            step="0.01"
+                            placeholder="0.00"
+                        />
+                    </div>
+    
+                    <div class="form-group">
+                        <label for="quantity">Quantité en stock</label>
+                        <input 
+                            id="quantity"
+                            type="number" 
+                            [(ngModel)]="formData.quantity" 
+                            name="quantity" 
+                            required 
+                            min="0"
+                            placeholder="0"
+                        />
+                    </div>
+                </div>
+    
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" (click)="closeForm()">
+                        Annuler
+                    </button>
+                    <button type="submit" class="btn-primary">
+                        {{ submitButtonText }}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div><div class="modal" >
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>{{ modalTitle }}</h2>
+                <button class="close-btn" (click)="closeForm()">×</button>
+            </div>
+    
+            <form (ngSubmit)="onSubmit()" #productForm="ngForm">
+                <div class="form-group">
+                    <label for="name">Nom du produit</label>
+                    <input 
+                        id="name"
+                        type="text" 
+                        [(ngModel)]="formData.name" 
+                        name="name" 
+                        required 
+                        placeholder="Nom du produit"
+                    />
+                </div>
+    
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea 
+                        id="description"
+                        [(ngModel)]="formData.description" 
+                        name="description" 
+                        required
+                        placeholder="Description du produit"
+                        rows="4"
+                    ></textarea>
+                </div>
+    
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="price">Prix (fcfa)</label>
+                        <input 
+                            id="price"
+                            type="number" 
+                            [(ngModel)]="formData.price" 
+                            name="price" 
+                            required 
+                            min="0"
+                            step="0.01"
+                            placeholder="0.00"
+                        />
+                    </div>
+    
+                    <div class="form-group">
+                        <label for="quantity">Quantité en stock</label>
+                        <input 
+                            id="quantity"
+                            type="number" 
+                            [(ngModel)]="formData.quantity" 
+                            name="quantity" 
+                            required 
+                            min="0"
+                            placeholder="0"
+                        />
+                    </div>
+                </div>
+    
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" (click)="closeForm()">
+                        Annuler
+                    </button>
+                    <button type="submit" class="btn-primary">
+                        {{ submitButtonText }}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+}
+

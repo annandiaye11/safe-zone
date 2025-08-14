@@ -1,12 +1,15 @@
 import {Component} from '@angular/core';
 import {FormsModule} from '@angular/forms';
+import {NgClass} from '@angular/common';
+import {RouterLink} from '@angular/router';
 import {User} from '../../../entity/User';
 import {Role} from '../../../entity/Role';
 
 @Component({
     selector: 'app-profile',
     imports: [
-        FormsModule
+        FormsModule,
+        NgClass
     ],
     templateUrl: './profile.html',
     styleUrl: './profile.scss'

@@ -2,9 +2,32 @@
     <!-- Header -->
     <header class="header">
         <div class="header-container">
-            <div>
+            <div class="header-content">
                 <h1 class="title">Dashboard Vendeur</h1>
                 <p class="subtitle">Gérez vos produits et vos ventes</p>
+                <div class="stats-overview">
+                    <div class="stat-card">
+                        <span class="stat-icon">📦</span>
+                        <div class="stat-info">
+                            <span class="stat-number">{{ products.length }}</span>
+                            <span class="stat-label">Produits</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-icon">💰</span>
+                        <div class="stat-info">
+                            <span class="stat-number">{{ getTotalValue() | number:'1.0-0' }}</span>
+                            <span class="stat-label">Valeur totale</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-icon">⚠️</span>
+                        <div class="stat-info">
+                            <span class="stat-number">{{ getLowStockCount() }}</span>
+                            <span class="stat-label">Stock faible</span>
+                        </div>
+                    </div>
+                </div>
             </div>
             <!-- Bouton ajout produit -->
             <button (click)="openAddForm()" class="add-button">
@@ -15,14 +38,23 @@
 
     <!-- Products Grid -->
     <main class="main">
+        <div class="section-header">
+            <h2>Mes Produits</h2>
+            <p>Gérez votre inventaire et vos ventes</p>
+        </div>
+
         <div class="products-grid">
             @for (product of products; track product) {
                 <div class="product-card">
                     <div class="image-container">
-                        <img [src]="'/assets/podium.jpg'" [alt]="product.name"/>
-                        <div class="actions">
-                            <button class="action-btn" (click)="openEditForm(product)">✏️</button>
-                            <button class="action-btn" (click)="deleteProduct(product.id)">🗑️</button>
+                        <img [src]="'/assets/podium.jpg'" [alt]="product.name" />
+                        <div class="actions-overlay">
+                            <button class="action-btn edit" (click)="openEditForm(product)" title="Modifier">
+                                ✏️
+                            </button>
+                            <button class="action-btn delete" (click)="deleteProduct(product.id)" title="Supprimer">
+                                🗑️
+                            </button>
                         </div>
 
                         @if (product.quantity === 0) {
@@ -31,15 +63,46 @@
                         @if (product.quantity > 0 && product.quantity < 10) {
                             <span class="badge badge-orange">Stock faible</span>
                         }
+                        @if (product.quantity >= 10) {
+                            <span class="badge badge-green">En stock</span>
+                        }
                     </div>
 
                     <div class="product-info">
-                        <h3 class="product-name">{{ product.name }}</h3>
+                        <div class="product-header">
+                            <h3 class="product-name">{{ product.name }}</h3>
+                            <div class="product-status" [ngClass]="{
+                                'status-red': product.quantity === 0,
+                                'status-orange': product.quantity > 0 && product.quantity < 10,
+                                'status-green': product.quantity >= 10
+                            }">
+                                <span class="status-dot"></span>
+                                <span class="status-text">
+                                    @if (product.quantity === 0) { Épuisé }
+                                    @if (product.quantity > 0 && product.quantity < 10) { Stock faible }
+                                    @if (product.quantity >= 10) { En stock }
+                                </span>
+                            </div>
+                        </div>
                         <p class="product-description">{{ product.description }}</p>
                         <div class="product-footer">
-                            <div>
+                            <div class="price-info">
                                 <span class="price">{{ product.price | number: '1.2-2' }} fcfa</span>
-                                <div class="stock">Stock: {{ product.quantity }}</div>
+                                <div class="stock-info">
+                                    <span class="stock-label">Stock:</span>
+                                    <span class="stock-value" [ngClass]="{
+                                        'low': product.quantity > 0 && product.quantity < 10,
+                                        'out': product.quantity === 0
+                                    }">{{ product.quantity }}</span>
+                                </div>
+                            </div>
+                            <div class="product-actions">
+                                <button class="btn-secondary" (click)="openEditForm(product)">
+                                    Modifier
+                                </button>
+                                <button class="btn-danger" (click)="deleteProduct(product.id)">
+                                    Supprimer
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -49,8 +112,12 @@
 
         @if (products.length === 0) {
             <div class="empty-state">
-                <p class="empty-title">Aucun produit pour le moment</p>
-                <p class="empty-subtitle">Commencez par ajouter votre premier produit</p>
+                <div class="empty-icon">📦</div>
+                <h3>Aucun produit pour le moment</h3>
+                <p>Commencez par ajouter votre premier produit pour commencer à vendre</p>
+                <button class="btn-primary" (click)="openAddForm()">
+                    + Ajouter mon premier produit
+                </button>
             </div>
         }
     </main>
@@ -58,30 +125,10 @@
 
 <!-- Modal Formulaire -->
 @if (isFormOpen) {
-    <div class="modal">
-        <div class="modal-content">
-            <h2>{{ editingProduct ? 'Modifier le produit' : 'Ajouter un produit' }}</h2>
-            <form>
-                <label>Nom du produit</label>
-                <input type="text" [(ngModel)]="formData.name" name="name" required/>
-
-                <label>Description</label>
-                <textarea [(ngModel)]="formData.description" name="description" required></textarea>
-
-                <label>Prix</label>
-                <input type="number" [(ngModel)]="formData.price" name="price" required/>
-
-                <label>Quantité</label>
-                <input type="number" [(ngModel)]="formData.quantity" name="quantity" required/>
-
-                <div class="modal-actions">
-                    <button type="submit" class="save-btn">
-                        {{ editingProduct ? 'Modifier' : 'Ajouter' }}
-                    </button>
-                    <button type="button" class="cancel-btn" (click)="closeForm()">Annuler</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
+    <app-add
+        [formData]="formData"
+        [editingProduct]="editingProduct"
+        [(isFormOpen)]="isFormOpen"
+        (saveProduct)="handleSaveProduct($event)">
+    </app-add>
 }

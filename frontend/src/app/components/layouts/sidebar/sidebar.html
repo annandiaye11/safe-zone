@@ -1,1 +1,39 @@
-<p>sidebar works!</p>
+<aside class="sidebar">
+    <!-- Logo -->
+    <a [routerLink]="['/']" class="sidebar-logo">
+        <h1>
+            BUY-01
+        </h1>
+    </a>
+
+    <!-- Profil -->
+    <div class="sidebar-profile">
+        <img class="avatar" src="https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?auto=format&fit=crop&w=80&q=80" alt="avatar">
+        <h4 class="username">John Doe</h4>
+        <p class="email">johnxample.com</p>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="sidebar-nav">
+        <a routerLink="/" class="nav-link ">
+            <span></span>
+            Produits
+        </a>
+        <a routerLink="/dashboard" class="nav-link active">
+            <span>📊</span>
+            Dashboard
+        </a>
+        <a routerLink="/profile" class="nav-link">
+            <span>👤</span>
+            Accounts
+        </a>
+    </nav>
+
+    <!-- Bouton Logout -->
+    <div class="sidebar-footer">
+        <button class="logout-btn">
+            <span>🚪</span>
+            Déconnexion
+        </button>
+    </div>
+</aside>

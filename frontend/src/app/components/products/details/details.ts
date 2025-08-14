@@ -20,6 +20,7 @@ export class Details implements OnInit {
     isEditing = false;
     editForm: Product | null = null;
     currentUserId = 'user1'; // Mock user
+    quantity: number = 1; // Quantité sélectionnée pour l'achat
 
     mockProducts: Product[] = [
         {

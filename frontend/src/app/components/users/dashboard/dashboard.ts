@@ -1,13 +1,16 @@
-import {Component} from '@angular/core';
-import {DecimalPipe} from '@angular/common';
+import { Component } from '@angular/core';
+import {DecimalPipe, NgClass} from '@angular/common';
 import {Product} from '../../../entity/Product';
 import {FormsModule} from '@angular/forms';
+import {Add} from '../../products/add/add';
 
 @Component({
     selector: 'app-dashboard',
     imports: [
         DecimalPipe,
-        FormsModule
+        NgClass,
+        FormsModule,
+        Add
     ],
     templateUrl: './dashboard.html',
     styleUrl: './dashboard.scss'
@@ -54,12 +57,35 @@ export class Dashboard {
         this.isFormOpen = true;
     }
 
-    closeForm() {
-        this.isFormOpen = false;
-    }
-
-
     deleteProduct(id: string) {
         this.products = this.products.filter(p => p.id !== id);
+    }
+
+    handleSaveProduct(product: Product) {
+        if (this.editingProduct) {
+            // Modification d'un produit existant
+            const index = this.products.findIndex(p => p.id === product.id);
+            if (index !== -1) {
+                this.products[index] = product;
+            }
+        } else {
+            // Ajout d'un nouveau produit
+            this.products.push(product);
+        }
+        
+        // Réinitialiser le formulaire
+        this.editingProduct = null;
+        this.formData = { name: '', description: '', price: 0, quantity: 0 };
+        this.isFormOpen = false;
+        
+        console.log('Produit sauvegardé:', product);
+    }
+
+    getTotalValue(): number {
+        return this.products.reduce((total, product) => total + (product.price * product.quantity), 0);
+    }
+
+    getLowStockCount(): number {
+        return this.products.filter(product => product.quantity > 0 && product.quantity < 10).length;
     }
 }

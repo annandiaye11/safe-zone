@@ -1,6 +1,9 @@
 <header class="header">
     <div class="logo">BUY-01</div>
     <div class="search-user-cart">
+        <a routerLink="login" [hidden]="isAuthenticated">Login</a>
+        <a routerLink="register" [hidden]="isAuthenticated">Register</a>
+        <button (click)="onLogout()" [hidden]="!isAuthenticated">Logout</button>
         <button class="icon-btn">👤</button>
     </div>
 </header>

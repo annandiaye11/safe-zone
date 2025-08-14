@@ -1,23 +1,23 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { Oops } from './oops';
+import {Oops} from './oops';
 
 describe('Oops', () => {
-  let component: Oops;
-  let fixture: ComponentFixture<Oops>;
+    let component: Oops;
+    let fixture: ComponentFixture<Oops>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [Oops]
-    })
-    .compileComponents();
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            imports: [Oops]
+        })
+            .compileComponents();
 
-    fixture = TestBed.createComponent(Oops);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+        fixture = TestBed.createComponent(Oops);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
 });

@@ -5,15 +5,15 @@ import {FormsModule} from '@angular/forms';
 import {DecimalPipe, NgClass} from '@angular/common';
 
 @Component({
-  selector: 'app-details',
+    selector: 'app-details',
     imports: [
         FormsModule,
         DecimalPipe,
         NgClass,
         RouterLink
     ],
-  templateUrl: './details.html',
-  styleUrl: './details.scss'
+    templateUrl: './details.html',
+    styleUrl: './details.scss'
 })
 export class Details implements OnInit {
     product: Product | null = null;
@@ -40,19 +40,20 @@ export class Details implements OnInit {
         }
     ];
 
-    constructor(private route: ActivatedRoute, private router: Router) {}
+    constructor(private route: ActivatedRoute, private router: Router) {
+    }
+
+    get canEdit(): boolean {
+        return this.product?.userId === this.currentUserId;
+    }
 
     ngOnInit() {
         const id = this.route.snapshot.paramMap.get('id');
         const found = this.mockProducts.find(p => p.id === id);
         if (found) {
-            this.product = { ...found };
-            this.editForm = { ...found };
+            this.product = {...found};
+            this.editForm = {...found};
         }
-    }
-
-    get canEdit(): boolean {
-        return this.product?.userId === this.currentUserId;
     }
 
     enableEdit() {
@@ -61,14 +62,14 @@ export class Details implements OnInit {
 
     save() {
         if (this.editForm) {
-            this.product = { ...this.editForm };
+            this.product = {...this.editForm};
             this.isEditing = false;
             console.log('Produit sauvegardé:', this.product);
         }
     }
 
     cancel() {
-        this.editForm = this.product ? { ...this.product } : null;
+        this.editForm = this.product ? {...this.product} : null;
         this.isEditing = false;
     }
 

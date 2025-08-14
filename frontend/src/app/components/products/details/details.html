@@ -1,7 +1,7 @@
 <div class="product-detail">
     <div class="container">
         <!-- Retour -->
-        <a routerLink="/" class="back-link">← Retour</a>
+        <a class="back-link" routerLink="/">← Retour</a>
 
         <!-- Produit introuvable -->
         @if (!product) {
@@ -55,19 +55,19 @@
                 @if (isEditing) {
                     <div class="edit-mode">
                         <label>Nom :
-                            <input [(ngModel)]="editForm!.name" />
+                            <input [(ngModel)]="editForm!.name"/>
                         </label>
                         <label>Prix (€) :
-                            <input type="number" [(ngModel)]="editForm!.price" />
+                            <input type="number" [(ngModel)]="editForm!.price"/>
                         </label>
                         <label>Quantité :
-                            <input type="number" [(ngModel)]="editForm!.quantity" />
+                            <input type="number" [(ngModel)]="editForm!.quantity"/>
                         </label>
                         <label>Description :
                             <textarea [(ngModel)]="editForm!.description"></textarea>
                         </label>
                         <label>Image (URL) :
-                            <input  placeholder="https://..." />
+                            <input placeholder="https://..."/>
                         </label>
 
                         <button class="primary" (click)="save()">Sauvegarder</button>

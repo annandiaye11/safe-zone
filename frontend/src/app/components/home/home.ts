@@ -1,15 +1,14 @@
 import {Component, OnInit} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {Product} from '../../entity/Product';
-import {NgForOf, NgIf} from '@angular/common';
 
 @Component({
-  selector: 'app-home',
+    selector: 'app-home',
     imports: [
         FormsModule,
     ],
-  templateUrl: './home.html',
-  styleUrl: './home.scss'
+    templateUrl: './home.html',
+    styleUrl: './home.scss'
 })
 export class Home implements OnInit {
 
@@ -62,9 +61,6 @@ export class Home implements OnInit {
             quantity: 3,
             userId: "12334"
         },
-
-
-
 
 
     ];

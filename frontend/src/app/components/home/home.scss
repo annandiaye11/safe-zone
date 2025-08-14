@@ -1,0 +1,122 @@
+$app-bg: #1a191c;
+$primary-color: #b2b9bf;
+$secondary-color: #213448;
+$accent-color: #547792;
+$text-light: #ecefca;
+
+.app-container {
+    min-height: 100vh;
+    background-color: $app-bg;
+    color: $text-light;
+    display: flex;
+    flex-direction: column;
+}
+
+
+main {
+    flex: 1;
+    .intro {
+        text-align: center;
+        background-color: $secondary-color;
+        padding: 2rem;
+        border-radius: 8px;
+        margin: 2rem 0;
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        p {
+            color: $primary-color;
+        }
+    }
+
+    .products-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 1rem;
+        padding: 2%;
+
+        .product-card {
+            border-radius: 8px;
+            background-color: $secondary-color;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 5px 0 $primary-color;
+
+            .product-image {
+                position: relative;
+
+                img {
+                    width: 100%;
+                    height: 250px;
+                    object-fit: cover;
+                }
+
+                .badge {
+                    position: absolute;
+                    top: 8px;
+                    left: 8px;
+                    padding: 0.3rem 0.6rem;
+                    border-radius: 4px;
+                    font-size: 0.8rem;
+                    color: white;
+
+                    &.stock {
+                        background-color: red;
+                    }
+
+                    &.limited {
+                        background-color: $accent-color;
+                    }
+                }
+            }
+
+            .product-content {
+                padding: 1rem;
+
+                h3 {
+                    margin-bottom: 0.5rem;
+                }
+
+                p {
+                    color: $primary-color;
+                    font-size: 0.9rem;
+                    margin-bottom: 0.8rem;
+                }
+
+                .price-stock {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+
+                    .price {
+                        font-size: 1.2rem;
+                        font-weight: bold;
+                    }
+
+                    .stock {
+                        color: $primary-color;
+                        font-size: 0.8rem;
+                    }
+
+                    .add-btn {
+                        background-color: $accent-color;
+                        color: white;
+                        padding: 0.4rem 0.8rem;
+                        border: none;
+                        border-radius: 4px;
+                        cursor: pointer;
+
+                        &:disabled {
+                            background-color: gray;
+                            cursor: not-allowed;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+

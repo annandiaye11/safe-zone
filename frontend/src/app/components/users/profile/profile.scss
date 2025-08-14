@@ -1,0 +1,140 @@
+.profile-page {
+    min-height: 100vh;
+    background-color: #1A191C;
+    color: #ECEFCA;
+    font-family: Arial, sans-serif;
+}
+
+/* Header */
+.profile-header {
+    border-bottom: 1px solid #94B4C1;
+    padding: 1rem;
+}
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+.back-button {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #94B4C1;
+    cursor: pointer;
+}
+.logo {
+    font-size: 2rem;
+    font-weight: bold;
+}
+.page-title {
+    color: #94B4C1;
+    font-size: 1.2rem;
+}
+
+/* Card */
+.profile-main {
+    max-width: 600px;
+    margin: auto;
+    padding: 2rem;
+}
+.profile-card {
+    background-color: #213448;
+    border: 2px solid #547792;
+    border-radius: 10px;
+    padding: 2rem;
+}
+.card-header {
+    text-align: center;
+}
+.avatar-container {
+    position: relative;
+    display: inline-block;
+}
+.avatar-img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.avatar-fallback {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: #547792;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+}
+.avatar-upload {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background: #94B4C1;
+    padding: 5px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+.profile-name {
+    margin-top: 1rem;
+}
+.profile-role {
+    color: #94B4C1;
+    font-size: 0.9rem;
+}
+
+/* Form */
+.card-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+input, select {
+    padding: 0.5rem;
+    background-color: #1A191C;
+    border: 1px solid #94B4C1;
+    color: #ECEFCA;
+    border-radius: 5px;
+}
+input:disabled, select:disabled {
+    opacity: 0.6;
+}
+
+/* Buttons */
+.actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+.btn-primary {
+    flex: 1;
+    background: #547792;
+    border: none;
+    color: white;
+    padding: 0.7rem;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.btn-outline {
+    flex: 1;
+    background: transparent;
+    border: 1px solid #94B4C1;
+    color: #94B4C1;
+    padding: 0.7rem;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.btn-save {
+    flex: 1;
+    background: #ECEFCA;
+    color: #213448;
+    border: none;
+    padding: 0.7rem;
+    border-radius: 5px;
+    cursor: pointer;
+}

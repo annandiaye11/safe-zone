@@ -1,1 +1,41 @@
-<p>home works!</p>
+<div class="app-container">
+    <!-- Header -->
+
+
+    <!-- Body -->
+    <main>
+        <section class="intro">
+            <h1>Nos Produits</h1>
+        </section>
+
+        <section class="products-grid">
+            @for (product of products; track product) {
+                <div class="product-card" >
+            <div class="product-image">
+                <img src="assets/podium.jpg" alt="{{ product.name }}" />
+                @if (product.quantity === 0) {
+                    <span class="badge stock" >Épuisé</span>
+                }
+                @if (product.quantity > 0 && product.quantity < 10) {
+                    <span class="badge limited" >Stock limité</span>
+                }
+
+            </div>
+            <div class="product-content">
+                <h3>{{ product.name }}</h3>
+                <p>{{ product.description }}</p>
+                <div class="price-stock">
+                    <div>
+                        <span class="price">{{ product.price.toFixed(2) }} fcfa</span>
+                        <div class="stock">Stock: {{ product.quantity }}</div>
+                    </div>
+                </div>
+            </div>
+                </div>
+            }
+        </section>
+    </main>
+
+    <!-- Footer -->
+
+</div>

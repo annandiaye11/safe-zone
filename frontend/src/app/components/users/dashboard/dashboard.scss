@@ -1,0 +1,220 @@
+.dashboard {
+    min-height: 100vh;
+    background-color: #1A191C;
+    color: white;
+    font-family: sans-serif;
+}
+
+/* Header */
+.header {
+    border-bottom: 1px solid #2d2d2d;
+}
+.header-container {
+    margin: auto;
+    padding: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+.title {
+    font-size: 1.875rem;
+    font-weight: bold;
+}
+.subtitle {
+    color: #9ca3af;
+}
+
+/* Bouton ajouter */
+.add-button {
+    background-color: #547792;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    border: none;
+    cursor: pointer;
+}
+.add-button:hover {
+    background-color: #466577;
+}
+.plus {
+    margin-right: 0.5rem;
+}
+
+/* Main grid */
+.main {
+    max-width: 1200px;
+    margin: auto;
+    padding: 2rem 1rem;
+}
+.products-grid {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+}
+
+/* Card produit */
+.product-card {
+    background-color: #1f2937;
+    border: 1px solid #374151;
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+.image-container {
+    position: relative;
+}
+.image-container img {
+    width: 100%;
+    height: 12rem;
+    object-fit: cover;
+}
+.actions {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    display: flex;
+    gap: 0.25rem;
+}
+.action-btn {
+    background-color: rgba(0, 0, 0, 0.2);
+    border: none;
+    padding: 0.25rem;
+    border-radius: 0.25rem;
+    color: white;
+    cursor: pointer;
+}
+.action-btn:hover {
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+/* Badge */
+.badge {
+    position: absolute;
+    top: 0.5rem;
+    left: 0.5rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+}
+.badge-red {
+    background-color: #ef4444;
+}
+.badge-orange {
+    background-color: #f97316;
+}
+
+/* Infos produit */
+.product-info {
+    padding: 1rem;
+}
+.product-name {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+.product-description {
+    color: #9ca3af;
+    font-size: 0.875rem;
+    margin-bottom: 1rem;
+}
+.product-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.price {
+    font-size: 1.125rem;
+    font-weight: bold;
+    color: #ECEFCA;
+}
+.stock {
+    font-size: 0.75rem;
+    color: #6b7280;
+}
+.view-btn {
+    border: 1px solid #4b5563;
+    color: #d1d5db;
+    background: transparent;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    cursor: pointer;
+}
+.view-btn:hover {
+    background-color: #374151;
+}
+
+/* État vide */
+.empty-state {
+    text-align: center;
+    padding: 3rem 0;
+}
+.empty-title {
+    color: #9ca3af;
+    font-size: 1.125rem;
+}
+.empty-subtitle {
+    color: #6b7280;
+}
+
+/* Modal */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.modal-content {
+    background-color: #1f2937;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    width: 400px;
+    color: white;
+}
+.modal-content h2 {
+    margin-bottom: 1rem;
+}
+.modal-content label {
+    display: block;
+    margin-top: 0.5rem;
+}
+.modal-content input,
+.modal-content textarea {
+    width: 100%;
+    padding: 0.5rem;
+    background-color: #374151;
+    border: 1px solid #4b5563;
+    color: white;
+    border-radius: 0.25rem;
+    margin-top: 0.25rem;
+}
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1rem;
+    gap: 0.5rem;
+}
+.save-btn {
+    background-color: #547792;
+    border: none;
+    padding: 0.5rem 1rem;
+    color: white;
+    border-radius: 0.25rem;
+    cursor: pointer;
+}
+.cancel-btn {
+    background-color: #6b7280;
+    border: none;
+    padding: 0.5rem 1rem;
+    color: white;
+    border-radius: 0.25rem;
+    cursor: pointer;
+}
+.save-btn:hover {
+    background-color: #466577;
+}
+.cancel-btn:hover {
+    background-color: #4b5563;
+}

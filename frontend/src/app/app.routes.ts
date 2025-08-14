@@ -4,6 +4,8 @@ import {Home} from './components/home/home';
 import {Register} from './components/auth/register/register';
 import {Details} from './components/products/details/details';
 import {Oops} from './components/errors/oops/oops';
+import {Dashboard} from './components/users/dashboard/dashboard';
+import {Profile} from './components/users/profile/profile';
 
 export const routes: Routes = [
     {
@@ -22,8 +24,17 @@ export const routes: Routes = [
         title: "Sign Up"
     },
     {
+        path: 'dashboard',
+        component: Dashboard,
+        title: "Dashboard"
+    },
+    {
         path: 'details/:id',
         component: Details,
+    },
+    {
+        path: 'profil',
+        component: Profile,
     },
     {
         // Redirect any other route to the Oops page

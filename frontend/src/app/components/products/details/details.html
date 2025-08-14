@@ -1,1 +1,81 @@
-<p>details works!</p>
+<div class="product-detail">
+    <div class="container">
+        <!-- Retour -->
+        <a routerLink="/" class="back-link">← Retour</a>
+
+        <!-- Produit introuvable -->
+        @if (!product) {
+            <div class="not-found">
+                <h2>Produit non trouvé</h2>
+            </div>
+        }
+
+        <!-- Produit trouvé -->
+        @if (product) {
+            <div class="product-card">
+                @if (!isEditing) {
+                    <div class="product-view">
+                        <!-- Image du produit -->
+                        <div class="product-image">
+                            <img
+                                [src]="'assets/podium.jpg'"
+                                [alt]="product.name"
+                            />
+                        </div>
+
+                        <!-- Infos produit -->
+                        <div class="product-info">
+                            <h1>{{ product.name }}</h1>
+                            <p class="price">{{ product.price | number:'1.2-2' }} €</p>
+                            <p class="description">{{ product.description }}</p>
+
+                            <p>
+                                Stock :
+                                <span [ngClass]="{
+                                                    'stock-red': product.quantity === 0,
+                                                    'stock-orange': product.quantity > 0 && product.quantity < 10,
+                                                    'stock-green': product.quantity >= 10
+                                                  }">
+                {{ product.quantity === 0 ? 'Épuisé' : product.quantity + ' dispo.' }}
+              </span>
+                            </p>
+
+                            <button class="primary" [disabled]="product.quantity === 0">
+                                {{ product.quantity > 0 ? 'Ajouter au panier' : 'Épuisé' }}
+                            </button>
+
+                            @if (canEdit) {
+                                <button class="secondary" (click)="enableEdit()">Modifier</button>
+                            }
+                        </div>
+                    </div>
+                }
+
+                <!-- Mode édition -->
+                @if (isEditing) {
+                    <div class="edit-mode">
+                        <label>Nom :
+                            <input [(ngModel)]="editForm!.name" />
+                        </label>
+                        <label>Prix (€) :
+                            <input type="number" [(ngModel)]="editForm!.price" />
+                        </label>
+                        <label>Quantité :
+                            <input type="number" [(ngModel)]="editForm!.quantity" />
+                        </label>
+                        <label>Description :
+                            <textarea [(ngModel)]="editForm!.description"></textarea>
+                        </label>
+                        <label>Image (URL) :
+                            <input  placeholder="https://..." />
+                        </label>
+
+                        <button class="primary" (click)="save()">Sauvegarder</button>
+                        <button class="secondary" (click)="cancel()">Annuler</button>
+                    </div>
+                }
+            </div>
+        }
+
+    </div>
+</div>

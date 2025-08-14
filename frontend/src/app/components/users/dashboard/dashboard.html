@@ -1,1 +1,87 @@
-<p>dashboard works!</p>
+<div class="dashboard">
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <div>
+                <h1 class="title">Dashboard Vendeur</h1>
+                <p class="subtitle">Gérez vos produits et vos ventes</p>
+            </div>
+            <!-- Bouton ajout produit -->
+            <button class="add-button" (click)="openAddForm()">
+                <span class="plus">+</span> Ajouter un produit
+            </button>
+        </div>
+    </header>
+
+    <!-- Products Grid -->
+    <main class="main">
+        <div class="products-grid">
+            @for (product of products; track product) {
+                <div class="product-card">
+                    <div class="image-container">
+                        <img [src]="'/assets/podium.jpg'" [alt]="product.name" />
+                        <div class="actions">
+                            <button class="action-btn" (click)="openEditForm(product)">✏️</button>
+                            <button class="action-btn" (click)="deleteProduct(product.id)">🗑️</button>
+                        </div>
+
+                        @if (product.quantity === 0) {
+                            <span class="badge badge-red">Épuisé</span>
+                        }
+                        @if (product.quantity > 0 && product.quantity < 10) {
+                            <span class="badge badge-orange">Stock faible</span>
+                        }
+                    </div>
+
+                    <div class="product-info">
+                        <h3 class="product-name">{{ product.name }}</h3>
+                        <p class="product-description">{{ product.description }}</p>
+                        <div class="product-footer">
+                            <div>
+                                <span class="price">{{ product.price | number: '1.2-2' }} fcfa</span>
+                                <div class="stock">Stock: {{ product.quantity }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        @if (products.length === 0) {
+            <div class="empty-state">
+                <p class="empty-title">Aucun produit pour le moment</p>
+                <p class="empty-subtitle">Commencez par ajouter votre premier produit</p>
+            </div>
+        }
+    </main>
+</div>
+
+<!-- Modal Formulaire -->
+@if (isFormOpen) {
+    <div class="modal" >
+        <div class="modal-content">
+            <h2>{{ editingProduct ? 'Modifier le produit' : 'Ajouter un produit' }}</h2>
+            <form  >
+                <label>Nom du produit</label>
+                <input type="text" [(ngModel)]="formData.name" name="name" required />
+
+                <label>Description</label>
+                <textarea [(ngModel)]="formData.description" name="description" required></textarea>
+
+                <label>Prix</label>
+                <input type="number" [(ngModel)]="formData.price" name="price" required />
+
+                <label>Quantité</label>
+                <input type="number" [(ngModel)]="formData.quantity" name="quantity" required />
+
+                <div class="modal-actions">
+                    <button type="submit" class="save-btn">
+                        {{ editingProduct ? 'Modifier' : 'Ajouter' }}
+                    </button>
+                    <button type="button" class="cancel-btn" (click)="closeForm()">Annuler</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+}

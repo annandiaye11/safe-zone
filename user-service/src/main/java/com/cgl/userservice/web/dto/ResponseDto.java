@@ -11,7 +11,6 @@ import lombok.*;
 public class ResponseDto {
     private String token;
     private String email;
-    private String string;
 
     public ResponseDto(String token) {
         this.token = token;

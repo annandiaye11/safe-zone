@@ -28,5 +28,4 @@ public interface UserController {
     @DeleteMapping("/{id}")
     ResponseEntity<Map<String, Object>> deleteUser(@PathVariable String id);
 
-
 }

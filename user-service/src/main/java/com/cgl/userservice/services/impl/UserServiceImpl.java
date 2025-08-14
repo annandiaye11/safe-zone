@@ -4,6 +4,7 @@ import com.cgl.userservice.data.entities.User;
 import com.cgl.userservice.data.repositories.UserRepository;
 import com.cgl.userservice.services.UserEventPublisher;
 import com.cgl.userservice.services.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -62,5 +63,6 @@ public class UserServiceImpl implements UserService {
         userEventPublisher.sendDeleteEvent(user.getId());
         return user;
     }
+
 
 }

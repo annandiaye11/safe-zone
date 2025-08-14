@@ -1,14 +1,15 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {User} from '../../../entity/User';
+import {Role} from '../../../entity/Role';
 
 @Component({
-  selector: 'app-profile',
+    selector: 'app-profile',
     imports: [
         FormsModule
     ],
-  templateUrl: './profile.html',
-  styleUrl: './profile.scss'
+    templateUrl: './profile.html',
+    styleUrl: './profile.scss'
 })
 export class Profile {
     user: User = {
@@ -16,16 +17,16 @@ export class Profile {
         name: 'Marie Dubois',
         email: 'marie.dubois@email.com',
         password: '',
-        role: 'seller',
+        role: Role.SELLER,
         avatar: '/assets/podium.jpg'
     };
 
     isEditing = false;
-    formData: User = { ...this.user };
+    formData: User = {...this.user};
 
 
     goBack() {
-       // this.location.origin();
+        // this.location.origin();
     }
 
     editProfile() {
@@ -33,12 +34,12 @@ export class Profile {
     }
 
     cancelEdit() {
-        this.formData = { ...this.user };
+        this.formData = {...this.user};
         this.isEditing = false;
     }
 
     saveProfile() {
-        this.user = { ...this.formData };
+        this.user = {...this.formData};
         this.isEditing = false;
         console.log('Profil sauvegardé', this.user);
         // Ajoute ici la logique d'API

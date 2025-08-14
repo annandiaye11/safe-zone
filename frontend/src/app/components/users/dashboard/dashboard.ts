@@ -1,16 +1,16 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {DecimalPipe} from '@angular/common';
 import {Product} from '../../../entity/Product';
 import {FormsModule} from '@angular/forms';
 
 @Component({
-  selector: 'app-dashboard',
+    selector: 'app-dashboard',
     imports: [
         DecimalPipe,
         FormsModule
     ],
-  templateUrl: './dashboard.html',
-  styleUrl: './dashboard.scss'
+    templateUrl: './dashboard.html',
+    styleUrl: './dashboard.scss'
 })
 export class Dashboard {
     products: Product[] = [
@@ -44,13 +44,13 @@ export class Dashboard {
 
     openAddForm() {
         this.editingProduct = null;
-        this.formData = { name: '', description: '', price: 0, quantity: 0 };
+        this.formData = {name: '', description: '', price: 0, quantity: 0};
         this.isFormOpen = true;
     }
 
     openEditForm(product: Product) {
         this.editingProduct = product;
-        this.formData = { ...product };
+        this.formData = {...product};
         this.isFormOpen = true;
     }
 

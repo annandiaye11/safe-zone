@@ -1,8 +1,10 @@
+import {Role} from './Role';
+
 export class User {
     id!: string
     name!: string
     email!: string
     password!: string
-    role!: string
+    role!: Role
     avatar!: string
 }

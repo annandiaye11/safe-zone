@@ -180,6 +180,11 @@ body {
     }
 }
 
+.error-message {
+    color: red;
+    font-size: .5rem;
+}
+
 @media screen and (max-width: 800px) {
     .container.form {
         padding: 20px;
@@ -268,6 +273,7 @@ header.header {
         display: flex;
         align-items: center;
         gap: 1rem;
+
         .icon-btn {
             background: none;
             border: none;
@@ -289,7 +295,6 @@ header.header {
         }
     }
 }
-
 
 
 footer {
@@ -328,11 +333,12 @@ footer {
     }
 }
 
-app-header{
+app-header {
     position: sticky;
     top: 0;
     z-index: 1;
 }
+
 app-footer {
     position: sticky;
     bottom: 0;

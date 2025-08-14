@@ -39,6 +39,8 @@ public class AuthControllerImpl implements AuthController {
         System.out.println("\n*****************START login");
         User checkUser = userService.getByEmail(userLoginDTO.getEmail());
 
+        System.out.println("checkUser: " + checkUser);
+
         if (checkUser == null) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Incorrect email");
         }

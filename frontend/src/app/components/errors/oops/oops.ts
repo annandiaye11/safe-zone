@@ -1,10 +1,10 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 
 @Component({
-  selector: 'app-oops',
-  imports: [],
-  templateUrl: './oops.html',
-  styleUrl: './oops.scss'
+    selector: 'app-oops',
+    imports: [],
+    templateUrl: './oops.html',
+    styleUrl: './oops.scss'
 })
 export class Oops {
 

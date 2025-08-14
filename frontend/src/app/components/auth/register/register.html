@@ -1,5 +1,5 @@
 <div class="container form">
-    <form class="auth" autocomplete="off">
+    <form autocomplete="off" class="auth" enctype="multipart/form-data" [formGroup]="registerFormData" (ngSubmit)="onSubmit()">
         <div class="form-header">
             <h1>Register</h1>
             <p>Create a new account to get started.</p>
@@ -7,37 +7,48 @@
 
         <div class="form-group">
             <label for="name">Name</label>
-            <input type="text" id="name" name="name" placeholder="John DOE">
+            <input id="name" name="name" placeholder="John DOE" type="text" formControlName="name">
+            @if (registerFormData.get('name')?.invalid && registerFormData.get('name')?.touched) {
+                <p class="error-message">Please enter a valid name.</p>
+            }
         </div>
 
         <div class="form-group">
             <label for="email">Email</label>
-            <input type="email" id="email" name="email" placeholder="johndoe@domain.com">
+            <input id="email" name="email" placeholder="johndoe@domain.com" type="email" formControlName="email">
+            @if (registerFormData.get('email')?.invalid && registerFormData.get('email')?.touched) {
+                <p class="error-message">Please enter a valid email address.</p>
+            }
         </div>
 
         <div class="form-group">
             <label for="password">Password</label>
-            <input type="password" id="password" name="password" placeholder="*********">
+            <input id="password" name="password" placeholder="*********" type="password" formControlName="password">
+            @if (registerFormData.get('password')?.invalid && registerFormData.get('password')?.touched) {
+                <p class="error-message">Please enter a valid password.</p>
+            }
         </div>
 
         <div class="form-group">
             <label for="role">Are you?</label>
-            <select id="role" name="role">
+            <select id="role" name="role" formControlName="role">
                 <option value="client" selected>Client</option>
                 <option value="seller">Seller</option>
             </select>
         </div>
 
-        <div class="form-avatar">
-            <label for="avatar">
-                <span>Upload Avatar</span>
-                <input type="file" id="avatar" name="avatar" accept="image/*">
-            </label>
-            <p>Avatar link</p>
-        </div>
+        @if (registerFormData.get('role')?.valid && registerFormData.get('role')?.value === 'seller') {
+            <div class="form-avatar">
+                <label for="avatar">
+                    <span>Upload Avatar</span>
+                    <input accept="image/*" id="avatar" name="avatar" type="file" formControlName="avatar">
+                </label>
+                <p>Avatar link</p>
+            </div>
+        }
 
         <div class="form-group">
-            <button type="submit">Register</button>
+            <button type="submit" [disabled]="registerFormData.invalid">Register</button>
         </div>
 
         <div class="form-footer">

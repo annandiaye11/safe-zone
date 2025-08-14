@@ -7,7 +7,7 @@
                 <p class="subtitle">Gérez vos produits et vos ventes</p>
             </div>
             <!-- Bouton ajout produit -->
-            <button class="add-button" (click)="openAddForm()">
+            <button (click)="openAddForm()" class="add-button">
                 <span class="plus">+</span> Ajouter un produit
             </button>
         </div>
@@ -19,7 +19,7 @@
             @for (product of products; track product) {
                 <div class="product-card">
                     <div class="image-container">
-                        <img [src]="'/assets/podium.jpg'" [alt]="product.name" />
+                        <img [src]="'/assets/podium.jpg'" [alt]="product.name"/>
                         <div class="actions">
                             <button class="action-btn" (click)="openEditForm(product)">✏️</button>
                             <button class="action-btn" (click)="deleteProduct(product.id)">🗑️</button>
@@ -58,21 +58,21 @@
 
 <!-- Modal Formulaire -->
 @if (isFormOpen) {
-    <div class="modal" >
+    <div class="modal">
         <div class="modal-content">
             <h2>{{ editingProduct ? 'Modifier le produit' : 'Ajouter un produit' }}</h2>
-            <form  >
+            <form>
                 <label>Nom du produit</label>
-                <input type="text" [(ngModel)]="formData.name" name="name" required />
+                <input type="text" [(ngModel)]="formData.name" name="name" required/>
 
                 <label>Description</label>
                 <textarea [(ngModel)]="formData.description" name="description" required></textarea>
 
                 <label>Prix</label>
-                <input type="number" [(ngModel)]="formData.price" name="price" required />
+                <input type="number" [(ngModel)]="formData.price" name="price" required/>
 
                 <label>Quantité</label>
-                <input type="number" [(ngModel)]="formData.quantity" name="quantity" required />
+                <input type="number" [(ngModel)]="formData.quantity" name="quantity" required/>
 
                 <div class="modal-actions">
                     <button type="submit" class="save-btn">

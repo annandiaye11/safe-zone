@@ -5,16 +5,16 @@
             <div class="card-header">
                 <div class="avatar-container">
                     @if (isEditing ? formData.avatar : user.avatar) {
-                        <img [src]="isEditing ? formData.avatar : user.avatar" class="avatar-img" />
+                        <img [src]="isEditing ? formData.avatar : user.avatar" class="avatar-img"/>
                     }
-                    @if (!(isEditing ? formData.avatar : user.avatar)){
+                    @if (!(isEditing ? formData.avatar : user.avatar)) {
                         <div class="avatar-fallback">👤</div>
                     }
 
-                    @if (isEditing){
+                    @if (isEditing) {
                         <label class="avatar-upload">
                             📷
-                            <input type="file" accept="image/*" (change)="handleAvatarChange($event)" hidden />
+                            <input type="file" accept="image/*" (change)="handleAvatarChange($event)" hidden/>
                         </label>
                     }
 
@@ -26,17 +26,18 @@
             <div class="card-content">
                 <!-- Nom -->
                 <label>Nom complet</label>
-                <input [(ngModel)]="formData.name" [disabled]="!isEditing" />
+                <input [(ngModel)]="formData.name" [disabled]="!isEditing"/>
 
                 <!-- Email -->
                 <label>Email</label>
-                <input type="email" [(ngModel)]="formData.email" [disabled]="!isEditing" />
+                <input [(ngModel)]="formData.email" [disabled]="!isEditing" type="email"/>
 
                 <!-- Mot de passe -->
-                @if (isEditing){
-                    <div >
+                @if (isEditing) {
+                    <div>
                         <label>Nouveau mot de passe (optionnel)</label>
-                        <input type="password" [(ngModel)]="formData.password" placeholder="Laisser vide pour ne pas changer" />
+                        <input type="password" [(ngModel)]="formData.password"
+                               placeholder="Laisser vide pour ne pas changer"/>
                     </div>
                 }
                 <!-- Rôle -->
@@ -51,8 +52,8 @@
                     @if (!isEditing) {
                         <button class="btn-primary" (click)="editProfile()">Modifier le profil</button>
                     }
-                    @if (isEditing){
-                        <ng-container >
+                    @if (isEditing) {
+                        <ng-container>
                             <button class="btn-outline" (click)="cancelEdit()">Annuler</button>
                             <button class="btn-save" (click)="saveProfile()">💾 Sauvegarder</button>
                         </ng-container>

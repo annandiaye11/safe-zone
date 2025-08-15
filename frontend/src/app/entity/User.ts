@@ -8,3 +8,4 @@ export class User {
     role!: Role
     avatar!: string
 }
+

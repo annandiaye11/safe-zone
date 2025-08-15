@@ -1,7 +1,7 @@
 import {Media} from './Media';
 
 export class Product {
-    id!: string
+    id: string | null = null;
     name!: string
     description!: string
     price!: number

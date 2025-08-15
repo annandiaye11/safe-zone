@@ -1,5 +1,5 @@
 export class Media {
-    id!: string;
+    id: string | null = null;
     imagePath!: string;
     productId!: string;
 }

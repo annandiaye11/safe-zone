@@ -1,32 +1,56 @@
 import {FormsModule} from "@angular/forms";
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Product} from '../../../entity/Product';
+import {User} from '../../../entity/User';
+import {UserService} from '../../../services/user.service';
+import {NgStyle} from '@angular/common';
+import {Media} from '../../../entity/Media';
 
 @Component({
     selector: 'app-add',
     templateUrl: './add.html',
     imports: [
-        FormsModule
+        FormsModule,
+        NgStyle
     ],
     styleUrls: ['./add.scss']
 })
 export class Add implements OnInit {
 
-    @Input() formData = {
+    @Input() formData: {
+        id: string | null;
+        name: string;
+        description: string;
+        price: number;
+        quantity: number;
+    } = {
+        id: null,
         name: '',
         description: '',
         price: 0,
-        quantity: 0
+        quantity: 0,
     };
 
     @Input() editingProduct: Product | null = null;
     @Input() isFormOpen = true;
+    @Input() media: Media | null = null;
+    @Output() mediaChange = new EventEmitter<Media>();
     @Output() isFormOpenChange = new EventEmitter<boolean>();
     @Output() saveProduct = new EventEmitter<Product>();
-
+    constructor(private userService: UserService) {
+    }
+    user! :any
     ngOnInit(): void {
         console.log('Données reçues du parent :', this.formData);
         console.log('Produit en édition :', this.editingProduct);
+        this.userService.getProfile().subscribe({
+            next: (data: User)=> {
+                this.user = data;
+            },
+            error: (err) => {
+                console.log("erreur lors de la recuperation des infos du user ", err)
+            }
+        },)
     }
 
     closeForm() {
@@ -35,14 +59,15 @@ export class Add implements OnInit {
     }
 
     onSubmit() {
+        console.log('product à enregitré', this.editingProduct);
         if (this.validateForm()) {
             const productData: Product = {
-                id: this.editingProduct?.id || this.generateId(),
+                id: this.editingProduct?.id ?? null,
                 name: this.formData.name,
                 description: this.formData.description,
                 price: this.formData.price,
                 quantity: this.formData.quantity,
-                userId: 'seller1' // Mock user ID
+                userId: this.user.id
             };
 
             console.log('Sauvegarde du produit :', productData);
@@ -71,8 +96,63 @@ export class Add implements OnInit {
         return true;
     }
 
-    private generateId(): string {
-        return Date.now().toString() + Math.random().toString(36).substr(2, 9);
+    selectedFiles: File[] = [];
+    filePreviewUrls: string[] = [];
+
+    // Gestion de la sélection de fichiers
+    onFileSelect(event: any) {
+        const files = Array.from(event.target.files) as File[];
+
+        // Limite à 5 fichiers max
+        const maxFiles = 5;
+        const remainingSlots = maxFiles - this.selectedFiles.length;
+        const filesToAdd = files.slice(0, remainingSlots);
+
+        // Validation des types d'images
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+        const validFiles = filesToAdd.filter(file => {
+            if (!allowedTypes.includes(file.type)) {
+                alert(`${file.name} n'est pas un type d'image valide`);
+                return false;
+            }
+            if (file.size > 5 * 1024 * 1024) { // 5MB max
+                alert(`${file.name} est trop volumineux (max 5MB)`);
+                return false;
+            }
+            return true;
+        });
+
+        this.selectedFiles = [...this.selectedFiles, ...validFiles];
+        const updatedMedia = {
+            id: null,
+            imagePath: this.selectedFiles[0].name,
+            productId: ''
+        };
+
+        this.media = updatedMedia;
+        console.log("media", this.media)
+        this.mediaChange.emit(updatedMedia);
+        // Reset input pour permettre de sélectionner le même fichier
+        event.target.value = '';
+    }
+
+    // Supprimer un fichier
+    removeFile(index: number) {
+        this.selectedFiles.splice(index, 1);
+    }
+
+    // Générer aperçu du fichier
+    getFilePreview(file: File): string {
+        return URL.createObjectURL(file);
+    }
+
+    // Formater la taille du fichier
+    formatFileSize(bytes: number): string {
+        if (bytes === 0) return '0 B';
+        const k = 1024;
+        const sizes = ['B', 'KB', 'MB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
     }
 
     get isEditing(): boolean {

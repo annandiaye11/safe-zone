@@ -12,10 +12,10 @@
                 <div class="card-header">
                     <div class="avatar-section">
                         <div class="avatar-container">
-                            @if (isEditing ? formData.avatar : user.avatar) {
-                                <img [src]="isEditing ? formData.avatar : user.avatar" class="avatar-img" />
+                            @if (isEditing ? formData.avatar : "") {
+                                <img [src]="isEditing ? formData.avatar : null " class="avatar-img" />
                             }
-                            @if (!(isEditing ? formData.avatar : user.avatar)){
+                            @if (!(isEditing ? formData.avatar : null )){
                                 <div class="avatar-fallback">👤</div>
                             }
 
@@ -67,23 +67,25 @@
 
                         <div class="form-group">
                             <label>Rôle</label>
-                            <select [(ngModel)]="formData.role" [disabled]="!isEditing">
-                                <option value="buyer">Acheteur</option>
-                                <option value="seller">Vendeur</option>
-                            </select>
+                            <input
+                                type="text"
+                                [(ngModel)]="formData.role"
+                                [disabled]="true"
+                                placeholder="votre@email.com"
+                            />
                         </div>
 
-                        @if (isEditing){
-                            <div class="form-group">
-                                <label>Nouveau mot de passe (optionnel)</label>
-                                <input
-                                    type="password"
-                                    [(ngModel)]="formData.password"
-                                    placeholder="Laisser vide pour ne pas changer"
-                                />
-                                <small class="form-hint">Laissez vide si vous ne souhaitez pas changer votre mot de passe</small>
-                            </div>
-                        }
+<!--                        @if (isEditing){-->
+<!--                            <div class="form-group">-->
+<!--                                <label>Nouveau mot de passe (optionnel)</label>-->
+<!--                                <input-->
+<!--                                    type="password"-->
+<!--                                    [(ngModel)]="formData.password"-->
+<!--                                    placeholder="Laisser vide pour ne pas changer"-->
+<!--                                />-->
+<!--                                <small class="form-hint">Laissez vide si vous ne souhaitez pas changer votre mot de passe</small>-->
+<!--                            </div>-->
+<!--                        }-->
                     </div>
 
                     <!-- Actions -->

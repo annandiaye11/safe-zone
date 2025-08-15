@@ -49,12 +49,6 @@
                     <div class="image-container">
                         <img [src]="'/assets/podium.jpg'" [alt]="product.name" />
                         <div class="actions-overlay">
-                            <button class="action-btn edit" (click)="openEditForm(product)" title="Modifier">
-                                ✏️
-                            </button>
-                            <button class="action-btn delete" (click)="deleteProduct(product.id)" title="Supprimer">
-                                🗑️
-                            </button>
                         </div>
 
                         @if (product.quantity === 0) {
@@ -100,7 +94,7 @@
                                 <button class="btn-secondary" (click)="openEditForm(product)">
                                     Modifier
                                 </button>
-                                <button class="btn-danger" (click)="deleteProduct(product.id)">
+                                <button class="btn-danger" (click)="deleteProduct(product.id!)" title="Supprimer">
                                     Supprimer
                                 </button>
                             </div>
@@ -130,5 +124,7 @@
         [editingProduct]="editingProduct"
         [(isFormOpen)]="isFormOpen"
         (saveProduct)="handleSaveProduct($event)">
+        [(media)] = "media"
+        (mediaChange)="onMediaChange($event)">
     </app-add>
 }

@@ -33,14 +33,15 @@ export class Login {
             email: this.loginFormData.value.email as string,
             password: this.loginFormData.value.password as string,
         }
-
         if (!data) return
-
-        this.authService.login(data)?.subscribe((response: any) => {
-            this.authService.saveToken(response.token)
-            this.isAuthenticated.emit(this.authService.isAuthenticated());
-        }, (error) => {
-            console.log(error)
+        this.authService.login(data)?.subscribe({
+            next: (response: any) => {
+                this.authService.saveToken(response.token)
+                this.isAuthenticated.emit(this.authService.isAuthenticated());
+            },
+            error: (error) => {
+                console.log(error)
+            }
         })
     }
 }

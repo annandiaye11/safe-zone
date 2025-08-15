@@ -1,10 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {NgClass} from '@angular/common';
-import {RouterLink} from '@angular/router';
 import {User} from '../../../entity/User';
 import {Role} from '../../../entity/Role';
 import {UserService} from '../../../services/user.service';
+import {routes} from '../../../app.routes';
+import {Router} from '@angular/router';
 
 @Component({
     selector: 'app-profile',
@@ -20,19 +21,41 @@ export class Profile implements OnInit {
     user!: any
 
     constructor(
-        private userService: UserService
+        private userService: UserService,
+        private router: Router
     ) {
-        this.user = this.userService.getProfile()
+
+    }
+    formData : User = {
+        id: '',
+        name: '',
+        email: '',
+        password: '',
+        role: Role.CLIENT,
+        avatar: '',
     }
 
     ngOnInit() {
-        console.log(this.user)
+         this.userService.getProfile().subscribe({
+            next: (data: User)=> {
+               this.user = data;
+               this.user.role = this.userService.getRole(this.user.role)
+                console.log("user", this.user)
+                this.formData = {...this.user};
+               this.formData.password = "ftkkeit"
+             },
+            error: (err) => {
+                console.log("erreur ", err)
+            }
+        },)
     }
 
-    getUserProfile(id: string) {}
+    getUserProfile() {
+
+    }
 
     isEditing = false;
-    formData: User = {...this.user};
+
 
 
     goBack() {
@@ -50,9 +73,19 @@ export class Profile implements OnInit {
 
     saveProfile() {
         this.user = {...this.formData};
-        this.isEditing = false;
-        console.log('Profil sauvegardé', this.user);
-        // Ajoute ici la logique d'API
+       this.userService.updateProfile(this.user).subscribe({
+           next: (data: any) => {
+               this.user = data.user;
+               this.user.role = this.userService.getRole(this.user.role)
+                console.log("user updated", this.user);
+                this.user.password = "ftkkeit"
+                this.cancelEdit();
+           },
+           error: (err) => {
+               console.log("erreur ", err)
+           }
+       })
+
     }
 
     handleAvatarChange(event: any) {

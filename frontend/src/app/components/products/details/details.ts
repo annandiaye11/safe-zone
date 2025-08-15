@@ -3,6 +3,7 @@ import {Product} from '../../../entity/Product';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {FormsModule} from '@angular/forms';
 import {DecimalPipe, NgClass} from '@angular/common';
+import {ProductService} from '../../../services/product.service';
 
 @Component({
     selector: 'app-details',
@@ -20,7 +21,7 @@ export class Details implements OnInit {
     isEditing = false;
     editForm: Product | null = null;
     currentUserId = 'user1'; // Mock user
-    quantity: number = 1; // Quantité sélectionnée pour l'achat
+    quantity: number = 1;
 
     mockProducts: Product[] = [
         {
@@ -41,20 +42,24 @@ export class Details implements OnInit {
         }
     ];
 
-    constructor(private route: ActivatedRoute, private router: Router) {
+    constructor(private route: ActivatedRoute, private router: Router, private productService: ProductService) {
     }
 
     get canEdit(): boolean {
         return this.product?.userId === this.currentUserId;
     }
-
     ngOnInit() {
         const id = this.route.snapshot.paramMap.get('id');
-        const found = this.mockProducts.find(p => p.id === id);
-        if (found) {
-            this.product = {...found};
-            this.editForm = {...found};
-        }
+        this.productService.getProductById(id!).subscribe({
+            next: (data: Product) => {
+                this.product = data;
+                this.editForm = {...this.product};
+            },
+            error: (err) => {
+                console.error('Erreur lors de la récupération du produit', err);
+            }
+        })
+
     }
 
     enableEdit() {

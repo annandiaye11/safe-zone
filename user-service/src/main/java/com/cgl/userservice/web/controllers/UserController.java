@@ -2,6 +2,7 @@ package com.cgl.userservice.web.controllers;
 
 import com.cgl.userservice.web.dto.RequestDto;
 import com.cgl.userservice.web.dto.UserDto;
+import com.cgl.userservice.web.dto.UserOneResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -28,4 +29,6 @@ public interface UserController {
     @DeleteMapping("/{id}")
     ResponseEntity<Map<String, Object>> deleteUser(@PathVariable String id);
 
+    @GetMapping("/me")
+    ResponseEntity<UserOneResponse> getCurrentUser();
 }

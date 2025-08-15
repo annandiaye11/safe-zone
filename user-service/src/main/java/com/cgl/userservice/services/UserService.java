@@ -12,4 +12,5 @@ public interface UserService {
     User create(User user);
     User update(User user);
     User delete(User user);
+    User getCurrentUser();
 }

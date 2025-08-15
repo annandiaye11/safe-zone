@@ -1,9 +1,10 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {NgClass} from '@angular/common';
 import {RouterLink} from '@angular/router';
 import {User} from '../../../entity/User';
 import {Role} from '../../../entity/Role';
+import {UserService} from '../../../services/user.service';
 
 @Component({
     selector: 'app-profile',
@@ -14,15 +15,21 @@ import {Role} from '../../../entity/Role';
     templateUrl: './profile.html',
     styleUrl: './profile.scss'
 })
-export class Profile {
-    user: User = {
-        id: '1',
-        name: 'Marie Dubois',
-        email: 'marie.dubois@email.com',
-        password: '',
-        role: Role.SELLER,
-        avatar: '/assets/podium.jpg'
-    };
+export class Profile implements OnInit {
+
+    user!: any
+
+    constructor(
+        private userService: UserService
+    ) {
+        this.user = this.userService.getProfile()
+    }
+
+    ngOnInit() {
+        console.log(this.user)
+    }
+
+    getUserProfile(id: string) {}
 
     isEditing = false;
     formData: User = {...this.user};

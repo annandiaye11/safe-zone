@@ -4,10 +4,13 @@ import com.cgl.userservice.data.entities.User;
 import com.cgl.userservice.services.UserService;
 import com.cgl.userservice.utils.mapper.MapperUser;
 import com.cgl.userservice.web.controllers.UserController;
-import com.cgl.userservice.web.dto.RequestDto;
 import com.cgl.userservice.web.dto.UserDto;
 import com.cgl.userservice.web.dto.UserOneResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,13 +19,11 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
+@RequiredArgsConstructor
 public class UserControllerImpl implements UserController {
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
-    public UserControllerImpl(UserService userService, PasswordEncoder passwordEncoder) {
-        this.userService = userService;
-        this.passwordEncoder = passwordEncoder;
-    }
+
     @Override
     public ResponseEntity<Map<String, Object>> getAllUsers() {
         List<User> users = userService.getAllUsers();
@@ -82,5 +83,26 @@ public class UserControllerImpl implements UserController {
         response.put("message", "User deleted");
         response.put("user", MapperUser.toDto(user));
         return ResponseEntity.status(200).body(response);
+    }
+
+    @Override
+    public ResponseEntity<UserOneResponse> getCurrentUser() {
+
+        User me = userService.getCurrentUser();
+
+        System.out.println("me: " + me);
+
+        if (me == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+//        Map<String, Object> resp = new HashMap<>();
+//        resp.put("id", me.getId());
+//        resp.put("name", me.getName());
+//        resp.put("email", me.getEmail());
+//        resp.put("avatar", me.getAvatar());
+//        resp.put("role", me.getRole().name());
+
+        return ResponseEntity.status(200).body(MapperUser.toDto(me));
     }
 }

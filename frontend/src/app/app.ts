@@ -1,15 +1,20 @@
 import {Component} from '@angular/core';
-import {RouterOutlet} from '@angular/router';
-import {Header} from './components/layouts/header/header';
-import {Footer} from './components/layouts/footer/footer';
+import {Router, RouterOutlet} from '@angular/router';
 import {Sidebar} from './components/layouts/sidebar/sidebar';
 
 @Component({
   selector: 'app-root',
-    imports: [RouterOutlet, Header, Sidebar],
+    imports: [RouterOutlet, Sidebar],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
 export class App {
     protected title = 'frontend';
+    constructor(private router: Router) {
+    }
+
+     hideNavbar(): boolean {
+        const hisNav = ['/login', '/register'];
+        return hisNav.includes(this.router.url);
+    }
 }

@@ -29,11 +29,22 @@
         </a>
     </nav>
 
+
     <!-- Bouton Logout -->
     <div class="sidebar-footer">
-        <button class="logout-btn" (click)="onLogout()">
-            <span>🚪</span>
-            Déconnexion
-        </button>
+        @if (!isAuthenticated) {
+            <a routerLink="/login" class="nav-link" >
+                <span>🚪</span>
+                Connexion
+            </a>
+        }
+
+        @if (isAuthenticated) {
+            <button class="logout-btn" (click)="onLogout()">
+                <span>🚪</span>
+                Déconnexion
+            </button>
+        }
     </div>
+
 </aside>

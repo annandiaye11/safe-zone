@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {RouterLink} from "@angular/router";
+import {Router, RouterLink} from "@angular/router";
 import {AuthService} from '../../../services/auth.service';
 
 @Component({
@@ -14,7 +14,8 @@ export class Sidebar implements OnInit {
     isAuthenticated: boolean = false;
 
     constructor(
-        private authService: AuthService
+        private authService: AuthService,
+        private router: Router
     ) {
         this.isAuthenticated = this.authService.isAuthenticated();
     }
@@ -26,4 +27,8 @@ export class Sidebar implements OnInit {
     ngOnInit() {
         this.isAuthenticated = this.authService.isAuthenticated()
     }
+
+    // goHome() {
+    //     this.router.navigate(['/']).then()
+    // }
 }

@@ -6,6 +6,8 @@ import {Details} from './components/products/details/details';
 import {Oops} from './components/errors/oops/oops';
 import {Dashboard} from './components/users/dashboard/dashboard';
 import {Profile} from './components/users/profile/profile';
+import {AuthGuard} from './guards/auth.guard';
+import {AuthorizationGuard} from './guards/authorization.guard';
 
 export const routes: Routes = [
     {
@@ -16,17 +18,20 @@ export const routes: Routes = [
     {
         path: 'login',
         component: Login,
-        title: "Sign In"
+        title: "Sign In",
+        canActivate: [AuthGuard]
     },
     {
         path: 'register',
         component: Register,
-        title: "Sign Up"
+        title: "Sign Up",
+        canActivate: [AuthGuard]
     },
     {
         path: 'dashboard',
         component: Dashboard,
-        title: "Dashboard"
+        title: "Dashboard",
+        canActivate: [AuthorizationGuard]
     },
     {
         path: 'details/:id',
@@ -35,6 +40,7 @@ export const routes: Routes = [
     {
         path: 'profile',
         component: Profile,
+        canActivate: [AuthorizationGuard]
     },
     {
         // Redirect any other route to the Oops page

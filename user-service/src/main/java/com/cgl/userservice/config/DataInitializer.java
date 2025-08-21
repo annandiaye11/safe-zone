@@ -23,7 +23,9 @@ public class DataInitializer {
         return args -> {
             if (userRepository.count() != 0) {
                 userRepository.deleteAll();
-            } else {
+            }
+
+            if (userRepository.count() == 0) {
                 log.info("Initializing data");
 
                 User seller = User.builder()
@@ -42,6 +44,14 @@ public class DataInitializer {
                         .role(Role.CLIENT)
                         .build();
                 userRepository.save(client);
+
+                User johndoe = User.builder()
+                        .name("John DOE")
+                        .email("johndoe@user.com")
+                        .password(passwordEncoder.encode("client@1234"))
+                        .role(Role.CLIENT)
+                        .build();
+                userRepository.save(johndoe);
             }
         };
     }

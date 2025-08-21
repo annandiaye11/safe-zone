@@ -17,9 +17,7 @@ public class DataInitializer {
     @Bean
     public CommandLineRunner init() {
         return args -> {
-            if (productRepository.count() !=0){
-                productRepository.deleteAll();
-            } else {
+            if (productRepository.count() == 0) {
                  Product product =  new Product();
                  product.setName("Savon");
                  product.setDescription("Savon pour le corps");

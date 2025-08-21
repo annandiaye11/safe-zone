@@ -34,9 +34,10 @@ export class Add implements OnInit {
     @Input() editingProduct: Product | null = null;
     @Input() isFormOpen = true;
     @Input() media: Media | null = null;
-    @Output() mediaChange = new EventEmitter<Media>();
+    @Output() selectedFilesChange = new EventEmitter<File[]>();
     @Output() isFormOpenChange = new EventEmitter<boolean>();
     @Output() saveProduct = new EventEmitter<Product>();
+    @Input() selectedFiles: File[] | null = [];
     constructor(private userService: UserService) {
     }
     user! :any
@@ -96,7 +97,7 @@ export class Add implements OnInit {
         return true;
     }
 
-    selectedFiles: File[] = [];
+
     filePreviewUrls: string[] = [];
 
     // Gestion de la sélection de fichiers
@@ -105,7 +106,7 @@ export class Add implements OnInit {
 
         // Limite à 5 fichiers max
         const maxFiles = 5;
-        const remainingSlots = maxFiles - this.selectedFiles.length;
+        const remainingSlots = maxFiles - this.selectedFiles!.length;
         const filesToAdd = files.slice(0, remainingSlots);
 
         // Validation des types d'images
@@ -122,23 +123,22 @@ export class Add implements OnInit {
             return true;
         });
 
-        this.selectedFiles = [...this.selectedFiles, ...validFiles];
+        this.selectedFiles = [...this.selectedFiles!, ...validFiles];
         const updatedMedia = {
             id: null,
-            imagePath: this.selectedFiles[0].name,
+            imagePath: this.selectedFiles[0],
             productId: ''
         };
 
         this.media = updatedMedia;
-        console.log("media", this.media)
-        this.mediaChange.emit(updatedMedia);
-        // Reset input pour permettre de sélectionner le même fichier
+        console.log('Émission depuis enfant :', updatedMedia);
+        this.selectedFilesChange.emit(this.selectedFiles);
         event.target.value = '';
     }
 
     // Supprimer un fichier
     removeFile(index: number) {
-        this.selectedFiles.splice(index, 1);
+       // this.selectedFiles.splice(index, 1);
     }
 
     // Générer aperçu du fichier

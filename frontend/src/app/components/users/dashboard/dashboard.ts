@@ -5,6 +5,7 @@ import {FormsModule} from '@angular/forms';
 import {Add} from '../../products/add/add';
 import {ProductService} from '../../../services/product.service';
 import {Media} from '../../../entity/Media';
+import {MediaService} from '../../../services/media.service';
 
 @Component({
     selector: 'app-dashboard',
@@ -19,12 +20,13 @@ import {Media} from '../../../entity/Media';
 })
 export class Dashboard implements OnInit{
 
-    constructor(private productService: ProductService) {}
+    constructor(private productService: ProductService, private mediaService: MediaService) {}
     products: Product[] = [
     ];
     isFormOpen = false;
     editingProduct: Product | null = null;
     media: Media | null = null;
+    selectedFiles: File[]  | null = [];
     formData: {
         id: string | null;
         name: string;
@@ -55,9 +57,10 @@ export class Dashboard implements OnInit{
         this.formData = {id: null ,name: '', description: '', price: 0, quantity: 0};
         this.isFormOpen = true;
     }
-    onMediaChange(updatedMedia: Media) {
-        console.log("📥 Reçu de l'enfant:", updatedMedia);
-        this.media = updatedMedia; // Met à jour la valeur du parent
+
+    onMediaFile(files: File[]) {
+        console.log('Images', files);
+
     }
     openEditForm(product: Product) {
         console.log("produit a edit", product)
@@ -83,10 +86,6 @@ export class Dashboard implements OnInit{
         })
 
     }
-    // saveMedia(media: Media) {
-    //     this.media = media;
-    // }
-
 
     handleSaveProduct(product: Product) {
         if (this.editingProduct) {
@@ -104,6 +103,16 @@ export class Dashboard implements OnInit{
                 next: (data: any)=> {
                     console.log("data", data)
                     this.products.push(data);
+                    if (this.selectedFiles) {
+                        this.mediaService.saveMedia(this.selectedFiles, data.id).subscribe({
+                            next: (data: any)=> {
+                                console.log("Media enregistre", data)
+                            },
+                            error: (err) => {
+                                console.log("erreur lors de l'enregistrement du media", err)
+                            }
+                        })
+                    }
                 },
                 error: (err) => {
                     console.log("erreur lors de l'enregistrement du produit", err)

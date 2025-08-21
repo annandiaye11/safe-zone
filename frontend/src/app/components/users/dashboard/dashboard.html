@@ -123,8 +123,8 @@
         [formData]="formData"
         [editingProduct]="editingProduct"
         [(isFormOpen)]="isFormOpen"
-        (saveProduct)="handleSaveProduct($event)">
-        [(media)] = "media"
-        (mediaChange)="onMediaChange($event)">
+        (saveProduct)="handleSaveProduct($event)"
+        [(selectedFiles)] = "selectedFiles"
+        (selectedFilesChange)="onMediaFile($event)">
     </app-add>
 }

@@ -68,7 +68,8 @@ export class Add implements OnInit {
                 description: this.formData.description,
                 price: this.formData.price,
                 quantity: this.formData.quantity,
-                userId: this.user.id
+                userId: this.user.id,
+                images: null
             };
 
             console.log('Sauvegarde du produit :', productData);

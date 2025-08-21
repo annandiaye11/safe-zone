@@ -26,8 +26,15 @@
 
                             <!-- image actuelle -->
                             <div class="product-image">
-                                <img [src]="product.images![currentIndexes[product.id!]]"
-                                     alt="{{ product.name }}" />
+                                <img
+                                    [src]="
+                                      product.images && product.images.length > 0
+                                        ? product.images[currentIndexes[product.id!] || 0].imagePath
+                                        : 'assets/podium.jpg'
+                                    "
+                                    alt="{{ product.name }}"
+                                />
+
                             </div>
 
                             <!-- flèche droite -->

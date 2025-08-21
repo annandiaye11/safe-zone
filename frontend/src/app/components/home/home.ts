@@ -24,12 +24,21 @@ export class Home implements OnInit {
         this.productService.getAllProducts().subscribe({
             next: (data: Product[]) => {
                 this.products = data;
-                console.log('Produits:', data);
-                // this.mediaService.
+                this.products.forEach(product => {
+                    this.mediaService.getMediaByProduitId(product.id!).subscribe({
+                        next: (data: any) => {
+                            console.log(`Media for produit ${product.name}`, data)
+                            product.images = data.media;
+                            console.log('Produit:', product);
+                        },
+                        error: (err) => {
+                            console.log("erreur lors de la recuperation des media")
+                        }
+                    })
+                })
                 this.products.forEach(p => {
                     if (p.id !== null) {
-                        this.currentIndexes[p.id] = 0;
-                    }
+                        this.currentIndexes[p.id] = 0;                    }
                 });
 
             },
@@ -47,7 +56,7 @@ export class Home implements OnInit {
         if (!product) return;
 
         if (this.currentIndexes[productId] === 0) {
-           // this.currentIndexes[productId] = product.images.length - 1;
+           this.currentIndexes[productId] = product.images!.length - 1;
         } else {
             this.currentIndexes[productId]--;
         }
@@ -57,11 +66,11 @@ export class Home implements OnInit {
         const product = this.products.find(p => p.id === productId);
         if (!product) return;
 
-        // if (this.currentIndexes[productId] === product.images.length - 1) {
-        //     this.currentIndexes[productId] = 0;
-        // } else {
-        //     this.currentIndexes[productId]++;
-        // }
+        if (this.currentIndexes[productId] === product.images!.length - 1) {
+            this.currentIndexes[productId] = 0;
+        } else {
+            this.currentIndexes[productId]++;
+        }
     }
 
 

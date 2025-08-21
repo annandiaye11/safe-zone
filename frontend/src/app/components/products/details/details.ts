@@ -30,7 +30,8 @@ export class Details implements OnInit {
             description: 'Un smartphone haut de gamme avec écran OLED...',
             price: 899.99,
             quantity: 15,
-            userId: 'user1'
+            userId: 'user1',
+            images: null,
         },
         {
             id: '2',
@@ -38,7 +39,8 @@ export class Details implements OnInit {
             description: 'Casque audio premium avec réduction de bruit...',
             price: 249.99,
             quantity: 8,
-            userId: 'user2'
+            userId: 'user2',
+            images: null
         }
     ];
 

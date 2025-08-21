@@ -22,16 +22,16 @@
                         <!-- SLIDER -->
                         <div class="product-slider">
                             <!-- flèche gauche -->
-                            <button class="arrow left" (click)="prevImage(product.id)">&#10094;</button>
+                            <button class="arrow left" (click)="prevImage(product.id!)">&#10094;</button>
 
                             <!-- image actuelle -->
                             <div class="product-image">
-                                <img [src]="product.images[currentIndexes[product.id]]"
+                                <img [src]="product.images![currentIndexes[product.id!]]"
                                      alt="{{ product.name }}" />
                             </div>
 
                             <!-- flèche droite -->
-                            <button class="arrow right" (click)="nextImage(product.id)">&#10095;</button>
+                            <button class="arrow right" (click)="nextImage(product.id!)">&#10095;</button>
 
                             <!-- badge stock -->
                             @if (product.quantity === 0) {

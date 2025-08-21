@@ -29,4 +29,12 @@ export class MediaService {
         formData.append("productId", productId);
         return this.http.post<Media>(`${this.apiUrl}`, formData, { headers });
     }
+
+    getMediaByProduitId(productId: string): Observable<Media[]> {
+        this.token = localStorage.getItem('user-token')!;
+        const headers = new HttpHeaders({
+            Authorization: `Bearer ${this.token}`
+        });
+        return this.http.get<Media[]>(`${this.apiUrl}/${productId}`, { headers });
+    }
 }

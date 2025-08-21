@@ -5,6 +5,7 @@ import {NgForOf, NgIf} from '@angular/common';
 import {RouterLink} from '@angular/router';
 import {environment} from '../../../environments/environment.development';
 import {ProductService} from '../../services/product.service';
+import {MediaService} from '../../services/media.service';
 
 @Component({
     selector: 'app-home',
@@ -17,13 +18,14 @@ import {ProductService} from '../../services/product.service';
 })
 export class Home implements OnInit {
     products: Product[] = [];
-    constructor(private productService: ProductService) {}
+    constructor(private productService: ProductService, private mediaService : MediaService) {}
     currentIndexes: { [key: string]: number } = {};
     ngOnInit() {
         this.productService.getAllProducts().subscribe({
             next: (data: Product[]) => {
                 this.products = data;
                 console.log('Produits:', data);
+                // this.mediaService.
                 this.products.forEach(p => {
                     if (p.id !== null) {
                         this.currentIndexes[p.id] = 0;

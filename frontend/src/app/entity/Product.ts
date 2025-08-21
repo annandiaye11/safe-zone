@@ -7,5 +7,5 @@ export class Product {
     price!: number
     quantity!: number
     userId!: string
-    // images!: Media[]
+    images: Media[] | null = null;
 }

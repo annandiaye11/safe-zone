@@ -1,13 +1,10 @@
 <div class="product-detail">
     <div class="container">
-        <!-- Navigation -->
         <nav class="breadcrumb-nav">
             <a routerLink="/" class="breadcrumb-link">🏠 Accueil</a>
             <span class="breadcrumb-separator">/</span>
             <span class="breadcrumb-current">Détails Produit</span>
         </nav>
-
-        <!-- Produit introuvable -->
         @if (!product) {
             <div class="not-found">
                 <div class="not-found-icon">❌</div>
@@ -25,21 +22,22 @@
                         <!-- Image du produit -->
                         <div class="product-image-section">
                             <div class="product-image">
-                                <img
-                                    [src]="'assets/podium.jpg'"
-                                    [alt]="product.name"
-                                />
+                                @if (product.images && product.images.length > 0) {
+                                    @if (currentImage !== null) {
+                                        <img
+                                            [src]="currentImage.imagePath"
+                                         alt="">
+                                    }
+                                } @else {
+                                    <img src="assets/podium.jpg" alt="Vue du produit" />
+                                }
                             </div>
                             <div class="product-gallery">
-                                <div class="gallery-thumb active">
-                                    <img src="assets/podium.jpg" alt="Vue 1" />
-                                </div>
-                                <div class="gallery-thumb">
-                                    <img src="assets/podium.jpg" alt="Vue 2" />
-                                </div>
-                                <div class="gallery-thumb">
-                                    <img src="assets/podium.jpg" alt="Vue 3" />
-                                </div>
+                                @for (productImage of product.images; track productImage.id) {
+                                    <div class="gallery-thumb" (click)="selectImage(productImage!)">
+                                        <img src="{{ productImage.imagePath }}" alt="Vue {{ productImage.id }}" />
+                                    </div>
+                                }
                             </div>
                         </div>
 
@@ -95,58 +93,7 @@
                                     </button>
                                 </div>
                             </div>
-
-                            @if (canEdit) {
-                                <div class="admin-actions">
-                                    <button class="btn-edit" (click)="enableEdit()">
-                                        ✏️ Modifier le produit
-                                    </button>
-                                </div>
-                            }
                         </div>
-                    </div>
-                }
-
-                <!-- Mode édition -->
-                @if (isEditing) {
-                    <div class="edit-mode">
-                        <div class="edit-header">
-                            <h2>Modifier le produit</h2>
-                            <p>Modifiez les informations du produit ci-dessous</p>
-                        </div>
-
-                        <form class="edit-form">
-                            <div class="form-group">
-                                <label>Nom du produit</label>
-                                <input type="text" [(ngModel)]="editForm!.name" name="name" placeholder="Nom du produit">
-                            </div>
-
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label>Prix (fcfa)</label>
-                                    <input type="number" [(ngModel)]="editForm!.price" name="price" placeholder="0.00">
-                                </div>
-                                <div class="form-group">
-                                    <label>Quantité en stock</label>
-                                    <input type="number" [(ngModel)]="editForm!.quantity" name="quantity" placeholder="0">
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label>Description</label>
-                                <textarea [(ngModel)]="editForm!.description" name="description" placeholder="Description du produit" rows="4"></textarea>
-                            </div>
-
-                            <div class="form-group">
-                                <label>Image URL</label>
-                                <input type="url" placeholder="https://..." name="imageUrl">
-                            </div>
-
-                            <div class="form-actions">
-                                <button type="button" class="btn-cancel" (click)="cancel()">Annuler</button>
-                                <button type="button" class="btn-save" (click)="save()">💾 Sauvegarder</button>
-                            </div>
-                        </form>
                     </div>
                 }
             </div>

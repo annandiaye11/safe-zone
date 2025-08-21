@@ -4,6 +4,8 @@ import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {FormsModule} from '@angular/forms';
 import {DecimalPipe, NgClass} from '@angular/common';
 import {ProductService} from '../../../services/product.service';
+import {MediaService} from '../../../services/media.service';
+import {Media} from '../../../entity/Media';
 
 @Component({
     selector: 'app-details',
@@ -20,41 +22,26 @@ export class Details implements OnInit {
     product: Product | null = null;
     isEditing = false;
     editForm: Product | null = null;
-    currentUserId = 'user1'; // Mock user
     quantity: number = 1;
-
-    mockProducts: Product[] = [
-        {
-            id: '1',
-            name: 'Smartphone Premium',
-            description: 'Un smartphone haut de gamme avec écran OLED...',
-            price: 899.99,
-            quantity: 15,
-            userId: 'user1',
-            images: null,
-        },
-        {
-            id: '2',
-            name: 'Casque Audio Sans Fil',
-            description: 'Casque audio premium avec réduction de bruit...',
-            price: 249.99,
-            quantity: 8,
-            userId: 'user2',
-            images: null
-        }
-    ];
-
-    constructor(private route: ActivatedRoute, private router: Router, private productService: ProductService) {
-    }
-
-    get canEdit(): boolean {
-        return this.product?.userId === this.currentUserId;
+    currentImage: Media | null = null;
+    constructor(private route: ActivatedRoute, private router: Router, private productService: ProductService, private mediaService : MediaService) {
     }
     ngOnInit() {
         const id = this.route.snapshot.paramMap.get('id');
         this.productService.getProductById(id!).subscribe({
             next: (data: Product) => {
                 this.product = data;
+                this.mediaService.getMediaByProduitId(this.product.id!).subscribe({
+                    next: (data: any) => {
+                        console.log(`Media for produit ${this.product!.name}`, data)
+                        this.product!.images = data.media;
+                        this.currentImage = data.media[0];
+                        console.log('Produit:', this.product);
+                    },
+                    error: (err) => {
+                        console.log("error lors de la recuperation des media")
+                    }
+                })
                 this.editForm = {...this.product};
             },
             error: (err) => {
@@ -63,22 +50,16 @@ export class Details implements OnInit {
         })
 
     }
-
-    enableEdit() {
-        this.isEditing = true;
+    selectImage(media: Media) {
+        this.currentImage = media;
     }
-
-    save() {
-        if (this.editForm) {
-            this.product = {...this.editForm};
-            this.isEditing = false;
-            console.log('Produit sauvegardé:', this.product);
-        }
+    handleQuantityChange(event: any) {
+        this.quantity = event.target.value;
     }
-
-    cancel() {
-        this.editForm = this.product ? {...this.product} : null;
-        this.isEditing = false;
+    handleEditFormSubmit() {
+        this.product!.quantity = this.quantity;
+        this.productService.saveOrUpdateProduct(this.product!).subscribe({
+            next: (data: any)=> {}
+        })
     }
-
 }

@@ -31,7 +31,7 @@ export class Profile implements OnInit {
         name: '',
         email: '',
         password: '',
-        role: Role.CLIENT,
+        role: Role.ROLE_CLIENT,
         avatar: null,
     }
 

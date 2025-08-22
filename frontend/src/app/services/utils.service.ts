@@ -47,9 +47,12 @@ export class UtilsService {
     }
 
     getToken() {
-        if (!this.isAuthenticated()) return null
+        if (!this.isAuthenticated()) return ""
 
-        return localStorage.getItem('user-token')
+        const token = localStorage.getItem('user-token')
+        if (!token) return ""
+
+        return token
     }
 
     removeToken() {

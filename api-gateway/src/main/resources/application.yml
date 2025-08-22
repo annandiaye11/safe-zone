@@ -67,6 +67,11 @@ management:
         web:
             exposure:
                 include: health,info
+            cors:
+                allowed-headers: "*"
+                allowed-methods: GET,POST,PUT,DELETE,OPTIONS
+                allowed-origins: "http://localhost:4200"
+                allow-credentials: true
 
 server:
     ssl:

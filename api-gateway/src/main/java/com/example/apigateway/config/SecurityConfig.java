@@ -1,56 +1,56 @@
 package com.example.apigateway.config;
 
-import com.example.apigateway.security.WebFilter;
-import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
-import org.springframework.security.config.web.server.ServerHttpSecurity;
-import org.springframework.security.web.server.SecurityWebFilterChain;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.reactive.CorsConfigurationSource;
-import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
-
-import java.util.Arrays;
-import java.util.Collections;
-
-@Configuration
-@EnableWebFluxSecurity
-@RequiredArgsConstructor
+//import com.example.apigateway.security.WebFilter;
+//import lombok.RequiredArgsConstructor;
+//import org.springframework.context.annotation.Bean;
+//import org.springframework.context.annotation.Configuration;
+//import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
+//import org.springframework.security.config.web.server.ServerHttpSecurity;
+//import org.springframework.security.web.server.SecurityWebFilterChain;
+//import org.springframework.web.cors.CorsConfiguration;
+//import org.springframework.web.cors.reactive.CorsConfigurationSource;
+//import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
+//
+//import java.util.Arrays;
+//import java.util.Collections;
+//
+//@Configuration
+//@EnableWebFluxSecurity
+//@RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final WebFilter webFilter;
-
-    @Bean
-    public SecurityWebFilterChain securityFilterChain(ServerHttpSecurity http) throws Exception {
-        return http
-                .csrf(ServerHttpSecurity.CsrfSpec::disable)
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .authorizeExchange(auth -> auth
-                        .pathMatchers(
-                                "/api/v1/auth/**",
-                                "/api/v1/products",
-                                "/api/v1/products/**"
-                        ).permitAll()
-                        .anyExchange().authenticated()
-                )
-                .httpBasic(ServerHttpSecurity.HttpBasicSpec::disable)
-                .formLogin(ServerHttpSecurity.FormLoginSpec::disable)
-                .build();
-    }
-
-    private CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Collections.singletonList("http://localhost:4200"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Requested-With"));
-        configuration.setExposedHeaders(Collections.singletonList("Authorization"));
-        configuration.setAllowCredentials(true);
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-
-        return source;
-    }
+//    private final WebFilter webFilter;
+//
+//    @Bean
+//    public SecurityWebFilterChain securityFilterChain(ServerHttpSecurity http) throws Exception {
+//        return http
+//                .csrf(ServerHttpSecurity.CsrfSpec::disable)
+//                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+//                .authorizeExchange(auth -> auth
+//                        .pathMatchers(
+//                                "/api/v1/auth/**",
+//                                "/api/v1/products",
+//                                "/api/v1/products/**"
+//                        ).permitAll()
+//                        .anyExchange().authenticated()
+//                )
+//                .httpBasic(ServerHttpSecurity.HttpBasicSpec::disable)
+//                .formLogin(ServerHttpSecurity.FormLoginSpec::disable)
+//                .build();
+//    }
+//
+//    private CorsConfigurationSource corsConfigurationSource() {
+//        CorsConfiguration configuration = new CorsConfiguration();
+//        configuration.setAllowedOrigins(Collections.singletonList("http://localhost:4200"));
+//        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+//        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Requested-With"));
+//        configuration.setExposedHeaders(Collections.singletonList("Authorization"));
+//        configuration.setAllowCredentials(true);
+//
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        source.registerCorsConfiguration("/**", configuration);
+//
+//        return source;
+//    }
 
 }

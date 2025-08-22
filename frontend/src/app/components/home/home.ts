@@ -6,6 +6,8 @@ import {RouterLink} from '@angular/router';
 import {environment} from '../../../environments/environment.development';
 import {ProductService} from '../../services/product.service';
 import {MediaService} from '../../services/media.service';
+import {JwtService} from '../../services/jwt.service';
+import {UtilsService} from '../../services/utils.service';
 
 @Component({
     selector: 'app-home',
@@ -18,8 +20,19 @@ import {MediaService} from '../../services/media.service';
 })
 export class Home implements OnInit {
     products: Product[] = [];
-    constructor(private productService: ProductService, private mediaService : MediaService) {}
+    token?
+
+    constructor(
+        private productService: ProductService,
+        private mediaService : MediaService,
+        private jwtService: JwtService,
+        private utilService: UtilsService
+    ) {
+        this.token = utilService.getToken()
+    }
+
     currentIndexes: { [key: string]: number } = {};
+
     ngOnInit() {
         this.productService.getAllProducts().subscribe({
             next: (data: Product[]) => {
@@ -46,6 +59,9 @@ export class Home implements OnInit {
                 console.error('Erreur lors de la récupération des produits', err);
             }
         });
+
+        console.log(Date.now())
+        console.log(this.jwtService.getExpirationTime(this.token!) * 1000)
     }
 
 

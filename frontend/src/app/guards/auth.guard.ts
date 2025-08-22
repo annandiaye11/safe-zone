@@ -1,5 +1,7 @@
 import {CanActivate, Router} from '@angular/router';
 import {Injectable} from '@angular/core';
+import {JwtService} from '../services/jwt.service';
+import {UtilsService} from '../services/utils.service';
 
 @Injectable({
     providedIn: 'root'
@@ -7,7 +9,8 @@ import {Injectable} from '@angular/core';
 export class AuthGuard implements CanActivate {
 
     constructor(
-        private router: Router
+        private jwtService: JwtService,
+        private utilsService: UtilsService
     ) {}
 
     canActivate() {
@@ -17,16 +20,10 @@ export class AuthGuard implements CanActivate {
             return true
         }
 
-        const parts = token.split(".")
-        if (parts.length !== 3) {
-            return true
-        }
+        const expirationTime = this.jwtService.getExpirationTime(token) * 1000
 
-        const payload = JSON.parse(atob(parts[1]))
-        console.log(payload)
-        const expirationTime = payload.exp * 1000
         if (Date.now() > expirationTime) {
-            localStorage.removeItem('user-token')
+            this.utilsService.removeToken()
             return true
         }
 

@@ -19,7 +19,7 @@ export class UtilsService {
     }
 
     convertRole(role: string) {
-        return role.toLowerCase() === "seller" ? Role.SELLER : Role.CLIENT
+        return role === "ROLE_SELLER" ? Role.ROLE_SELLER : Role.ROLE_CLIENT
     }
 
     logout() {
@@ -43,6 +43,21 @@ export class UtilsService {
     }
 
     isSeller() {
-        return this.isAuthenticated() && this.convertRole(localStorage.getItem('user-token')!) === Role.SELLER
+        return this.isAuthenticated() && this.convertRole(localStorage.getItem('user-token')!) === Role.ROLE_SELLER
+    }
+
+    getToken() {
+        if (!this.isAuthenticated()) return null
+
+        return localStorage.getItem('user-token')
+    }
+
+    removeToken() {
+        if (!this.isAuthenticated()) return
+
+        localStorage.removeItem('user-token')
+        if (!localStorage.getItem('user-token')) {
+            this.router.navigate(['/']).then()
+        }
     }
 }

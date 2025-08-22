@@ -3,6 +3,7 @@ import {environment} from '../../environments/environment.development';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Media} from '../entity/Media';
+import {UtilsService} from './utils.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,11 @@ export class MediaService {
     token= "";
     apiUrl = environment.apiURL + '/media';
 
-    constructor(private http: HttpClient) {}
+    constructor(
+        private http: HttpClient,
+        private utilService: UtilsService
+    ) {}
+
     getHeaders(token: string) {
         return new HttpHeaders({
             'Authorization': `Bearer ${token}`,

@@ -33,7 +33,9 @@ export class Login {
             email: this.loginFormData.value.email as string,
             password: this.loginFormData.value.password as string,
         }
+
         if (!data) return
+
         this.authService.login(data)?.subscribe({
             next: (response: any) => {
                 this.authService.saveToken(response.token)

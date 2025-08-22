@@ -10,13 +10,12 @@ export class AuthorizationGuard implements CanActivate {
     ) {}
 
     canActivate() {
-        if (!this.utilsService.isAuthenticated()) {
-        }
+        if (!this.utilsService.isAuthenticated()) return false
 
         const token = this.utilsService.getToken()
         const isTokenExpired = this.jwtService.getExpirationTime(token)
 
-        return false
+        return true
     }
 
 }

@@ -4,7 +4,6 @@ import {NgClass} from '@angular/common';
 import {User} from '../../../entity/User';
 import {Role} from '../../../entity/Role';
 import {UserService} from '../../../services/user.service';
-import {routes} from '../../../app.routes';
 import {Router} from '@angular/router';
 
 @Component({

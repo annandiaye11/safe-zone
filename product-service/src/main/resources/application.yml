@@ -11,16 +11,16 @@ spring:
 
   data:
     mongodb:
-        database: ${DB_NAME}
-        username: ${DB_USER}
-        password: ${DB_PASSWORD}
-        port: ${DB_PORT}
-        host: ${DB_HOST}
-        auto-index-creation: true
-        authentication-database: ${DB_AUTH_DB}
-#      uri: mongodb+srv://${DB_USER}:${DB_PASSWORD}@buy0x.mqr2hhc.mongodb.net/?retryWrites=true&w=majority&appName=buy0x
-#      database: ${DB_NAME}
-#      auto-index-creation: true
+#        database: ${DB_NAME}
+#        username: ${DB_USER}
+#        password: ${DB_PASSWORD}
+#        port: ${DB_PORT}
+#        host: ${DB_HOST}
+#        auto-index-creation: true
+#        authentication-database: ${DB_AUTH_DB}
+      uri: mongodb+srv://${DB_USER}:${DB_PASSWORD}@buy0x.mqr2hhc.mongodb.net/?retryWrites=true&w=majority&appName=buy0x
+      database: ${DB_NAME}
+      auto-index-creation: true
   kafka:
     bootstrap-servers: localhost:9092, localhost:9093
     producer:

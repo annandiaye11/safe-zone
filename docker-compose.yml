@@ -13,7 +13,7 @@ services:
         networks:
             -   buy01-network
         healthcheck:
-            test: echo 'db.runCommand("pring").ok' | mongosh localhost:27017/test -quiet
+            test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test -quiet
             interval: 10s
             timeout: 10s
             retries: 2
@@ -33,7 +33,7 @@ services:
             KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
             KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
             KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2
-            KAFKA_AUTO_CREATE_TOPICS_ENABLE: true
+            KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
     kafka2:
         image: confluentinc/cp-kafka:7.2.15
         depends_on:
@@ -45,7 +45,7 @@ services:
             KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
             KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9093
             KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2
-            KAFKA_AUTO_CREATE_TOPICS_ENABLE: true
+            KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
 
 volumes:
     mongodb_data:

@@ -7,6 +7,27 @@ $text-light: #ecefca;
 $border-radius: 12px;
 $transition: all 0.3s ease;
 
+// Go home link
+.go-home {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px; /* espace entre icône et texte */
+    padding: 10px 16px;
+    font-size: 16px;
+    font-weight: 500;
+    color: #ffffff; /* texte blanc */
+    background-color: linear-gradient(135deg, $primary-color, $accent-color); /* bleu principal */
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.go-home span {
+    font-size: 20px; /* icône plus grande */
+}
+
+
 // Auth Container
 .auth-container {
     min-height: 100vh;

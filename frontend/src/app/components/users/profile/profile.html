@@ -16,7 +16,12 @@
                                 <img [src]="isEditing ? formData.avatar : null " class="avatar-img" />
                             }
                             @if (!(isEditing ? formData.avatar : null )){
-                                <div class="avatar-fallback">👤</div>
+                                @if (user.avatar) {
+                                    <img [src]="user.avatar" class="avatar-img" />
+                                } @else {
+                                    <div class="avatar-fallback">👤</div>
+                                }
+
                             }
 
                             @if (isEditing){

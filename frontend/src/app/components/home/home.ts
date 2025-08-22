@@ -45,7 +45,7 @@ export class Home implements OnInit {
                             console.log('Produit:', product);
                         },
                         error: (err) => {
-                            console.log("error lors de la recuperation des media")
+                            console.log("error lors de la recuperation des media", err)
                         }
                     })
                 })

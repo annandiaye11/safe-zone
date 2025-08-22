@@ -32,6 +32,16 @@ export class Register {
             avatar: [null],
         })
     }
+    selectedFile: File | null = null;
+
+    onFileSelected(event: Event) {
+        const input = event.target as HTMLInputElement;
+        if (input.files && input.files.length > 0) {
+            this.selectedFile = input.files[0];
+            console.log("Fichier sélectionné :", this.selectedFile);
+        }
+    }
+
 
     onSubmit() {
         console.log(this.registerFormData.value)
@@ -50,8 +60,8 @@ export class Register {
             {
                 next: (responses: any) => {
                     console.log(responses.response.id);
-                    if (data.avatar != null) {
-                        this.userService.updateAvatar(data.avatar, responses.response.id).subscribe({
+                    if (this.selectedFile != null) {
+                        this.userService.updateAvatar(this.selectedFile, responses.response.id).subscribe({
                             next: (data: any) => {
                                 console.log(data)
                             },

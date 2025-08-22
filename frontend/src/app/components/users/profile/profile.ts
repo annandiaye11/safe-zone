@@ -43,6 +43,7 @@ export class Profile implements OnInit {
                 console.log("user", this.user)
                 this.formData = {...this.user};
                this.formData.password = "ftkkeit"
+                console.log("formData", this.formData)
              },
             error: (err) => {
                 console.log("erreur ", err)

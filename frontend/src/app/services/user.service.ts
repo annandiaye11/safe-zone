@@ -33,13 +33,13 @@ export class UserService {
 
     updateAvatar(file: File, userId: string): Observable<any> {
         this.token = localStorage.getItem('user-token')!;
-        const headers = new HttpHeaders({
-            Authorization: `Bearer ${this.token}`
-        });
+        // const headers = new HttpHeaders({
+        //     Authorization: `Bearer ${this.token}`
+        // });
         const formData = new FormData();
         formData.append("imagePath", file);
         formData.append("userId", userId);
-        return this.http.patch(`${this.apiUrl}/upload`, formData, {headers}) as Observable<any>;
+        return this.http.patch(`${this.apiUrl}/upload`, formData) as Observable<any>;
     }
 
     getHeaders(token: string) {

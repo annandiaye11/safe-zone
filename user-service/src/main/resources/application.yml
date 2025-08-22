@@ -43,7 +43,7 @@ application:
   security:
     jwt:
       secret: ${JWT_SECRET}
-      expiration-ms: 600000
+      expiration-ms: 3600000
       refresh-expiration: 3600000
 
 springdoc:
@@ -55,3 +55,10 @@ springdoc:
 
 server:
   port: 8081
+aws:
+  s3:
+    bucket: hackaton-groupe10
+  region: eu-north-1
+  credentials:
+    access-key: ${AWS_ACCESS_KEY_ID}
+    secret-key: ${AWS_SECRET_ACCESS_KEY}

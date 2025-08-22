@@ -2,6 +2,7 @@ package com.cgl.userservice.services;
 
 import com.cgl.userservice.data.entities.User;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -13,4 +14,5 @@ public interface UserService {
     User update(User user);
     User delete(User user);
     User getCurrentUser();
+    User updateAvatar(MultipartFile imageFile, String userId);
 }

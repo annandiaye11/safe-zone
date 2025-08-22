@@ -14,7 +14,7 @@ public class MediaDtoAll {
     private String id;
     @NotBlank(message = "Image is required")
     @NotNull(message = "Image is required")
-    private MultipartFile imagePath;
+    private String imagePath;
     @NotBlank(message = "Product Id is required")
     @NotNull(message = "Product Id is required")
     private String productId;

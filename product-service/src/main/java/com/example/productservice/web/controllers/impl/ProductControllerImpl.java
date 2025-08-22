@@ -32,7 +32,11 @@ public class ProductControllerImpl implements ProductController {
     @Override
     public ResponseEntity<List<ProductDto>> getAll() {
         List<Product> products = productService.getAllProducts();
-        if (products.isEmpty()) {
+        return getListResponseEntity(products);
+    }
+
+    private ResponseEntity<List<ProductDto>> getListResponseEntity(List<Product> products) {
+        if (products == null || products.isEmpty() ) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
         List<ProductDto> productDtos = products.stream()
@@ -76,13 +80,7 @@ public class ProductControllerImpl implements ProductController {
     @Override
     public ResponseEntity<List<ProductDto>> getByUserId(@PathVariable("userId") String userId) {
     List<Product> products = productService.getByUserId(userId);
-    if (products == null || products.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
-        List<ProductDto> productDtos = products.stream()
-            .map(ProductMapper::toDto)
-            .toList();
-        return new ResponseEntity<>(productDtos, HttpStatus.OK);
+        return getListResponseEntity(products);
     }
 
 }

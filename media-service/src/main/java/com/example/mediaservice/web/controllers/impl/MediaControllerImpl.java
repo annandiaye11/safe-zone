@@ -9,7 +9,9 @@ import com.example.mediaservice.web.dto.requests.MediaDtoAll;
 import com.example.mediaservice.web.dto.responses.MediaResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,8 +51,15 @@ public class MediaControllerImpl implements MediaController {
     @Override
     public ResponseEntity<Map<String, Object>> getMediaByProductId(String id) {
         HashMap<String, Object> response = new HashMap<>();
-        Media media = mediaService.getByProductId(id);
-        return getMapResponseEntity(response, media);
+        List<Media> media = mediaService.getByProductId(id);
+        if (media == null) {
+            response.put("message", "Media not found");
+            return ResponseEntity.status(404).body(response);
+        }
+        List<MediaResponse> mediaResponses = media.stream().map(MapperMedia::toDto).toList();
+        response.put("message", "Media found");
+        response.put("media", mediaResponses);
+        return ResponseEntity.status(200).body(response);
     }
 
     private ResponseEntity<Map<String, Object>> getMapResponseEntity(HashMap<String, Object> response, Media media) {
@@ -65,12 +74,17 @@ public class MediaControllerImpl implements MediaController {
     }
 
     @Override
-    public ResponseEntity<Map<String, Object>> createMedia(MediaDtoAll mediaDtoAll) {
+    public ResponseEntity<Map<String, Object>> createMedia(List<MultipartFile> imageFile, String productId) {
         HashMap<String, Object> response = new HashMap<>();
-        Media media = MapperMedia.toEntity(mediaDtoAll);
-        Media mediaSaved = mediaService.saveMedia(media);
+        List<Media> medias = new ArrayList<>();
+        for (MultipartFile file : imageFile) {
+            String imagePath = s3Service.uploadFile(file);
+            Media media = MapperMedia.toEntity(new MediaDtoAll(null, imagePath, productId));
+            media.setImagePath(imagePath);
+            medias.add(mediaService.saveMedia(media));
+        }
         response.put("message", "Media created");
-        response.put("media", MapperMedia.toDto(mediaSaved));
+        response.put("media", medias);
         return ResponseEntity.status(201).body(response);
     }
 
@@ -80,7 +94,7 @@ public class MediaControllerImpl implements MediaController {
         if (media == null) {
             return ResponseEntity.notFound().build();
         }
-        media.setImagePath(s3Service.uploadFile(mediaDtoAll.getImagePath()));
+      //  media.setImagePath(s3Service.uploadFile(mediaDtoAll.getImagePath()));
         media.setProductId(mediaDtoAll.getProductId());
         Media mediaCreated = mediaService.updateMedia(media);
         HashMap<String, Object> response = new HashMap<>();

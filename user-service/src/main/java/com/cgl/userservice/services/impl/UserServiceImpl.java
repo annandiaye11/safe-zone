@@ -15,6 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -25,6 +26,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserEventPublisher userEventPublisher;
+    private final S3Service s3Service;
 
     @Override
     public List<User> getAllUsers() {
@@ -68,6 +70,15 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByEmail(email).orElseThrow(
                 () -> new RuntimeException("User not found")
         );
+    }
+
+    @Override
+    public User updateAvatar(MultipartFile imageFile, String userId) {
+        User user = getById(userId);
+        if (user == null) return null;
+        String avatar = s3Service.uploadFile(imageFile);
+        user.setAvatar(avatar);
+        return userRepository.save(user);
     }
 
     private String getCurrentUserEmail() {

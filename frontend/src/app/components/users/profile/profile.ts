@@ -31,8 +31,8 @@ export class Profile implements OnInit {
         name: '',
         email: '',
         password: '',
-        role: Role.ROLE_CLIENT,
-        avatar: '',
+        role: Role.CLIENT,
+        avatar: null,
     }
 
     ngOnInit() {

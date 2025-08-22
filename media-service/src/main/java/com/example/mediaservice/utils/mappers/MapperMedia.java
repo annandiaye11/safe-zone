@@ -5,16 +5,15 @@ import com.example.mediaservice.services.impl.S3Service;
 import com.example.mediaservice.web.dto.requests.MediaDtoAll;
 import com.example.mediaservice.web.dto.responses.MediaResponse;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Setter
 @Getter
+@RequiredArgsConstructor
 public class MapperMedia {
-    private static final S3Service s3Service = new S3Service();
-
     public static Media toEntity(MediaDtoAll mediaDtoAll) {
         Media media = new Media();
-        media.setImagePath(s3Service.uploadFile(mediaDtoAll.getImagePath()));
         media.setProductId(mediaDtoAll.getProductId());
         return media;
     }

@@ -27,6 +27,7 @@ public class MapperUser {
         userOneResponse.setEmail(user.getEmail());
         userOneResponse.setName(user.getName());
         userOneResponse.setAvatar(user.getAvatar());
+        userOneResponse.setRole(String.valueOf(user.getRole()));
         return userOneResponse;
     }
 

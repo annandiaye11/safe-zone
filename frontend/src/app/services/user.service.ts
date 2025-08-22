@@ -31,6 +31,17 @@ export class UserService {
         return this.http.put(`${this.apiUrl}/${user.id}`, user, {headers}) as Observable<any>;
     }
 
+    updateAvatar(file: File, userId: string): Observable<any> {
+        this.token = localStorage.getItem('user-token')!;
+        const headers = new HttpHeaders({
+            Authorization: `Bearer ${this.token}`
+        });
+        const formData = new FormData();
+        formData.append("imagePath", file);
+        formData.append("userId", userId);
+        return this.http.patch(`${this.apiUrl}/upload`, formData, {headers}) as Observable<any>;
+    }
+
     getHeaders(token: string) {
         return new HttpHeaders({
             'Authorization': `Bearer ${token}`,

@@ -43,8 +43,8 @@ public class MediaServiceImpl implements MediaService {
     }
 
     @Override
-    public Media getByProductId(String productId) {
-        return mediaRepository.findByProductId(productId).orElse(null);
+    public List<Media> getByProductId(String productId) {
+        return mediaRepository.getAllByProductId(productId);
     }
 
     @Override

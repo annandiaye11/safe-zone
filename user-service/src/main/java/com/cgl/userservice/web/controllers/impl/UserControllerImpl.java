@@ -2,6 +2,7 @@ package com.cgl.userservice.web.controllers.impl;
 
 import com.cgl.userservice.data.entities.User;
 import com.cgl.userservice.services.UserService;
+import com.cgl.userservice.services.impl.S3Service;
 import com.cgl.userservice.utils.mapper.MapperUser;
 import com.cgl.userservice.web.controllers.UserController;
 import com.cgl.userservice.web.dto.UserDto;
@@ -13,6 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.List;
@@ -23,6 +25,7 @@ import java.util.Map;
 public class UserControllerImpl implements UserController {
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
+    private final S3Service s3Service;
 
     @Override
     public ResponseEntity<Map<String, Object>> getAllUsers() {
@@ -64,7 +67,6 @@ public class UserControllerImpl implements UserController {
         }
         user.setName(userDto.getName());
         user.setEmail(userDto.getEmail());
-        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         user.setAvatar(userDto.getAvatar());
         userService.update(user);
         response.put("message", "User updated");
@@ -104,5 +106,14 @@ public class UserControllerImpl implements UserController {
 //        resp.put("role", me.getRole().name());
 
         return ResponseEntity.status(200).body(MapperUser.toDto(me));
+    }
+
+    @Override
+    public ResponseEntity<UserOneResponse> updateUser(MultipartFile imageFile, String email) {
+        User user = userService.updateAvatar(imageFile, email);
+        if (user == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.status(200).body(MapperUser.toDto(user));
     }
 }

@@ -21,7 +21,7 @@ public class DataInitializer {
     @Bean
     public CommandLineRunner initializeData() {
         return args -> {
-            if (userRepository.count() != 0) {
+            if (userRepository.count() == 0) {
                 userRepository.deleteAll();
             }
 

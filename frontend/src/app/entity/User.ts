@@ -6,6 +6,6 @@ export class User {
     email!: string
     password!: string
     role!: Role
-    avatar!: string
+    avatar: File | null = null;
 }
 

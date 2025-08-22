@@ -12,7 +12,7 @@ public interface MediaService {
     Media saveMedia(Media media);
     Media deleteMedia(Media media);
     Media updateMedia(Media media);
-    Media getByProductId(String productId);
+    List<Media> getByProductId(String productId);
     void deleteMediaByProductId(String productId);
 
 }

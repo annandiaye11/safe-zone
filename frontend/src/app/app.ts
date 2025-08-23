@@ -23,6 +23,7 @@ export class App implements OnInit {
     ngOnInit() {
         this.isAuthenticated = this.utilService.isAuthenticated()
         this.showSidebar()
+        this.showHeader()
     }
 
      hideNavbar(): boolean {
@@ -32,5 +33,9 @@ export class App implements OnInit {
 
     showSidebar() {
         return this.isAuthenticated && this.jwtService.isSeller()
+    }
+
+    showHeader() {
+        return this.isAuthenticated && !this.jwtService.isSeller()
     }
 }

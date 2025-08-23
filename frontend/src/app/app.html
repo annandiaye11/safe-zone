@@ -6,7 +6,7 @@
         <app-sidebar></app-sidebar>
     }-->
     <main class="app-content">
-        <app-header [hidden]="showSidebar()"></app-header>
+        <app-header [hidden]="!showHeader()"></app-header>
         <router-outlet></router-outlet>
     </main>
 </div>

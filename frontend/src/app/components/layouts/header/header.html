@@ -12,7 +12,7 @@
         }
         @if (isAuthenticated) {
             <button class="logout-btn" (click)="onLogout()" [hidden]="isAuthenticated">Déconnexion</button>
-            <button class="icon-btn nav-link">👤</button>
+            <button class="icon-btn nav-link" (click)="onProfile()">👤</button>
         }
     </div>
 </header>

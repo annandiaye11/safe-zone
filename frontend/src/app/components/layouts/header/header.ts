@@ -27,6 +27,10 @@ export class Header implements OnInit {
         this.router.navigate(['/login']).then()
     }
 
+    onProfile() {
+        this.router.navigate(['/profile']).then()
+    }
+
     ngOnInit() {
         this.isAuthenticated = this.utilService.isAuthenticated()
     }

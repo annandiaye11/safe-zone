@@ -31,7 +31,7 @@ export const routes: Routes = [
         path: 'dashboard',
         component: Dashboard,
         title: "Dashboard",
-        //canActivate: [AuthorizationGuard]
+        canActivate: [AuthorizationGuard]
     },
     {
         path: 'details/:id',
@@ -40,7 +40,7 @@ export const routes: Routes = [
     {
         path: 'profile',
         component: Profile,
-      //  canActivate: [AuthorizationGuard]
+        title: "Profile"
     },
     {
         // Redirect any other route to the Oops page

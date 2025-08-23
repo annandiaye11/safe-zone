@@ -33,7 +33,7 @@ export class JwtService {
 
     getExpirationTime(token: string) {
         const decoded: JwtPayLoad = this.decodeToken(token);
-        return decoded.exp
+        return decoded.exp * 1000
     }
 
     getIssuedAt(token: string) {

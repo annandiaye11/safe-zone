@@ -5,6 +5,7 @@ import {User} from '../../../entity/User';
 import {Role} from '../../../entity/Role';
 import {UserService} from '../../../services/user.service';
 import {Router} from '@angular/router';
+import {UtilsService} from '../../../services/utils.service';
 
 @Component({
     selector: 'app-profile',
@@ -18,49 +19,50 @@ import {Router} from '@angular/router';
 export class Profile implements OnInit {
 
     user!: any
-
-    constructor(
-        private userService: UserService,
-        private router: Router
-    ) {
-
-    }
+    isEditing = false;
     formData : User = {
         id: '',
         name: '',
         email: '',
         password: '',
-        role: Role.ROLE_CLIENT,
+        role: Role.CLIENT,
         avatar: null,
     }
 
+    constructor(
+        private userService: UserService,
+        private utilservice: UtilsService,
+        private router: Router
+    ) {}
+
     ngOnInit() {
+        if (!this.utilservice.isAuthenticated()) {
+            this.router.navigate(['/login']).then();
+            return;
+        }
+
          this.userService.getProfile().subscribe({
             next: (data: User)=> {
                this.user = data;
-               this.user.role = this.userService.getRole(this.user.role)
-                console.log("user", this.user)
-                this.formData = {...this.user};
+               // this.user.role = this.userService.getRole(this.user.role)
+                // console.log("user", this.user)
+                //this.formData = {...this.user};
+                this.formData = {...data};
                this.formData.password = "ftkkeit"
-                console.log("formData", this.formData)
+                // console.log("formData: ", this.formData)
              },
             error: (err) => {
-                console.log("erreur ", err)
+                console.error("erreur ", err)
             }
-        },)
+        })
+
+        //console.log("user agent", navigator.userAgent)
+        //console.log("product", navigator.product)
+        //console.log("product sub", navigator.productSub)
     }
 
-    getUserProfile() {
-
-    }
-
-    isEditing = false;
 
 
-
-    goBack() {
-        // this.location.origin();
-    }
 
     editProfile() {
         this.isEditing = true;
@@ -76,13 +78,13 @@ export class Profile implements OnInit {
        this.userService.updateProfile(this.user).subscribe({
            next: (data: any) => {
                this.user = data.user;
-               this.user.role = this.userService.getRole(this.user.role)
-                console.log("user updated", this.user);
+               // this.user.role = this.userService.getRole(this.user.role)
+                // console.log("user updated", this.user);
                 this.user.password = "ftkkeit"
                 this.cancelEdit();
            },
            error: (err) => {
-               console.log("erreur ", err)
+               console.error("erreur ", err)
            }
        })
 
@@ -106,4 +108,6 @@ export class Profile implements OnInit {
             reader.readAsDataURL(file);
         }
     }
+
+    protected readonly Role = Role;
 }

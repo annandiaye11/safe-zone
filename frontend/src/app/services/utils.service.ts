@@ -1,14 +1,18 @@
 import {Injectable} from '@angular/core';
-import {HttpHeaders} from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Role} from '../entity/Role';
 import {Router} from '@angular/router';
+import {JwtService} from './jwt.service';
+import {map} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UtilsService {
     constructor(
-        private router: Router
+        private router: Router,
+        private jwtService: JwtService,
+        private http: HttpClient,
     ) {}
 
     getHeaders(token: string) {
@@ -19,7 +23,7 @@ export class UtilsService {
     }
 
     convertRole(role: string) {
-        return role === "ROLE_SELLER" ? Role.ROLE_SELLER : Role.ROLE_CLIENT
+        return role === "SELLER" ? Role.SELLER : Role.CLIENT
     }
 
     logout() {
@@ -29,38 +33,35 @@ export class UtilsService {
         }
     }
 
-    session(token: string) {
-        localStorage.setItem('user-token', token)
-        if (localStorage.getItem('user-token')) {
-            this.router.navigate(['/']).then()
-        } else {
-            console.log('error saving token')
-        }
-    }
-
     isAuthenticated() {
+        if (this.getToken().trim().length === 0) {
+            this.removeToken()
+            return false
+        }
+
+        if (this.jwtService.getExpirationTime(this.getToken()) < Date.now()) {
+            this.removeToken()
+            return false
+        }
+
         return !!localStorage.getItem('user-token')
     }
 
     isSeller() {
-        return this.isAuthenticated() && this.convertRole(localStorage.getItem('user-token')!) === Role.ROLE_SELLER
+        return this.jwtService.getUserRole(this.getToken()) === Role.SELLER
     }
 
     getToken() {
-        if (!this.isAuthenticated()) return ""
-
         const token = localStorage.getItem('user-token')
-        if (!token) return ""
 
-        return token
+        return token === null ? "" : token
     }
 
     removeToken() {
-        if (!this.isAuthenticated()) return
-
         localStorage.removeItem('user-token')
-        if (!localStorage.getItem('user-token')) {
-            this.router.navigate(['/']).then()
-        }
+    }
+
+    publicIpAddress() {
+        return this.http.get('https://free.freeipapi.com/api/json')
     }
 }

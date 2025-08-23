@@ -28,7 +28,7 @@ public class JwtTools {
     public String generateToken(User user) {
         return Jwts.builder()
                 .subject(user.getEmail())
-                .claim("role", "ROLE_" + user.getRole().name())
+                .claim("role", user.getRole().name())
                 .claim("userId", user.getId())
                 .issuedAt(new Date())
                 .expiration( new Date(System.currentTimeMillis() + expiration))
@@ -69,6 +69,6 @@ public class JwtTools {
     }
 
     public boolean validateToken(String token, User user) {
-        return extractEmail(token).equals(user.getEmail()) && extractRole(token).equals("ROLE_" + user.getRole().name());
+        return extractEmail(token).equals(user.getEmail()) && extractRole(token).equals(user.getRole().name());
     }
 }

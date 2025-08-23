@@ -26,9 +26,9 @@ export class Home implements OnInit {
         private productService: ProductService,
         private mediaService : MediaService,
         private jwtService: JwtService,
-        private utilService: UtilsService
+        private utilsService: UtilsService
     ) {
-        this.token = utilService.getToken()
+        this.token = utilsService.getToken()
     }
 
     currentIndexes: { [key: string]: number } = {};
@@ -40,12 +40,12 @@ export class Home implements OnInit {
                 this.products.forEach(product => {
                     this.mediaService.getMediaByProduitId(product.id!).subscribe({
                         next: (data: any) => {
-                            console.log(`Media for produit ${product.name}`, data)
+                            //console.log(`Media for produit ${product.name}`, data)
                             product.images = data.media;
-                            console.log('Produit:', product);
+                            //console.log('Produit:', product);
                         },
                         error: (err) => {
-                            console.log("error lors de la recuperation des media", err)
+                            console.error("error lors de la recuperation des media", err)
                         }
                     })
                 })
@@ -58,10 +58,7 @@ export class Home implements OnInit {
             error: (err) => {
                 console.error('Erreur lors de la récupération des produits', err);
             }
-        });
-
-        console.log(Date.now())
-        console.log(this.jwtService.getExpirationTime(this.token!) * 1000)
+        })
     }
 
 

@@ -13,11 +13,11 @@
                     <div class="avatar-section">
                         <div class="avatar-container">
                             @if (isEditing ? formData.avatar : "") {
-                                <img [src]="isEditing ? formData.avatar : null " class="avatar-img" />
+                                <img src="{{isEditing ? formData.avatar : null}}" class="avatar-img" alt="{{formData.name}}"/>
                             }
                             @if (!(isEditing ? formData.avatar : null )){
-                                @if (user.avatar) {
-                                    <img [src]="user.avatar" class="avatar-img" />
+                                @if (formData.avatar) {
+                                    <img src="{{formData.avatar}}" class="avatar-img" alt="{{formData.name}}"/>
                                 } @else {
                                     <div class="avatar-fallback">👤</div>
                                 }
@@ -34,15 +34,15 @@
                             }
                         </div>
                         <div class="profile-info">
-                            <h2 class="profile-name">{{ isEditing ? 'Modifier le profil' : user.name }}</h2>
+                            <h2 class="profile-name">{{ isEditing ? 'Modifier le profil' : formData.name }}</h2>
                             <div class="profile-role">
                                 <span class="role-badge" [ngClass]="{
-                                    'role-seller': user.role === 'seller',
+                                    'role-seller': formData.role === 'SELLER',
                                 }">
-                                    {{ user.role === 'seller' ? 'Vendeur' : 'Acheteur' }}
+                                    {{ formData.role === Role.SELLER ? 'Vendeur' : 'Acheteur' }}
                                 </span>
                             </div>
-                            <p class="profile-email">{{ user.email }}</p>
+                            <p class="profile-email">{{ formData.email }}</p>
                         </div>
                     </div>
                 </div>

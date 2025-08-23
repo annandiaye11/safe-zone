@@ -17,7 +17,7 @@ export class UserService {
 
     getUserByToken(token: string) {}
     getRole(role: string): Role{
-      return role == 'ROLE_SELLER' ? Role.ROLE_SELLER : Role.ROLE_CLIENT;
+      return role == 'ROLE_SELLER' ? Role.SELLER : Role.CLIENT;
     }
     getProfile():Observable<User> {
         this.token =  localStorage.getItem('user-token')!;

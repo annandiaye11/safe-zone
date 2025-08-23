@@ -8,9 +8,9 @@
 
     <!-- Profil -->
     <div class="sidebar-profile">
-        <img class="avatar" src="https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?auto=format&fit=crop&w=80&q=80" alt="avatar">
-        <h4 class="username">John Doe</h4>
-        <p class="email">johnxample.com</p>
+        <img class="avatar" src="{{ user?.avatar === null ? 'assets/podium.jpg' : user?.avatar }}" alt="avatar">
+        <h4 class="username">{{ user?.name }}</h4>
+        <p class="email">{{ user?.email }}</p>
     </div>
 
     <!-- Navigation -->

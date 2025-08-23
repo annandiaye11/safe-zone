@@ -1,9 +1,18 @@
 <header class="header">
-    <div class="logo">BUY-01</div>
+    <div class="logo">
+        <a routerLink="/" class="logo_link">BUY-01</a>
+    </div>
+    <div class="menu">
+        <a routerLink="/" class="menu_item">Catalogue</a>
+    </div>
     <div class="search-user-cart">
-        <a routerLink="login" [hidden]="isAuthenticated">Login</a>
-        <a routerLink="register" [hidden]="isAuthenticated">Register</a>
-        <button (click)="onLogout()" [hidden]="!isAuthenticated">Logout</button>
-        <button class="icon-btn">👤</button>
+        <!--<button class="icon-btn nav-link">🛒</button>-->
+        @if (!isAuthenticated) {
+            <button (click)="onLogin()" class="nav-link" [hidden]="isAuthenticated">Connexion</button>
+        }
+        @if (isAuthenticated) {
+            <button class="logout-btn" (click)="onLogout()" [hidden]="isAuthenticated">Déconnexion</button>
+            <button class="icon-btn nav-link">👤</button>
+        }
     </div>
 </header>

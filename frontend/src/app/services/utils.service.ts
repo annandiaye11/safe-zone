@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {Injectable, OnInit} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Role} from '../entity/Role';
 import {Router} from '@angular/router';
@@ -8,12 +8,21 @@ import {map} from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class UtilsService {
+export class UtilsService implements OnInit {
+
+    private readonly TOKEN_KEY = 'user-token';
+
     constructor(
         private router: Router,
         private jwtService: JwtService,
         private http: HttpClient,
     ) {}
+
+    ngOnInit() {
+        this.getToken()
+        this.isAuthenticated()
+        this.isSeller()
+    }
 
     getHeaders(token: string) {
         return new HttpHeaders({
@@ -27,8 +36,8 @@ export class UtilsService {
     }
 
     logout() {
-        localStorage.removeItem('user-token')
-        if (!localStorage.getItem("user-token")) {
+        localStorage.removeItem(this.TOKEN_KEY)
+        if (!localStorage.getItem(this.TOKEN_KEY)) {
             this.router.navigate(['/login']).then()
         }
     }
@@ -44,15 +53,15 @@ export class UtilsService {
             return false
         }
 
-        return !!localStorage.getItem('user-token')
+        return !!localStorage.getItem(this.TOKEN_KEY)
     }
 
     isSeller() {
-        return this.jwtService.getUserRole(this.getToken()) === Role.SELLER
+        return this.getToken().trim().length === 0 ? false : this.jwtService.getUserRole(this.getToken()) === Role.SELLER
     }
 
     getToken() {
-        const token = localStorage.getItem('user-token')
+        const token = localStorage.getItem(this.TOKEN_KEY)
 
         return token === null ? "" : token
     }

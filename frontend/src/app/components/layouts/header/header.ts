@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Router, RouterLink, RouterLinkActive} from '@angular/router';
 import {AuthService} from '../../../services/auth.service';
 import {UtilsService} from '../../../services/utils.service';
+import {AuthStateService} from '../../../services/auth.state.service';
 
 @Component({
     selector: 'app-header',
@@ -12,15 +13,21 @@ import {UtilsService} from '../../../services/utils.service';
     styleUrl: './header.scss'
 })
 export class Header implements OnInit {
-    protected isAuthenticated: boolean = false;
+    isAuthenticated: boolean = false;
 
     constructor(
-        private utilService: UtilsService,
+        private authState: AuthStateService,
         private router: Router
     ) {}
 
+    ngOnInit() {
+        this.authState.isAuthenticated$.subscribe(value => {
+            this.isAuthenticated = value;
+        })
+    }
+
     onLogout() {
-        this.utilService.logout()
+        this.authState.logout()
     }
 
     onLogin() {
@@ -29,9 +36,5 @@ export class Header implements OnInit {
 
     onProfile() {
         this.router.navigate(['/profile']).then()
-    }
-
-    ngOnInit() {
-        this.isAuthenticated = this.utilService.isAuthenticated()
     }
 }

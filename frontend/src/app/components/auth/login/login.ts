@@ -3,6 +3,7 @@ import {RouterLink} from '@angular/router';
 import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import {AuthService} from '../../../services/auth.service';
 import {Auth} from '../../../entity/Auth';
+import {AuthStateService} from '../../../services/auth.state.service';
 
 @Component({
     selector: 'app-login',
@@ -20,7 +21,8 @@ export class Login {
 
     constructor(
         private fb: FormBuilder,
-        private authService: AuthService
+        private authService: AuthService,
+        private authState: AuthStateService
     ) {
         this.loginFormData = this.fb.group({
             email: ['', [Validators.required, Validators.email]],
@@ -40,6 +42,7 @@ export class Login {
             next: (response: any) => {
                 this.authService.saveToken(response.token)
                 this.isAuthenticated.emit(this.authService.isAuthenticated());
+                this.authState.loadAuthState()
             },
             error: (error) => {
                 console.log(error)

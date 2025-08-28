@@ -1,8 +1,10 @@
-import {Component, OnInit} from '@angular/core';
-import {Router, RouterOutlet} from '@angular/router';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {RouterOutlet} from '@angular/router';
 import {Sidebar} from './components/layouts/sidebar/sidebar';
 import {UtilsService} from './services/utils.service';
 import {Header} from './components/layouts/header/header';
+import {Subscription} from 'rxjs';
+import {AuthStateService} from './services/auth.state.service';
 
 @Component({
   selector: 'app-root',
@@ -10,32 +12,29 @@ import {Header} from './components/layouts/header/header';
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
-export class App implements OnInit {
+export class App implements OnInit, OnDestroy {
     protected title = 'frontend';
     protected isAuthenticated: boolean = false;
+    private routerSubscription: Subscription = new Subscription()
 
     constructor(
-        private router: Router,
-        private utilService: UtilsService,
         private jwtService: UtilsService,
+        private authState: AuthStateService
     ) {}
 
     ngOnInit() {
-        this.isAuthenticated = this.utilService.isAuthenticated()
-        this.showSidebar()
-        this.showHeader()
+        this.authState.loadAuthState()
     }
 
-     hideNavbar(): boolean {
-        const hisNav = ['/login', '/register'];
-        return hisNav.includes(this.router.url);
+    ngOnDestroy() {
+        this.routerSubscription.unsubscribe()
     }
 
     showSidebar() {
-        return this.isAuthenticated && this.jwtService.isSeller()
+        return this.jwtService.isSeller()
     }
 
     showHeader() {
-        return this.isAuthenticated && !this.jwtService.isSeller()
+        return !this.jwtService.isSeller()
     }
 }

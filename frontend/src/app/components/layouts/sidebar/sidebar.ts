@@ -4,6 +4,7 @@ import {AuthService} from '../../../services/auth.service';
 import {UtilsService} from '../../../services/utils.service';
 import {UserService} from '../../../services/user.service';
 import {User} from '../../../entity/User';
+import {AuthStateService} from '../../../services/auth.state.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -18,17 +19,22 @@ export class Sidebar implements OnInit {
     user: any
 
     constructor(
-        private utilsService: UtilsService,
-        private userService: UserService
+        private authState: AuthStateService,
+        private userService: UserService,
     ) {}
 
-    onLogout() {
-        this.utilsService.logout()
+    ngOnInit() {
+        this.authState.isAuthenticated$.subscribe(value => {
+            this.isAuthenticated = value;
+        })
+
+        this.authState.user$.subscribe(user => {
+            this.user = user;
+        })
     }
 
-    ngOnInit() {
-        this.isAuthenticated = this.utilsService.isAuthenticated()
-        this.getProfile()
+    onLogout() {
+        this.authState.logout()
     }
 
     getProfile() {

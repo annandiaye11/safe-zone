@@ -4,6 +4,9 @@ import {HttpClient} from '@angular/common/http';
 import {User} from '../entity/User';
 import {Auth} from '../entity/Auth';
 import {Router} from '@angular/router';
+import {AuthStateService} from './auth.state.service';
+import {tap} from 'rxjs';
+import {UtilsService} from './utils.service';
 
 @Injectable({
     providedIn: 'root'
@@ -13,7 +16,9 @@ export class AuthService {
 
     constructor(
         private http: HttpClient,
-        private route: Router
+        private route: Router,
+        private authState: AuthStateService,
+        private utilsService: UtilsService
     ) {}
 
     login(credentials: Auth) {

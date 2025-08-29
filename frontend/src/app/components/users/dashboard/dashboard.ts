@@ -92,8 +92,10 @@ export class Dashboard implements OnInit{
             description: product.description,
             price: product.price,
             quantity: product.quantity
+
         };
         this.isFormOpen = true;
+        this.selectedFiles = product.images!.map(p => p.imagePath)
     }
 
     deleteProduct(id: string) {

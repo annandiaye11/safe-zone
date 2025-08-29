@@ -157,20 +157,23 @@
                             <h4>Images sélectionnées :</h4>
                             <div class="file-grid">
                                 @for (file of selectedFiles; track file) {
-                                    <div  class="file-item">
-                                        <div class="file-thumbnail" [ngStyle]="{'background-image': 'url(' + getFilePreview(file) + ')'}"></div>
-                                        <div class="file-details">
-                                            <span class="file-name">{{ file.name }}</span>
-                                            <span class="file-size">{{ formatFileSize(file.size) }}</span>
+                                    <div class="file-item">
+                                        <div
+                                            class="file-thumbnail"
+                                            [ngStyle]="{'background-image': getFilePreview(file) ? 'url(' + getFilePreview(file) + ')' : 'none'}">
                                         </div>
-<!--                                        (click)="removeFile(i)"-->
-                                        <button type="button" class="remove-file-btn"  title="Supprimer">
-                                            ×
-                                        </button>
+                                        <div class="file-details">
+                                            <span class="file-name">{{ file.name || file }}</span>
+                                            @if (file.size){
+                                                <span class="file-size" >{{ formatFileSize(file.size) }}</span>
+                                            }
+
+                                        </div>
+                                        <button type="button" class="remove-file-btn" title="Supprimer">×</button>
                                     </div>
                                 }
-
                             </div>
+
                         </div>
                     }
 

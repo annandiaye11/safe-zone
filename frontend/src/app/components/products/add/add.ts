@@ -44,6 +44,7 @@ export class Add implements OnInit {
     ngOnInit(): void {
         console.log('Données reçues du parent :', this.formData);
         console.log('Produit en édition :', this.editingProduct);
+        console.log("selectedFiles", this.selectedFiles)
         this.userService.getProfile().subscribe({
             next: (data: User)=> {
                 this.user = data;
@@ -145,9 +146,18 @@ export class Add implements OnInit {
     }
 
     // Générer aperçu du fichier
-    getFilePreview(file: File): string {
-        return URL.createObjectURL(file);
+    getFilePreview(file: any): string | null {
+        if (file instanceof File) {
+            return URL.createObjectURL(file); // fichier local uploadé
+        }
+        if (typeof file === 'string') {
+            return file; // déjà une URL (ex: "https://.../image.jpg")
+        }
+        console.error("Type de fichier non supporté :", file);
+        return null;
     }
+
+
 
     // Formater la taille du fichier
     formatFileSize(bytes: number): string {

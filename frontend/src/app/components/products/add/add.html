@@ -156,7 +156,7 @@
                         <div class="file-preview">
                             <h4>Images sélectionnées :</h4>
                             <div class="file-grid">
-                                @for (file of selectedFiles; track file) {
+                                @for (file of selectedFiles; track $index; let i = $index) {
                                     <div class="file-item">
                                         <div
                                             class="file-thumbnail"
@@ -169,7 +169,7 @@
                                             }
 
                                         </div>
-                                        <button type="button" class="remove-file-btn" title="Supprimer">×</button>
+                                        <button type="button" class="remove-file-btn" (click)="removeFile(i)" title="Supprimer">×</button>
                                     </div>
                                 }
                             </div>

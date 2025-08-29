@@ -18,6 +18,7 @@
                         id="name"
                         name="name"
                         placeholder="John DOE"
+                        pattern="^[a-zA-ZÀ-ÿ '-]+$"
                         type="text"
                         formControlName="name"
                     >
@@ -67,7 +68,13 @@
                 <label for="role">Vous êtes ?</label>
                 <div class="input-wrapper">
                     <span class="input-icon">🎯</span>
-                    <select id="role" name="role" formControlName="role" class="role-select">
+                    <select
+                        id="role"
+                        name="role"
+                        formControlName="role"
+                        class="role-select"
+                        pattern="^(CLIENT|SELLER)$"
+                    >
                         <option value="CLIENT" selected>Client</option>
                         <option value="SELLER">Vendeur</option>
                     </select>

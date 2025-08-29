@@ -45,7 +45,71 @@
                             <p class="profile-email">{{ formData.email }}</p>
                         </div>
                     </div>
+                    <!-- Bouton modifier mot de passe -->
+                    <div class="header-actions">
+                        <button class="btn-password" (click)="togglePasswordForm()" title="Modifier le mot de passe">
+                            🔒 Mot de passe
+                        </button>
+                    </div>
                 </div>
+
+                <!-- Formulaire de modification du mot de passe -->
+                @if (showPasswordForm) {
+                    <div class="password-form-section">
+                        <h3>Modifier le mot de passe</h3>
+                        <form (ngSubmit)="updatePassword()" #passwordForm="ngForm">
+                            <div class="form-group">
+                                <label>Mot de passe actuel</label>
+                                <input
+                                    type="password"
+                                    [(ngModel)]="passwordData.currentPassword"
+                                    name="currentPassword"
+                                    placeholder="Votre mot de passe actuel"
+                                    required
+                                />
+                            </div>
+
+                            <div class="form-group">
+                                <label>Nouveau mot de passe</label>
+                                <input
+                                    type="password"
+                                    [(ngModel)]="passwordData.newPassword"
+                                    name="newPassword"
+                                    placeholder="Nouveau mot de passe (min. 6 caractères)"
+                                    required
+                                    minlength="6"
+                                />
+                            </div>
+
+                            <div class="form-group">
+                                <label>Confirmer le nouveau mot de passe</label>
+                                <input
+                                    type="password"
+                                    [(ngModel)]="passwordData.confirmPassword"
+                                    name="confirmPassword"
+                                    placeholder="Confirmer le nouveau mot de passe"
+                                    required
+                                />
+                                @if (passwordData.newPassword && passwordData.confirmPassword && passwordData.newPassword !== passwordData.confirmPassword) {
+                                    <small class="error-text">Les mots de passe ne correspondent pas</small>
+                                }
+                            </div>
+
+                            <div class="password-actions">
+                                <button type="button" class="btn-secondary" (click)="cancelPasswordEdit()">
+                                    Annuler
+                                </button>
+                                <button
+                                    type="submit"
+                                    class="btn-save"
+                                    [disabled]="!passwordForm.valid || passwordData.newPassword !== passwordData.confirmPassword"
+                                >
+                                    💾 Modifier le mot de passe
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                }
 
                 <div class="card-content">
                     <div class="form-section">
@@ -80,17 +144,6 @@
                             />
                         </div>
 
-<!--                        @if (isEditing){-->
-<!--                            <div class="form-group">-->
-<!--                                <label>Nouveau mot de passe (optionnel)</label>-->
-<!--                                <input-->
-<!--                                    type="password"-->
-<!--                                    [(ngModel)]="formData.password"-->
-<!--                                    placeholder="Laisser vide pour ne pas changer"-->
-<!--                                />-->
-<!--                                <small class="form-hint">Laissez vide si vous ne souhaitez pas changer votre mot de passe</small>-->
-<!--                            </div>-->
-<!--                        }-->
                     </div>
 
                     <!-- Actions -->
@@ -116,3 +169,5 @@
         </div>
     </main>
 </div>
+
+

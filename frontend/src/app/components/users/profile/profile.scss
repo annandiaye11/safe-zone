@@ -47,6 +47,7 @@ $transition: all 0.3s ease;
 .profile-header {
     text-align: center;
     margin-bottom: 2rem;
+    position: relative;
 
     .back-link {
         margin-bottom: 1rem;
@@ -66,6 +67,7 @@ $transition: all 0.3s ease;
             }
         }
     }
+
 
     .page-title {
         font-size: 2.5rem;
@@ -97,8 +99,116 @@ $transition: all 0.3s ease;
     background: linear-gradient(135deg, rgba(84, 119, 146, 0.1) 0%, rgba(148, 180, 193, 0.05) 100%);
     padding: 2rem;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+
+    .header-actions {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+    }
 }
 
+.btn-password {
+    padding: 0.75rem 1.25rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 8px;
+    color: $text-light;
+    font-weight: 600;
+    cursor: pointer;
+    transition: $transition;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.2);
+        border-color: $accent-color;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    &:active {
+        transform: translateY(0);
+    }
+}
+
+// Formulaire de modification du mot de passe
+.password-form-section {
+    padding: 2rem;
+    background: rgba(239, 68, 68, 0.05);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    animation: slideDown 0.3s ease-out;
+
+    h3 {
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: $text-light;
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        &::before {
+            content: '🔒';
+            font-size: 1.2rem;
+        }
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+
+        .error-text {
+            display: block;
+            font-size: 0.85rem;
+            color: $error-color;
+            margin-top: 0.5rem;
+            font-weight: 500;
+        }
+    }
+}
+
+.password-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+
+    .btn-secondary, .btn-save {
+        min-width: 140px;
+        justify-content: center;
+
+        &:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+
+            &:hover {
+                transform: none !important;
+                box-shadow: none !important;
+            }
+        }
+    }
+}
+
+// Animation pour l'apparition du formulaire
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+        max-height: 0;
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+        max-height: 400px;
+    }
+}
 .avatar-section {
     display: flex;
     align-items: center;
@@ -415,6 +525,7 @@ $transition: all 0.3s ease;
         width: 100%;
         justify-content: center;
     }
+
 }
 
 @media (max-width: 480px) {
@@ -433,5 +544,42 @@ $transition: all 0.3s ease;
 
     .stat-card {
         padding: 1rem;
+    }
+}
+// Responsive pour le bouton mot de passe
+@media (max-width: 768px) {
+    .card-header .header-actions {
+        position: static;
+        margin-top: 1rem;
+        display: flex;
+        justify-content: center;
+    }
+
+    .btn-password {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .password-actions {
+        justify-content: center;
+
+        .btn-secondary, .btn-save {
+            flex: 1;
+            min-width: auto;
+        }
+    }
+}
+
+@media (max-width: 480px) {
+    .password-form-section {
+        padding: 1.5rem;
+    }
+
+    .password-actions {
+        flex-direction: column;
+
+        .btn-secondary, .btn-save {
+            width: 100%;
+        }
     }
 }

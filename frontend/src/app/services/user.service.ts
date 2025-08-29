@@ -48,4 +48,11 @@ export class UserService {
             'Content-Type': 'application/json'
         });
     }
+
+    updatePassword(passwordData: { currentPassword: string, newPassword: string }): Observable<any> {
+        this.token =  localStorage.getItem('user-token')!;
+        const headers = this.getHeaders(this.token);
+        return this.http.patch(`${this.apiUrl}/password`, passwordData, {headers});
+        // Remplacez par l'URL correcte de votre API
+    }
 }

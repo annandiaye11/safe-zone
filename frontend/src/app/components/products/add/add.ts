@@ -143,8 +143,25 @@ export class Add implements OnInit {
     }
 
     // Supprimer un fichier
-    removeFile(index: number) {
-       // this.selectedFiles.splice(index, 1);
+    removeFile(index: number): void {
+        if (this.selectedFiles && this.selectedFiles.length > index) {
+            // Supprimer le fichier du tableau
+            this.selectedFiles.splice(index, 1);
+
+            // Si vous utilisez un FormControl pour les fichiers, mettez-le à jour aussi
+            // this.fileControl?.setValue(this.selectedFiles);
+
+            // Optionnel : Si vous voulez aussi mettre à jour l'input file HTML
+            // this.resetFileInput();
+        }
+    }
+
+    // Fonction optionnelle pour réinitialiser l'input file
+    private resetFileInput(): void {
+        const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+        if (fileInput) {
+            fileInput.value = '';
+        }
     }
 
     // Générer aperçu du fichier

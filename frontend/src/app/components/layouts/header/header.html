@@ -2,9 +2,11 @@
     <div class="logo">
         <a routerLink="/" class="logo_link">BUY-01</a>
     </div>
-    <div class="menu">
-        <a routerLink="/" class="menu_item">Catalogue</a>
-    </div>
+    @if(router.url != '/'){
+        <div class="menu">
+            <a routerLink="/" class="menu_item">Catalogue</a>
+        </div>
+    }
     <div class="search-user-cart">
         <!--<button class="icon-btn nav-link">🛒</button>-->
         @if (!isAuthenticated) {

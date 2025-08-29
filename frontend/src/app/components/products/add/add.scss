@@ -251,7 +251,7 @@ form {
     display: block;
     margin-bottom: 0.5rem;
     font-weight: 600;
-    color: #374151;
+    color: $text-light;
 }
 
 .form-group input,
@@ -328,7 +328,7 @@ form {
 
 .file-info {
     font-size: 0.875rem;
-    color: #6b7280;
+    color: $accent-color;
     font-style: italic;
 }
 

@@ -1,18 +1,25 @@
 package com.cgl.userservice.web.controllers.impl;
 
 import com.cgl.userservice.data.entities.User;
+import com.cgl.userservice.exception.InvalidPasswordException;
+import com.cgl.userservice.exception.UserNotFoundException;
 import com.cgl.userservice.services.UserService;
 import com.cgl.userservice.services.impl.S3Service;
 import com.cgl.userservice.utils.mapper.MapperUser;
 import com.cgl.userservice.web.controllers.UserController;
+import com.cgl.userservice.web.dto.ChangePasswordRequest;
+import com.cgl.userservice.web.dto.ChangePasswordResponse;
 import com.cgl.userservice.web.dto.UserDto;
 import com.cgl.userservice.web.dto.UserOneResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -115,5 +122,20 @@ public class UserControllerImpl implements UserController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.status(200).body(MapperUser.toDto(user));
+    }
+
+    @Override
+    public ResponseEntity<ChangePasswordResponse> updatePassword(
+            @Valid @RequestBody ChangePasswordRequest request,
+            String id) {
+
+        if (id == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new ChangePasswordResponse(false, "Utilisateur non authentifié"));
+        }
+
+        userService.updatePassword(id, request);
+
+        return ResponseEntity.ok(new ChangePasswordResponse(true, "Mot de passe mis à jour avec succès"));
     }
 }

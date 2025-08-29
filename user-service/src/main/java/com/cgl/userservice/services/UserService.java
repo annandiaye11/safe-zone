@@ -1,6 +1,7 @@
 package com.cgl.userservice.services;
 
 import com.cgl.userservice.data.entities.User;
+import com.cgl.userservice.web.dto.ChangePasswordRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,4 +16,5 @@ public interface UserService {
     User delete(User user);
     User getCurrentUser();
     User updateAvatar(MultipartFile imageFile, String userId);
+    void updatePassword(String id, ChangePasswordRequest request);
 }

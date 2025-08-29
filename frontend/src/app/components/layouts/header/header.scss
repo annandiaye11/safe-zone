@@ -25,6 +25,7 @@ a {
 
 a:hover {
     text-decoration: underline;
+
 }
 
 .menu {
@@ -37,7 +38,7 @@ a:hover {
     display: flex;
     align-items: center;
     gap: 1rem;
-
+    cursor: pointer;
     .icon-btn {
         color: $primary-color;
     }

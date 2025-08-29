@@ -1,14 +1,13 @@
 package com.cgl.userservice.web.controllers;
 
-import com.cgl.userservice.web.dto.RequestDto;
-import com.cgl.userservice.web.dto.UserDto;
-import com.cgl.userservice.web.dto.UserOneResponse;
+import com.cgl.userservice.web.dto.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -36,4 +35,10 @@ public interface UserController {
 
     @PatchMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     ResponseEntity<UserOneResponse> updateUser(@RequestParam("imagePath") MultipartFile imageFile, @RequestParam("userId") String userId);
+
+    @PatchMapping("/password")
+    ResponseEntity<ChangePasswordResponse> updatePassword(
+            @Valid @RequestBody ChangePasswordRequest request,
+            String id);
+
 }

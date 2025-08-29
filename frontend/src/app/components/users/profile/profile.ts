@@ -29,6 +29,14 @@ export class Profile implements OnInit {
         avatar: null,
     }
 
+    showPasswordForm = false;
+    passwordData = {
+        currentPassword: '',
+        newPassword: '',
+        confirmPassword: ''
+    };
+
+
     constructor(
         private userService: UserService,
         private utilservice: UtilsService,
@@ -62,7 +70,62 @@ export class Profile implements OnInit {
     }
 
 
+    togglePasswordForm() {
+        this.showPasswordForm = !this.showPasswordForm;
+        if (this.showPasswordForm) {
+            // Réinitialiser le formulaire quand on l'ouvre
+            this.resetPasswordForm();
+        }
+    }
 
+    cancelPasswordEdit() {
+        this.showPasswordForm = false;
+        this.resetPasswordForm();
+    }
+
+    resetPasswordForm() {
+        this.passwordData = {
+            currentPassword: '',
+            newPassword: '',
+            confirmPassword: ''
+        };
+    }
+
+    updatePassword() {
+        // Vérification finale des mots de passe
+        if (this.passwordData.newPassword !== this.passwordData.confirmPassword) {
+            alert('Les mots de passe ne correspondent pas');
+            return;
+        }
+
+        if (this.passwordData.newPassword.length < 6) {
+            alert('Le nouveau mot de passe doit contenir au moins 6 caractères');
+            return;
+        }
+
+        // Appel à votre service pour modifier le mot de passe
+        const passwordUpdateData = {
+            currentPassword: this.passwordData.currentPassword,
+            newPassword: this.passwordData.newPassword
+        };
+        console.log('Data envoyée au back : ', passwordUpdateData);
+
+        this.userService.updatePassword(passwordUpdateData).subscribe({
+            next: (response: any) => {
+                console.log('Mot de passe modifié avec succès', response);
+                alert('Mot de passe modifié avec succès !');
+                this.cancelPasswordEdit();
+            },
+            error: (error) => {
+                console.error('Erreur lors de la modification du mot de passe', error);
+                if (error.status === 400) {
+                    alert('Mot de passe actuel incorrect');
+                } else {
+                    alert('Erreur lors de la modification du mot de passe');
+                }
+            }
+        });
+    }
 
     editProfile() {
         this.isEditing = true;

@@ -17,7 +17,7 @@ export class Header implements OnInit {
 
     constructor(
         private authState: AuthStateService,
-        private router: Router
+        protected router: Router
     ) {}
 
     ngOnInit() {

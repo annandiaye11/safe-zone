@@ -21,16 +21,6 @@
 
                         <!-- SLIDER -->
                         <div class="product-slider">
-
-                            <!-- flèche gauche -->
-<!--                            <button-->
-<!--                                class="arrow left"-->
-<!--                                (click)="prevImage(product.id!)"-->
-<!--                                [disabled]="!(product.images?.length! > 1)"-->
-<!--                            >-->
-<!--                                &#10094;-->
-<!--                            </button>-->
-
                             @if (product.images?.length! > 1) {
                                 <button class="arrow left" (click)="prevImage(product.id!)">&#10094;</button>
                             }
@@ -48,21 +38,9 @@
                                 />
 
                             </div>
-
-                            <!-- flèche droite -->
-<!--                            <button-->
-<!--                                class="arrow right"-->
-<!--                                (click)="nextImage(product.id!)"-->
-<!--                                [disabled]="!(product.images?.length! > 1)"-->
-<!--                            >-->
-<!--                                &#10095;-->
-<!--                            </button>-->
-
                             @if (product.images?.length! > 1) {
                                 <button class="arrow right" (click)="nextImage(product.id!)">&#10095;</button>
                             }
-
-
 
                             <!-- badge stock -->
                             @if (product.quantity === 0) {

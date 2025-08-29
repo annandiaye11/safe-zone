@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {Router, RouterLink} from "@angular/router";
+import {Router, RouterLink, RouterLinkActive} from "@angular/router";
 import {AuthService} from '../../../services/auth.service';
 import {UtilsService} from '../../../services/utils.service';
 import {UserService} from '../../../services/user.service';
@@ -9,12 +9,13 @@ import {AuthStateService} from '../../../services/auth.state.service';
 @Component({
   selector: 'app-sidebar',
     imports: [
-        RouterLink
+        RouterLink,
     ],
   templateUrl: './sidebar.html',
   styleUrl: './sidebar.scss'
 })
 export class Sidebar implements OnInit {
+    activeLink = 'produits';
     isAuthenticated: boolean = false;
     user: any
 
@@ -22,6 +23,10 @@ export class Sidebar implements OnInit {
         private authState: AuthStateService,
         private userService: UserService,
     ) {}
+
+    setActiveLink(linkName: string): void {
+        this.activeLink = linkName;
+    }
 
     ngOnInit() {
         this.authState.isAuthenticated$.subscribe(value => {

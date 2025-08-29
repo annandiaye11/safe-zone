@@ -15,7 +15,6 @@ import {AuthStateService} from '../../services/auth.state.service';
     imports: [
         FormsModule,
         RouterLink,
-        NgIf,
     ],
     templateUrl: './home.html',
     styleUrl: './home.scss'

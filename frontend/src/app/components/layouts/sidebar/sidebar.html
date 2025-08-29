@@ -1,6 +1,6 @@
 <aside class="sidebar">
     <!-- Logo -->
-    <a [routerLink]="['/']" class="sidebar-logo">
+    <a [routerLink]="['/']" class="sidebar-logo" (click)="setActiveLink('produits')">
         <h1>
             BUY-01
         </h1>
@@ -15,15 +15,17 @@
 
     <!-- Navigation -->
     <nav class="sidebar-nav">
-        <a routerLink="/" class="nav-link ">
-            <span></span>
+        <a routerLink="/" class="nav-link" (click)="setActiveLink('produits')" [class.active]="activeLink === 'produits'">
+            <span>🛍️</span>
             Produits
         </a>
-        <a routerLink="/dashboard" class="nav-link active">
+
+        <a routerLink="/dashboard" class="nav-link" (click)="setActiveLink('dashboard')" [class.active]="activeLink === 'dashboard'">
             <span>📊</span>
             Dashboard
         </a>
-        <a routerLink="/profile" class="nav-link">
+
+        <a routerLink="/profile" class="nav-link" (click)="setActiveLink('profile')" [class.active]="activeLink === 'profile'">
             <span>👤</span>
             Accounts
         </a>

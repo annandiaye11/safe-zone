@@ -1,4 +1,7 @@
 <div class="auth-container">
+
+    <app-toast></app-toast>
+
     <div class="auth-background">
         <div class="auth-pattern"></div>
     </div>
@@ -23,6 +26,7 @@
                         name="email"
                         placeholder="votre@email.com"
                         type="email"
+                        pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
                         formControlName="email"
                         required
                     >

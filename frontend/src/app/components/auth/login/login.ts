@@ -1,20 +1,23 @@
-import {Component, EventEmitter, Output} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {RouterLink} from '@angular/router';
 import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import {AuthService} from '../../../services/auth.service';
 import {Auth} from '../../../entity/Auth';
 import {AuthStateService} from '../../../services/auth.state.service';
+import {ToastService} from '../../../services/toast.service';
+import {ToastComponent} from '../../toast/toast.component';
 
 @Component({
     selector: 'app-login',
     imports: [
         RouterLink,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        ToastComponent
     ],
     templateUrl: './login.html',
     styleUrl: './login.scss'
 })
-export class Login {
+export class Login implements OnInit {
     @Output() isAuthenticated = new EventEmitter<boolean>()
 
     loginFormData;
@@ -22,12 +25,17 @@ export class Login {
     constructor(
         private fb: FormBuilder,
         private authService: AuthService,
-        private authState: AuthStateService
+        private authState: AuthStateService,
+        private toastService: ToastService
     ) {
         this.loginFormData = this.fb.group({
             email: ['', [Validators.required, Validators.email]],
             password: ['', [Validators.required, Validators.minLength(6)]]
         });
+    }
+
+    ngOnInit() {
+        this.toastService.success("I am a toast message called from Login component!", 10000)
     }
 
     onSubmit() {

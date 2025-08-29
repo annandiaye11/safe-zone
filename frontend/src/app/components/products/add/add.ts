@@ -60,6 +60,8 @@ export class Add implements OnInit {
         this.selectedFiles = null;
         this.selectedFilesChange.emit([])
         this.isFormOpenChange.emit(false);
+        this.editingProduct = null;
+        this.formData = {id: null, name: '', description: '', price: 0, quantity: 0 };
     }
 
     onSubmit() {
@@ -77,7 +79,7 @@ export class Add implements OnInit {
 
             console.log('Sauvegarde du produit :', productData);
             this.saveProduct.emit(productData);
-            this.closeForm();
+           // this.closeForm();
         }
     }
 

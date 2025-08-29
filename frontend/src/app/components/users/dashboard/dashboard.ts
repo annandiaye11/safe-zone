@@ -7,6 +7,9 @@ import {ProductService} from '../../../services/product.service';
 import {Media} from '../../../entity/Media';
 import {MediaService} from '../../../services/media.service';
 import {UtilsService} from '../../../services/utils.service';
+import {JwtService} from '../../../services/jwt.service';
+import {ToastService} from '../../../services/toast.service';
+import {ToastComponent} from '../../toast/toast.component';
 
 @Component({
     selector: 'app-dashboard',
@@ -14,22 +17,25 @@ import {UtilsService} from '../../../services/utils.service';
         DecimalPipe,
         NgClass,
         FormsModule,
-        Add
+        Add,
     ],
     templateUrl: './dashboard.html',
     styleUrl: './dashboard.scss'
 })
 export class Dashboard implements OnInit{
-
-    constructor(private productService: ProductService, private mediaService: MediaService, private utilsService: UtilsService) {}
+    constructor(private productService: ProductService,
+                private mediaService: MediaService,
+                private utilsService: UtilsService,
+                private jwtService: JwtService,
+                private toastService: ToastService) {}
     products: Product[] = [
     ];
     currentIndexes: { [key: string]: number } = {};
-
     isFormOpen = false;
     editingProduct: Product | null = null;
     media: Media | null = null;
     selectedFiles: File[]  | null = [];
+    mediaForSave: File[]  | null = [];
     formData: {
         id: string | null;
         name: string;
@@ -43,14 +49,21 @@ export class Dashboard implements OnInit{
         price: 0,
         quantity: 0,
     };
+    userId: string | null = null;
+
     ngOnInit() {
-        this.loadProducts();
+        this.userId = this.jwtService.getUserId(this.utilsService.getToken());
+        if (this.userId != null) this.loadProducts();
     }
 
     private loadProducts() {
         this.productService.getAllProducts().subscribe({
             next: (data: Product[]) => {
-                this.products = data;
+                data.forEach(p => {
+                    if (p.userId == this.userId) {
+                        this.products.push(p);
+                    }
+                })
                 this.products.forEach(product => {
                     this.mediaService.getMediaByProduitId(product.id!).subscribe({
                         next: (data: any) => {
@@ -111,43 +124,57 @@ export class Dashboard implements OnInit{
     }
 
     handleSaveProduct(product: Product) {
+        if (this.selectedFiles?.length == 0) {
+            this.toastService.warning("Veuillez mettre au moins une image")
+            return
+        }
+
+        if (this.formData.name.trim() == "") {
+            this.toastService.warning("Veuillez renseigner le nom du produit")
+            return
+        }
+        if (this.formData.description.trim() == "") {
+            this.toastService.warning("Veuillez renseigner la description du produit")
+            return
+        }
+        if (this.formData.quantity <= 0 || this.formData.quantity <= 0) {
+            this.toastService.warning("Le prix et la quantite doivent etre positifs")
+            return
+        }
+        for (let p of this.products) {
+            if (p.name == product.name.trim()) {
+                this.toastService.warning("Veuillez choisir un autre nom pour le produit, le nom du produit existe déjà");
+                return;
+            }
+        }
         if (this.editingProduct) {
             this.productService.saveOrUpdateProduct(product).subscribe({
                 next: (data: any)=> {
                   this.products = this.products.map(p => p.id === product.id ? data : p);
-                  console.log(this.media);
-                 },
+                    if (this.selectedFiles) this.mediaForSave = this.selectedFiles;
+                    this.selectedFiles = [];
+                    this.saveMedia(this.mediaForSave, data.id!);                },
                 error: (err) => {
+                    this.toastService.warning("Le nom du produit existe deja, veuillez choisir un autre nom")
                     console.log("erreur lors de la modification du produit", err)
                 }
             })
         } else {
             this.productService.saveOrUpdateProduct(product).subscribe({
                 next: (data: any)=> {
-                    console.log("data", data)
                     this.products.push(data);
-                    if (this.selectedFiles) {
-                        this.mediaService.saveMedia(this.selectedFiles, data.id).subscribe({
-                            next: (data: any)=> {
-                                console.log("Media enregistre", data)
-                            },
-                            error: (err) => {
-                                console.log("erreur lors de l'enregistrement du media", err)
-                            }
-                        })
-                    }
+                    if (this.selectedFiles) this.mediaForSave = this.selectedFiles;
+                    this.selectedFiles = [];
+                    this.saveMedia(this.mediaForSave, data.id!);
                 },
                 error: (err) => {
+                    this.selectedFiles = []
                     console.log("erreur lors de l'enregistrement du produit", err)
                 }
             })
         }
-        // Réinitialiser le formulaire
         this.editingProduct = null;
         this.formData = {id: null, name: '', description: '', price: 0, quantity: 0 };
-        this.isFormOpen = false;
-
-        console.log('Produit sauvegardé:', product);
     }
 
     getTotalValue(): number {
@@ -163,5 +190,18 @@ export class Dashboard implements OnInit{
 
     nextImage(productId: string) {
         this.utilsService.next(this.products, productId, this.currentIndexes)
+    }
+
+    saveMedia(files: File[] | null, productId: string) {
+        if (files == null) return;
+        this.mediaService.saveMedia(files, productId).subscribe({
+            next: (data: any)=> {
+                this.toastService.success("Produit enregistré")
+                this.loadProducts()
+            },
+            error: (err) => {
+                console.log("erreur lors de l'enregistrement du media", err)
+            }
+        })
     }
 }

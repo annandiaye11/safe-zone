@@ -41,7 +41,6 @@ export class Home implements OnInit {
         this.authState.isAuthenticated$.subscribe(value => {
             this.isAuthenticated = value;
         });
-
         // 🔹 écouter les infos utilisateur (utile si tu veux filtrer les produits par rôle plus tard)
         this.authState.user$.subscribe(user => {
             this.user = user;

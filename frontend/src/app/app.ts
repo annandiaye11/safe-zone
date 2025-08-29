@@ -5,10 +5,11 @@ import {UtilsService} from './services/utils.service';
 import {Header} from './components/layouts/header/header';
 import {Subscription} from 'rxjs';
 import {AuthStateService} from './services/auth.state.service';
+import {ToastComponent} from './components/toast/toast.component';
 
 @Component({
   selector: 'app-root',
-    imports: [RouterOutlet, Sidebar, Header],
+    imports: [RouterOutlet, Sidebar, Header, ToastComponent],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })

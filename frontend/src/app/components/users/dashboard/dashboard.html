@@ -47,10 +47,23 @@
             @for (product of products; track product) {
                 <div class="product-card">
                     <div class="image-container">
-                        <img [src]="'/assets/podium.jpg'" [alt]="product.name" />
-                        <div class="actions-overlay">
-                        </div>
+                        <div class="product-image">
+                            @if (product.images?.length! > 1) {
+                                <button class="arrow left" (click)="prevImage(product.id!)">&#10094;</button>
+                            }
+                            <img
+                                [src]="
+                                      product.images && product.images.length > 0
+                                        ? product.images[currentIndexes[product.id!] || 0].imagePath
+                                        : 'assets/podium.jpg'
+                                    "
+                                alt="{{ product.name }}"
+                            />
+                            @if (product.images?.length! > 1) {
+                                <button class="arrow right" (click)="nextImage(product.id!)">&#10095;</button>
+                            }
 
+                        </div>
                         @if (product.quantity === 0) {
                             <span class="badge badge-red">Épuisé</span>
                         }

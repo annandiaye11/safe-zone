@@ -56,6 +56,8 @@ export class Add implements OnInit {
 
     closeForm() {
         console.log('Fermeture du formulaire');
+        this.selectedFiles = null;
+        this.selectedFilesChange.emit([])
         this.isFormOpenChange.emit(false);
     }
 

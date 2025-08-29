@@ -6,6 +6,7 @@ import {Add} from '../../products/add/add';
 import {ProductService} from '../../../services/product.service';
 import {Media} from '../../../entity/Media';
 import {MediaService} from '../../../services/media.service';
+import {UtilsService} from '../../../services/utils.service';
 
 @Component({
     selector: 'app-dashboard',
@@ -20,9 +21,11 @@ import {MediaService} from '../../../services/media.service';
 })
 export class Dashboard implements OnInit{
 
-    constructor(private productService: ProductService, private mediaService: MediaService) {}
+    constructor(private productService: ProductService, private mediaService: MediaService, private utilsService: UtilsService) {}
     products: Product[] = [
     ];
+    currentIndexes: { [key: string]: number } = {};
+
     isFormOpen = false;
     editingProduct: Product | null = null;
     media: Media | null = null;
@@ -40,12 +43,30 @@ export class Dashboard implements OnInit{
         price: 0,
         quantity: 0,
     };
+    ngOnInit() {
+        this.loadProducts();
+    }
 
-    ngOnInit(): void {
+    private loadProducts() {
         this.productService.getAllProducts().subscribe({
             next: (data: Product[]) => {
                 this.products = data;
-                console.log('Produits:', data);
+                this.products.forEach(product => {
+                    this.mediaService.getMediaByProduitId(product.id!).subscribe({
+                        next: (data: any) => {
+                            console.log(`Media for produit ${product.name}`, data)
+                            product.images = data.media;
+                        },
+                        error: (err) => {
+                            console.error("Erreur lors de la récupération des media", err);
+                        }
+                    });
+                });
+                this.products.forEach(p => {
+                    if (p.id !== null) {
+                        this.currentIndexes[p.id] = 0;
+                    }
+                });
             },
             error: (err) => {
                 console.error('Erreur lors de la récupération des produits', err);
@@ -119,7 +140,6 @@ export class Dashboard implements OnInit{
                 }
             })
         }
-
         // Réinitialiser le formulaire
         this.editingProduct = null;
         this.formData = {id: null, name: '', description: '', price: 0, quantity: 0 };
@@ -134,5 +154,12 @@ export class Dashboard implements OnInit{
 
     getLowStockCount(): number {
         return this.products.filter(product => product.quantity > 0 && product.quantity < 10).length;
+    }
+    prevImage(productId: string) {
+        this.utilsService.prev(this.products, productId, this.currentIndexes)
+    }
+
+    nextImage(productId: string) {
+        this.utilsService.next(this.products, productId, this.currentIndexes)
     }
 }

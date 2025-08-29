@@ -35,58 +35,6 @@ export class Home implements OnInit {
     ) {
     }
 
-    /*ngOnInit() {
-        this.productService.getAllProducts().subscribe({
-            next: (data: Product[]) => {
-                this.products = data;
-                this.products.forEach(product => {
-                    this.mediaService.getMediaByProduitId(product.id!).subscribe({
-                        next: (data: any) => {
-                            //console.log(`Media for produit ${product.name}`, data)
-                            product.images = data.media;
-                            //console.log('Produit:', product);
-                        },
-                        error: (err) => {
-                            console.error("error lors de la recuperation des media", err)
-                        }
-                    })
-                })
-                this.products.forEach(p => {
-                    if (p.id !== null) {
-                        this.currentIndexes[p.id] = 0;                    }
-                });
-
-            },
-            error: (err) => {
-                console.error('Erreur lors de la récupération des produits', err);
-            }
-        })
-    }
-
-
-
-
-    prevImage(productId: string) {
-        const product = this.products.find(p => p.id === productId);
-        if (!product) return;
-
-        if (this.currentIndexes[productId] === 0) {
-           this.currentIndexes[productId] = product.images!.length - 1;
-        } else {
-            this.currentIndexes[productId]--;
-        }
-    }
-
-    nextImage(productId: string) {
-        const product = this.products.find(p => p.id === productId);
-        if (!product) return;
-
-        if (this.currentIndexes[productId] === product.images!.length - 1) {
-            this.currentIndexes[productId] = 0;
-        } else {
-            this.currentIndexes[productId]++;
-        }
-    }*/
 
     ngOnInit() {
         // 🔹 écouter l’état d’authentification
@@ -134,25 +82,11 @@ export class Home implements OnInit {
     }
 
     prevImage(productId: string) {
-        const product = this.products.find(p => p.id === productId);
-        if (!product || !product.images) return;
-
-        if (this.currentIndexes[productId] === 0) {
-            this.currentIndexes[productId] = product.images.length - 1;
-        } else {
-            this.currentIndexes[productId]--;
-        }
+       this.utilsService.prev(this.products, productId, this.currentIndexes)
     }
 
     nextImage(productId: string) {
-        const product = this.products.find(p => p.id === productId);
-        if (!product || !product.images) return;
-
-        if (this.currentIndexes[productId] === product.images.length - 1) {
-            this.currentIndexes[productId] = 0;
-        } else {
-            this.currentIndexes[productId]++;
-        }
+        this.utilsService.next(this.products, productId, this.currentIndexes)
     }
 
 }

@@ -4,6 +4,7 @@ import {Role} from '../entity/Role';
 import {Router} from '@angular/router';
 import {JwtService} from './jwt.service';
 import {map} from 'rxjs';
+import {Product} from '../entity/Product';
 
 @Injectable({
   providedIn: 'root'
@@ -72,5 +73,27 @@ export class UtilsService implements OnInit {
 
     publicIpAddress() {
         return this.http.get('https://free.freeipapi.com/api/json')
+    }
+
+    prev(products : Product[], productId: string, currentIndexes: { [key: string]: number }) {
+        const product = products.find(p => p.id === productId);
+        if (!product || !product.images) return;
+
+        if (currentIndexes[productId] === 0) {
+            currentIndexes[productId] = product.images.length - 1;
+        } else {
+            currentIndexes[productId]--;
+        }
+    }
+
+    next(products : Product[], productId: string, currentIndexes: { [key: string]: number }) {
+        const product = products.find(p => p.id === productId);
+        if (!product || !product.images) return;
+
+        if (currentIndexes[productId] === product.images.length - 1) {
+            currentIndexes[productId] = 0;
+        } else {
+            currentIndexes[productId]++;
+        }
     }
 }

@@ -24,8 +24,6 @@
                             @if (product.images?.length! > 1) {
                                 <button class="arrow left" (click)="prevImage(product.id!)">&#10094;</button>
                             }
-
-
                             <!-- image actuelle -->
                             <div class="product-image">
                                 <img
@@ -38,10 +36,10 @@
                                 />
 
                             </div>
+
                             @if (product.images?.length! > 1) {
                                 <button class="arrow right" (click)="nextImage(product.id!)">&#10095;</button>
                             }
-
                             <!-- badge stock -->
                             @if (product.quantity === 0) {
                                 <span class="badge stock">Épuisé</span>
@@ -66,7 +64,7 @@
                                         <span class="stock-value"
                                               [class.low]="product.quantity < 10"
                                               [class.out]="product.quantity === 0">
-                {{ product.quantity }}
+                                        {{ product.quantity }}
               </span>
                                     </div>
                                 </div>

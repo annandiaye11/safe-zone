@@ -1,6 +1,6 @@
 <aside class="sidebar">
     <!-- Logo -->
-    <a [routerLink]="['/']" class="sidebar-logo" (click)="setActiveLink('produits')">
+    <a [routerLink]="['/']" class="sidebar-logo">
         <h1>
             BUY-01
         </h1>
@@ -15,18 +15,23 @@
 
     <!-- Navigation -->
     <nav class="sidebar-nav">
-        <a routerLink="/" class="nav-link" (click)="setActiveLink('produits')" [class.active]="activeLink === 'produits'">
+        <a [routerLink]="Link.HOME"
+           [ngClass]="['nav-link', setActiveLink(Link.HOME) ? 'active' : '']">
             <span>🛍️</span>
-            Produits
+            Home
         </a>
 
-        <a routerLink="/dashboard" class="nav-link" (click)="setActiveLink('dashboard')" [class.active]="activeLink === 'dashboard'">
-            <span>📊</span>
+        <a [routerLink]="Link.DashBoard"
+           [ngClass]="['nav-link', setActiveLink(Link.DashBoard) ? 'active' : '']">
+
+        <span>📊</span>
             Dashboard
         </a>
 
-        <a routerLink="/profile" class="nav-link" (click)="setActiveLink('profile')" [class.active]="activeLink === 'profile'">
-            <span>👤</span>
+        <a [routerLink]="Link.Account"
+           [ngClass]="['nav-link', setActiveLink(Link.Account) ? 'active' : '']">
+
+        <span>👤</span>
             Accounts
         </a>
     </nav>

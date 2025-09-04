@@ -25,11 +25,9 @@ public interface MediaController {
     ResponseEntity<Map<String, Object>> createMedia( @RequestParam("imagePath") List<MultipartFile> imageFile,
                                                      @RequestParam("productId") String productId);
 
-    //@PreAuthorize("#id == authentication.principal.id")
     @PutMapping("/{id}")
     ResponseEntity<Map<String, Object>> updateMedia(@PathVariable String id, @RequestBody @Valid MediaDtoAll mediaDtoAll);
 
-    // @PreAuthorize("#id ==  authentication.principal.id")
     @DeleteMapping("/{id}")
     ResponseEntity<Map<String, Object>> deleteMedia(@PathVariable String id);
 }

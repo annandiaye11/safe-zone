@@ -99,18 +99,9 @@ public class UserControllerImpl implements UserController {
 
         User me = userService.getCurrentUser();
 
-        System.out.println("me: " + me);
-
         if (me == null) {
             return ResponseEntity.notFound().build();
         }
-
-//        Map<String, Object> resp = new HashMap<>();
-//        resp.put("id", me.getId());
-//        resp.put("name", me.getName());
-//        resp.put("email", me.getEmail());
-//        resp.put("avatar", me.getAvatar());
-//        resp.put("role", me.getRole().name());
 
         return ResponseEntity.status(200).body(MapperUser.toDto(me));
     }

@@ -18,8 +18,6 @@ public class MapperMedia {
         return media;
     }
 
-
-
     public static MediaResponse toDto(Media media) {
         MediaResponse mediaResponse = new MediaResponse();
         mediaResponse.setId(media.getId());
@@ -27,6 +25,5 @@ public class MapperMedia {
         mediaResponse.setProductId(media.getProductId());
         return mediaResponse;
     }
-
 
 }

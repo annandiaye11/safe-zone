@@ -94,7 +94,7 @@ public class MediaControllerImpl implements MediaController {
         if (media == null) {
             return ResponseEntity.notFound().build();
         }
-      //  media.setImagePath(s3Service.uploadFile(mediaDtoAll.getImagePath()));
+
         media.setProductId(mediaDtoAll.getProductId());
         Media mediaCreated = mediaService.updateMedia(media);
         HashMap<String, Object> response = new HashMap<>();

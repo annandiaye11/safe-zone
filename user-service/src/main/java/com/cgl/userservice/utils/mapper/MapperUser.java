@@ -19,8 +19,6 @@ public class MapperUser {
         return user;
     }
 
-
-
     public static UserOneResponse toDto(User user) {
         UserOneResponse userOneResponse = new UserOneResponse();
         userOneResponse.setId(user.getId());
@@ -30,7 +28,6 @@ public class MapperUser {
         userOneResponse.setRole(String.valueOf(user.getRole()));
         return userOneResponse;
     }
-
 
     public static UserAllResponse toDtoSecond(User user) {
         UserAllResponse userAllResponse = new UserAllResponse();

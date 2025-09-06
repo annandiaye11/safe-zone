@@ -7,7 +7,7 @@ RUN mvn dependency:go-offline
 RUN mvn clean package -DskipTests -pl media-service -am
 
 FROM eclipse-temurin:17-jdk-alpine
-RUN apk add --no-cache bash curl
+RUN apk add --no-cache curl
 
 WORKDIR /app
 

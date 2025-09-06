@@ -2,6 +2,7 @@ services:
     mongodb:
         image: mongo:latest
         container_name: mongo-database
+        restart: unless-stopped
         ports:
             -   "27017:27017"
         volumes:
@@ -46,6 +47,114 @@ services:
             KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9093
             KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2
             KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+
+    eureka-server:
+        build:
+            context: .
+            dockerfile: ./eureka-server/Dockerfile
+        container_name: eureka-server
+        restart: unless-stopped
+        ports:
+            -   "8761:8761"
+        environment:
+            -   EUREKA_SERVER_PORT=8761
+        networks:
+            -   buy01-network
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://eureka-service:8761/actuator/health"]
+            interval: 30s
+            timeout: 10s
+            retries: 2
+
+    api-gateway:
+        build:
+            context: .
+            dockerfile: ./api-gateway/Dockerfile
+        container_name: api-gateway
+        restart: unless-stopped
+        ports:
+            -   "8080:8080"
+        environment:
+            -   EUREKA_SERVER_PORT=8761
+        depends_on:
+            eureka-server:
+                condition: service_healthy
+        networks:
+            -   buy01-network
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+            interval: 30s
+            timeout: 10s
+            retries: 2
+
+    user-service:
+        build:
+            context: .
+            dockerfile: ./user-service/Dockerfile
+        container_name: user-service
+        restart: unless-stopped
+        ports:
+            -   "8081:8081"
+        environment:
+            -   EUREKA_SERVER_PORT=8761
+        depends_on:
+            eureka-server:
+                condition: service_healthy
+            mongodb:
+                condition: service_healthy
+        networks:
+            -   buy01-network
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost:8081/actuator/health"]
+            interval: 30s
+            timeout: 10s
+            retries: 2
+
+    product-service:
+        build:
+            context: .
+            dockerfile: ./product-service/Dockerfile
+        container_name: product-service
+        restart: unless-stopped
+        ports:
+            -   "8082:8082"
+        environment:
+            -   EUREKA_SERVER_PORT=8761
+        depends_on:
+            eureka-server:
+                condition: service_healthy
+            mongodb:
+                condition: service_healthy
+        networks:
+            -   buy01-network
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost:8082/actuator/health"]
+            interval: 30s
+            timeout: 10s
+            retries: 2
+
+    media-service:
+        build:
+            context: .
+            dockerfile: ./media-service/Dockerfile
+        container_name: media-service
+        restart: unless-stopped
+        ports:
+            -   "8083:8083"
+        environment:
+            -   EUREKA_SERVER_PORT=8761
+        depends_on:
+            eureka-server:
+                condition: service_healthy
+            mongodb:
+                condition: service_healthy
+        networks:
+            -   buy01-network
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost:8083/actuator/health"]
+            interval: 30s
+            timeout: 10s
+            retries: 2
 
 volumes:
     mongodb_data:

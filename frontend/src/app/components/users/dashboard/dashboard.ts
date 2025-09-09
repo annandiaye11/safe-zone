@@ -35,6 +35,7 @@ export class Dashboard implements OnInit{
     editingProduct: Product | null = null;
     media: Media | null = null;
     selectedFiles: File[]  | null = [];
+    mediaForDelete: string[]  | null = [];
     mediaForSave: File[]  | null = [];
     formData: {
         id: string | null;
@@ -90,6 +91,9 @@ export class Dashboard implements OnInit{
         this.editingProduct = null;
         this.formData = {id: null ,name: '', description: '', price: 0, quantity: 0};
         this.isFormOpen = true;
+    }
+    onMediaForDelete(mediaIds : string[]) {
+        console.log("")
     }
 
     onMediaFile(files: File[]) {
@@ -159,9 +163,13 @@ export class Dashboard implements OnInit{
                 next: (data: any)=> {
                   this.products = this.products.map(p => p.id === product.id ? data : p);
                   console.log("selectedFiles", this.selectedFiles)
-                    if (this.selectedFiles) this.mediaForSave = this.selectedFiles;
+                    if (this.selectedFiles) this.mediaForSave = this.selectedFiles.filter(f => typeof f === "object");
                     this.selectedFiles = [];
-                    this.saveMedia(this.mediaForSave, data.id!);                },
+                    console.log("mediaForDelete", this.mediaForDelete)
+                    this.saveMedia(this.mediaForSave, data.id!);
+                    if (this.mediaForDelete) this.deleteMedia(this.mediaForDelete);
+                    this.isFormOpen = false;
+                },
                 error: (err) => {
                     this.toastService.warning("erreur lors de la modification du produit: Veuillez verifier les informations")
                 }
@@ -205,7 +213,7 @@ export class Dashboard implements OnInit{
     }
 
     saveMedia(files: File[] | null, productId: string) {
-        if (files == null) return;
+        if (files == null || files.length == 0) return;
         console.log("files recu", files)
         this.mediaService.saveMedia(files, productId).subscribe({
             next: (data: any)=> {
@@ -214,8 +222,24 @@ export class Dashboard implements OnInit{
                 this.loadProducts()
             },
             error: (err) => {
-                console.log("erreur lors de l'enregistrement du media", err)
+               this.toastService.error("erreur lors de l'enregistrement du produit")
             }
         })
+    }
+
+    deleteMedia(mediaIds: string[]) {
+        for (let mediaId of mediaIds ) {
+            this.mediaService.deleteMedia(mediaId).subscribe({
+                next: (data: any) => {
+                    this.toastService.success("Media supprimé")
+                },
+                error: ( err) =>{
+                    this.toastService.error("erreur lors de la suppression du media")
+                }
+
+            })
+        }
+
+
     }
 }

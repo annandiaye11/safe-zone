@@ -39,6 +39,8 @@ export class Add implements OnInit {
     @Output() isFormOpenChange = new EventEmitter<boolean>();
     @Output() saveProduct = new EventEmitter<Product>();
     @Input() selectedFiles: File[] | null = [];
+    @Input() mediaForDelete: string[] | null = [];
+    @Output() mediaForDeleteChange = new EventEmitter<string[]>();
     constructor(private userService: UserService, private toastService :ToastService, private mediaService : MediaService) {
     }
     user! :any
@@ -146,20 +148,12 @@ export class Add implements OnInit {
 
     // Supprimer un fichier
     removeFile(index: number): void {
-       let ok = false
         if (this.selectedFiles && this.selectedFiles.length > index) {
+            if (typeof this.selectedFiles[index] != "object") {
+                this.mediaForDelete?.push(this.editingProduct!.images![index]!.id!)
+            }
             this.selectedFiles.splice(index, 1);
-            this.mediaService.deleteMedia(this.selectedFiles[index].name).subscribe({
-                next (date) {
-                    ok = true
-                },
-                error ( err) {
-
-                    console.log("erreur lors de la suppression du media", err)
-                }
-            })
         }
-       ok ? this.toastService.success("Media supprimé") : this.toastService.error("Erreur lors de la suppression du media")
     }
 
     private resetFileInput(): void {
@@ -203,4 +197,6 @@ export class Add implements OnInit {
     get submitButtonText(): string {
         return this.isEditing ? 'Modifier' : 'Ajouter';
     }
+
+    protected readonly console = console;
 }

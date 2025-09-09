@@ -138,6 +138,10 @@
         [(isFormOpen)]="isFormOpen"
         (saveProduct)="handleSaveProduct($event)"
         [(selectedFiles)] = "selectedFiles"
-        (selectedFilesChange)="onMediaFile($event)">
+        (selectedFilesChange)="onMediaFile($event)"
+        [(mediaForDelete)]="mediaForDelete"
+        (mediaForDeleteChange)="onMediaForDelete($event)"
+
+    >
     </app-add>
 }

@@ -14,5 +14,6 @@ public interface MediaService {
     Media updateMedia(Media media);
     List<Media> getByProductId(String productId);
     void deleteMediaByProductId(String productId);
+    void deleteByImagePath(String imagePath);
 
 }

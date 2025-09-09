@@ -52,4 +52,9 @@ public class MediaServiceImpl implements MediaService {
         mediaRepository.deleteMediaByProductId(productId);
     }
 
+    @Override
+    public void deleteByImagePath(String imagePath) {
+        mediaRepository.deleteMediaByImagePath(imagePath);
+    }
+
 }

@@ -10,4 +10,6 @@ public interface MediaRepository extends MongoRepository<Media, String> {
     Optional<Media> findByProductId(String productId);
     List<Media> getAllByProductId(String productId);
     void deleteMediaByProductId(String productId);
+
+    void deleteMediaByImagePath(String imagePath);
 }

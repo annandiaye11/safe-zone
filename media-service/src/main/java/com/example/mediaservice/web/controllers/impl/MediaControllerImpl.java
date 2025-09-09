@@ -75,6 +75,10 @@ public class MediaControllerImpl implements MediaController {
 
     @Override
     public ResponseEntity<Map<String, Object>> createMedia(List<MultipartFile> imageFile, String productId) {
+        if (imageFile.size() > 3) {
+            return ResponseEntity.badRequest().body(Map.of("message", "You can't upload more than 3 images"));
+        }
+
         HashMap<String, Object> response = new HashMap<>();
         List<Media> medias = new ArrayList<>();
         for (MultipartFile file : imageFile) {
@@ -115,4 +119,24 @@ public class MediaControllerImpl implements MediaController {
         response.put("media", MapperMedia.toDto(mediaDeleted));
         return ResponseEntity.status(200).body(response);
     }
+
+    @Override
+    public ResponseEntity<Map<String, Object>> deleteByImagePath(String imagePath) {
+        Media media = mediaService.getAllMedias().stream()
+                .filter(m -> m.getImagePath().equals(imagePath))
+                .findFirst()
+                .orElse(null);
+
+        if (media == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Media mediaDeleted = mediaService.deleteMedia(media);
+        HashMap<String, Object> response = new HashMap<>();
+        response.put("message", "This media has been deleted");
+        response.put("media", MapperMedia.toDto(mediaDeleted));
+        return ResponseEntity.ok().body(response);
+    }
+
+
 }

@@ -30,4 +30,7 @@ public interface MediaController {
 
     @DeleteMapping("/{id}")
     ResponseEntity<Map<String, Object>> deleteMedia(@PathVariable String id);
+
+    @DeleteMapping("/{magePath}/media")
+    ResponseEntity<Map<String, Object>> deleteByImagePath(@PathVariable("imagePath") String imagePath);
 }

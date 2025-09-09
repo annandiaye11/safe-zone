@@ -35,7 +35,7 @@ export class Login implements OnInit {
     }
 
     ngOnInit() {
-        this.toastService.success("Login Page Loaded successful", 3000)
+        this.toastService.success("Page login chargee avec succes", 3000)
     }
 
     onSubmit() {
@@ -51,8 +51,9 @@ export class Login implements OnInit {
                 this.authService.saveToken(response.token)
                 this.isAuthenticated.emit(this.authService.isAuthenticated());
                 this.authState.loadAuthState()
+                this.toastService.success("Utilisateur connecte avec succes")
             },
-            error: (error) => {
+            error: (_) => {
                 this.toastService.error("Erreur: Ce utilisateur n'existe pas ou le mot de passe est incorrect !", 3000 );
 
             }

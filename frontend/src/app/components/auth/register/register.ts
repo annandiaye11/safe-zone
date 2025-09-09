@@ -5,12 +5,15 @@ import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import {Role} from '../../../entity/Role';
 import {User} from '../../../entity/User';
 import {UserService} from '../../../services/user.service';
+import {ToastService} from '../../../services/toast.service';
+import {ToastComponent} from '../../toast/toast.component';
 
 @Component({
     selector: 'app-register',
     imports: [
         RouterLink,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        // ToastComponent
     ],
     templateUrl: './register.html',
     styleUrl: './register.scss'
@@ -22,7 +25,8 @@ export class Register {
         private fb: FormBuilder,
         private authService: AuthService,
         private route: Router,
-        private userService: UserService
+        private userService: UserService,
+        private toastService : ToastService,
     ) {
         this.registerFormData = this.fb.group({
             name: ['', [Validators.required]],
@@ -63,10 +67,11 @@ export class Register {
                     if (this.selectedFile != null) {
                         this.userService.updateAvatar(this.selectedFile, responses.response.id).subscribe({
                             next: (data: any) => {
+                                this.toastService.success("Enregistre avec succes")
                                 console.log(data)
                             },
-                            error: (err: any) => {
-                                console.log("erreur lors de l'enregistrement de l'avatar", err)
+                            error: (_) => {
+                                this.toastService.error("Erreur lors de l'enregistrement de l'avatar: " )
                             }
                         })
                     }
@@ -74,6 +79,7 @@ export class Register {
                     this.route.navigate(['/login']).then()
                 },
                 error: (error) => {
+                    this.toastService.error("Erreur lors de l'enregistrement: " + error.error.message)
                     console.log(error)
                 }
             }

@@ -36,9 +36,9 @@ public interface UserController {
     @PatchMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     ResponseEntity<UserOneResponse> updateUser(@RequestParam("imagePath") MultipartFile imageFile, @RequestParam("userId") String userId);
 
-    @PatchMapping("/password")
-    ResponseEntity<ChangePasswordResponse> updatePassword(
-            @Valid @RequestBody ChangePasswordRequest request,
-            String id);
+    @PatchMapping("/{id}/changePassword")
+    ResponseEntity<ChangePasswordResponse> updatePassword(@PathVariable("id") String id,
+            @Valid @RequestBody ChangePasswordRequest request
+            );
 
 }

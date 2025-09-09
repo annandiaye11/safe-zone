@@ -6,6 +6,7 @@ import {Role} from '../../../entity/Role';
 import {UserService} from '../../../services/user.service';
 import {Router} from '@angular/router';
 import {UtilsService} from '../../../services/utils.service';
+import {ToastService} from '../../../services/toast.service';
 
 @Component({
     selector: 'app-profile',
@@ -40,7 +41,8 @@ export class Profile implements OnInit {
     constructor(
         private userService: UserService,
         private utilservice: UtilsService,
-        private router: Router
+        private router: Router,
+        private toastService: ToastService,
     ) {}
 
     ngOnInit() {
@@ -52,15 +54,13 @@ export class Profile implements OnInit {
          this.userService.getProfile().subscribe({
             next: (data: User)=> {
                this.user = data;
-               // this.user.role = this.userService.getRole(this.user.role)
-                // console.log("user", this.user)
-                //this.formData = {...this.user};
+
                 this.formData = {...data};
                this.formData.password = "ftkkeit"
                 // console.log("formData: ", this.formData)
              },
             error: (err) => {
-                console.error("erreur ", err)
+                this.toastService.error(err)
             }
         })
 
@@ -92,36 +92,34 @@ export class Profile implements OnInit {
     }
 
     updatePassword() {
-        // Vérification finale des mots de passe
         if (this.passwordData.newPassword !== this.passwordData.confirmPassword) {
-            alert('Les mots de passe ne correspondent pas');
+            this.toastService.error('Les mots de passe ne correspondent pas');
             return;
         }
 
         if (this.passwordData.newPassword.length < 6) {
-            alert('Le nouveau mot de passe doit contenir au moins 6 caractères');
+            this.toastService.error('Le nouveau mot de passe doit contenir au moins 6 caractères')
             return;
         }
 
-        // Appel à votre service pour modifier le mot de passe
         const passwordUpdateData = {
             currentPassword: this.passwordData.currentPassword,
             newPassword: this.passwordData.newPassword
         };
         console.log('Data envoyée au back : ', passwordUpdateData);
 
-        this.userService.updatePassword(passwordUpdateData).subscribe({
+        this.userService.updatePassword(passwordUpdateData, this.user.id).subscribe({
             next: (response: any) => {
                 console.log('Mot de passe modifié avec succès', response);
-                alert('Mot de passe modifié avec succès !');
+                this.toastService.success('Mot de passe modifié avec succès !')
                 this.cancelPasswordEdit();
             },
             error: (error) => {
                 console.error('Erreur lors de la modification du mot de passe', error);
                 if (error.status === 400) {
-                    alert('Mot de passe actuel incorrect');
+                    this.toastService.error('Les mots de passe ne correspondent pas')
                 } else {
-                    alert('Erreur lors de la modification du mot de passe');
+                    this.toastService.error('Erreur lors de la modification du mot de passe')
                 }
             }
         });
@@ -141,13 +139,12 @@ export class Profile implements OnInit {
        this.userService.updateProfile(this.user).subscribe({
            next: (data: any) => {
                this.user = data.user;
-               // this.user.role = this.userService.getRole(this.user.role)
-                // console.log("user updated", this.user);
+               this.toastService.success("Utilisateur modifié")
                 this.user.password = "ftkkeit"
                 this.cancelEdit();
            },
            error: (err) => {
-               console.error("erreur ", err)
+               this.toastService.error("Erreur lors de la modification de l'utilisateur" + err)
            }
        })
 
@@ -157,11 +154,11 @@ export class Profile implements OnInit {
         const file = event.target.files?.[0];
         if (file) {
             if (file.size > 5 * 1024 * 1024) {
-                alert('Le fichier doit faire moins de 5MB');
+                this.toastService.error('Le fichier doit faire moins de 5MB');
                 return;
             }
             if (!file.type.startsWith('image/')) {
-                alert('Veuillez sélectionner une image');
+                this.toastService.error('Veuillez sélectionner une image')
                 return;
             }
             const reader = new FileReader();

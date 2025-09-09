@@ -116,9 +116,8 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
-    public ResponseEntity<ChangePasswordResponse> updatePassword(
-            @Valid @RequestBody ChangePasswordRequest request,
-            String id) {
+    public ResponseEntity<ChangePasswordResponse> updatePassword( String id,
+       ChangePasswordRequest request) {
 
         if (id == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)

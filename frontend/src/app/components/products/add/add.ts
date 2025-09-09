@@ -5,6 +5,7 @@ import {User} from '../../../entity/User';
 import {UserService} from '../../../services/user.service';
 import {NgStyle} from '@angular/common';
 import {Media} from '../../../entity/Media';
+import {ToastService} from '../../../services/toast.service';
 
 @Component({
     selector: 'app-add',
@@ -38,7 +39,7 @@ export class Add implements OnInit {
     @Output() isFormOpenChange = new EventEmitter<boolean>();
     @Output() saveProduct = new EventEmitter<Product>();
     @Input() selectedFiles: File[] | null = [];
-    constructor(private userService: UserService) {
+    constructor(private userService: UserService, private toastService :ToastService) {
     }
     user! :any
     ngOnInit(): void {
@@ -50,7 +51,7 @@ export class Add implements OnInit {
                 this.user = data;
             },
             error: (err) => {
-                console.log("erreur lors de la recuperation des infos du user ", err)
+                this.toastService.error("erreur lors de la recuperation des infos du user " + err)
             }
         },)
     }
@@ -85,19 +86,19 @@ export class Add implements OnInit {
 
     private validateForm(): boolean {
         if (!this.formData.name.trim()) {
-            alert('Le nom du produit est requis');
+            this.toastService.warning("Veuillez renseigner le nom du produit")
             return false;
         }
         if (!this.formData.description.trim()) {
-            alert('La description est requise');
+            this.toastService.warning("Veuillez renseigner la description du produit")
             return false;
         }
         if (this.formData.price <= 0) {
-            alert('Le prix doit être supérieur à 0');
+            this.toastService.warning('Le prix doit être supérieur à 0')
             return false;
         }
         if (this.formData.quantity < 0) {
-            alert('La quantité ne peut pas être négative');
+            this.toastService.warning('La quantité ne peut pas être négative')
             return false;
         }
         return true;
@@ -119,11 +120,11 @@ export class Add implements OnInit {
         const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
         const validFiles = filesToAdd.filter(file => {
             if (!allowedTypes.includes(file.type)) {
-                alert(`${file.name} n'est pas un type d'image valide`);
+                this.toastService.warning(`${file.name} n'est pas un type d'image valide`);
                 return false;
             }
-            if (file.size > 5 * 1024 * 1024) { // 5MB max
-                alert(`${file.name} est trop volumineux (max 5MB)`);
+            if (file.size > 5 * 1024 * 1024) {
+                this.toastService.warning(`${file.name} est trop volumineux (max 5MB)`);
                 return false;
             }
             return true;
@@ -145,18 +146,11 @@ export class Add implements OnInit {
     // Supprimer un fichier
     removeFile(index: number): void {
         if (this.selectedFiles && this.selectedFiles.length > index) {
-            // Supprimer le fichier du tableau
             this.selectedFiles.splice(index, 1);
 
-            // Si vous utilisez un FormControl pour les fichiers, mettez-le à jour aussi
-            // this.fileControl?.setValue(this.selectedFiles);
-
-            // Optionnel : Si vous voulez aussi mettre à jour l'input file HTML
-            // this.resetFileInput();
         }
     }
 
-    // Fonction optionnelle pour réinitialiser l'input file
     private resetFileInput(): void {
         const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
         if (fileInput) {
@@ -167,10 +161,10 @@ export class Add implements OnInit {
     // Générer aperçu du fichier
     getFilePreview(file: any): string | null {
         if (file instanceof File) {
-            return URL.createObjectURL(file); // fichier local uploadé
+            return URL.createObjectURL(file);
         }
         if (typeof file === 'string') {
-            return file; // déjà une URL (ex: "https://.../image.jpg")
+                return file;
         }
         console.error("Type de fichier non supporté :", file);
         return null;

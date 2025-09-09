@@ -115,6 +115,7 @@ export class Dashboard implements OnInit{
         this.productService.deleteProduct(id).subscribe({
             next: (data: any)=> {
                 this.products = this.products.filter(p => p.id !== id);
+                this.toastService.info("Produit supprimé")
             },
             error: (err) => {
                 console.log("erreur lors de la suppression du produit", err)
@@ -162,7 +163,6 @@ export class Dashboard implements OnInit{
         } else {
             this.productService.saveOrUpdateProduct(product).subscribe({
                 next: (data: any)=> {
-                    this.products.push(data);
                     if (this.selectedFiles) this.mediaForSave = this.selectedFiles;
                     this.selectedFiles = [];
                     this.saveMedia(this.mediaForSave, data.id!);
@@ -197,6 +197,7 @@ export class Dashboard implements OnInit{
         this.mediaService.saveMedia(files, productId).subscribe({
             next: (data: any)=> {
                 this.toastService.success("Produit enregistré")
+                this.products = []
                 this.loadProducts()
             },
             error: (err) => {

@@ -6,6 +6,7 @@ import {UserService} from '../../../services/user.service';
 import {NgStyle} from '@angular/common';
 import {Media} from '../../../entity/Media';
 import {ToastService} from '../../../services/toast.service';
+import {MediaService} from '../../../services/media.service';
 
 @Component({
     selector: 'app-add',
@@ -17,7 +18,6 @@ import {ToastService} from '../../../services/toast.service';
     styleUrls: ['./add.scss']
 })
 export class Add implements OnInit {
-
     @Input() formData: {
         id: string | null;
         name: string;
@@ -39,13 +39,13 @@ export class Add implements OnInit {
     @Output() isFormOpenChange = new EventEmitter<boolean>();
     @Output() saveProduct = new EventEmitter<Product>();
     @Input() selectedFiles: File[] | null = [];
-    constructor(private userService: UserService, private toastService :ToastService) {
+    constructor(private userService: UserService, private toastService :ToastService, private mediaService : MediaService) {
     }
     user! :any
     ngOnInit(): void {
         console.log('Données reçues du parent :', this.formData);
         console.log('Produit en édition :', this.editingProduct);
-        console.log("selectedFiles", this.selectedFiles)
+        console.log("Données reçues de selectedFiles", typeof this.selectedFiles![0])
         this.userService.getProfile().subscribe({
             next: (data: User)=> {
                 this.user = data;
@@ -111,9 +111,10 @@ export class Add implements OnInit {
     onFileSelect(event: any) {
         const files = Array.from(event.target.files) as File[];
 
-        // Limite à 5 fichiers max
-        const maxFiles = 5;
+        // Limite à 3 fichiers max
+        const maxFiles = 3;
         const remainingSlots = maxFiles - this.selectedFiles!.length;
+        console.log("selectedFiles", this.selectedFiles)
         const filesToAdd = files.slice(0, remainingSlots);
 
         // Validation des types d'images
@@ -145,10 +146,20 @@ export class Add implements OnInit {
 
     // Supprimer un fichier
     removeFile(index: number): void {
+       let ok = false
         if (this.selectedFiles && this.selectedFiles.length > index) {
             this.selectedFiles.splice(index, 1);
+            this.mediaService.deleteMedia(this.selectedFiles[index].name).subscribe({
+                next (date) {
+                    ok = true
+                },
+                error ( err) {
 
+                    console.log("erreur lors de la suppression du media", err)
+                }
+            })
         }
+       ok ? this.toastService.success("Media supprimé") : this.toastService.error("Erreur lors de la suppression du media")
     }
 
     private resetFileInput(): void {

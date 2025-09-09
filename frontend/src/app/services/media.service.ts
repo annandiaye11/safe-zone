@@ -42,4 +42,12 @@ export class MediaService {
         });
         return this.http.get<any>(`${this.apiUrl}/product/${productId}`, { headers });
     }
+
+    deleteMedia(imagePath: string): Observable<any> {
+        this.token = localStorage.getItem('user-token')!;
+        const headers = new HttpHeaders({
+            Authorization: `Bearer ${this.token}`
+        });
+        return this.http.delete<any>(`${this.apiUrl}/${imagePath}/media`, { headers });
+    }
 }

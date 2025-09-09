@@ -53,7 +53,8 @@ export class Login implements OnInit {
                 this.authState.loadAuthState()
             },
             error: (error) => {
-                console.log(error)
+                this.toastService.error("Erreur: Ce utilisateur n'existe pas ou le mot de passe est incorrect !", 3000 );
+
             }
         })
     }

@@ -40,8 +40,8 @@ export class Dashboard implements OnInit{
         id: string | null;
         name: string;
         description: string;
-        price: number;
-        quantity: number;
+        price: any;
+        quantity: any;
     } = {
         id: null,
         name: '',
@@ -138,29 +138,41 @@ export class Dashboard implements OnInit{
             this.toastService.warning("Veuillez renseigner la description du produit")
             return
         }
-        if (this.formData.quantity <= 0 || this.formData.quantity <= 0) {
+        if (typeof this.formData.quantity != "number" ||  typeof this.formData.price != "number") {
+            this.toastService.warning("Le prix et la quantite doivent etre des nombres")
+            return
+        }
+        if (this.formData.quantity <= 0 || this.formData.price <= 0) {
             this.toastService.warning("Le prix et la quantite doivent etre positifs")
             return
         }
-        for (let p of this.products) {
-            if (p.name == product.name.trim()) {
-                this.toastService.warning("Veuillez choisir un autre nom pour le produit, le nom du produit existe déjà");
-                return;
-            }
+        if (this.formData.quantity > 9999 ) {
+            this.toastService.warning("La quantité ne doit pas être superieurs à 9999  ")
+            return
+        }
+        if (this.formData.price > 9999999) {
+            this.toastService.warning("Le prix ne doit pas etre superieurs à 9999999 ")
+            return
         }
         if (this.editingProduct) {
             this.productService.saveOrUpdateProduct(product).subscribe({
                 next: (data: any)=> {
                   this.products = this.products.map(p => p.id === product.id ? data : p);
+                  console.log("selectedFiles", this.selectedFiles)
                     if (this.selectedFiles) this.mediaForSave = this.selectedFiles;
                     this.selectedFiles = [];
                     this.saveMedia(this.mediaForSave, data.id!);                },
                 error: (err) => {
-                    this.toastService.warning("Le nom du produit existe deja, veuillez choisir un autre nom")
-                    console.log("erreur lors de la modification du produit", err)
+                    this.toastService.warning("erreur lors de la modification du produit: Veuillez verifier les informations")
                 }
             })
         } else {
+            for (let p of this.products) {
+                if (p.name == product.name.trim()) {
+                    this.toastService.error("Veuillez choisir un autre nom pour le produit, le nom du produit existe déjà");
+                    return;
+                }
+            }
             this.productService.saveOrUpdateProduct(product).subscribe({
                 next: (data: any)=> {
                     if (this.selectedFiles) this.mediaForSave = this.selectedFiles;
@@ -169,7 +181,7 @@ export class Dashboard implements OnInit{
                 },
                 error: (err) => {
                     this.selectedFiles = []
-                    console.log("erreur lors de l'enregistrement du produit", err)
+                    this.toastService.error("erreur lors de l'enregistrement du produit")
                 }
             })
         }
@@ -194,6 +206,7 @@ export class Dashboard implements OnInit{
 
     saveMedia(files: File[] | null, productId: string) {
         if (files == null) return;
+        console.log("files recu", files)
         this.mediaService.saveMedia(files, productId).subscribe({
             next: (data: any)=> {
                 this.toastService.success("Produit enregistré")

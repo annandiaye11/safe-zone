@@ -62,6 +62,7 @@ export class Home implements OnInit {
                             product.images = data.media;
                         },
                         error: (err) => {
+
                             console.error("Erreur lors de la récupération des media", err);
                         }
                     });

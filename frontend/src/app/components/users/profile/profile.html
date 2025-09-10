@@ -58,7 +58,7 @@
                     <div class="password-form-section">
                         <h3>Modifier le mot de passe</h3>
 
-                        <form (ngSubmit)="updatePassword()" #passwordForm="ngForm">
+                        <form (ngSubmit)="updatePassword()" #passwordForm="ngForm" autocomplete="off">
                             <div class="form-group">
                                 <label>Mot de passe actuel</label>
                                 <input

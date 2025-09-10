@@ -162,10 +162,8 @@ export class Dashboard implements OnInit{
             this.productService.saveOrUpdateProduct(product).subscribe({
                 next: (data: any)=> {
                   this.products = this.products.map(p => p.id === product.id ? data : p);
-                  console.log("selectedFiles", this.selectedFiles)
                     if (this.selectedFiles) this.mediaForSave = this.selectedFiles.filter(f => typeof f === "object");
                     this.selectedFiles = [];
-                    console.log("mediaForDelete", this.mediaForDelete)
                     this.saveMedia(this.mediaForSave, data.id!);
                     if (this.mediaForDelete) this.deleteMedia(this.mediaForDelete);
                     this.isFormOpen = false;
@@ -216,12 +214,12 @@ export class Dashboard implements OnInit{
         if (files == null || files.length == 0) return;
         console.log("files recu", files)
         this.mediaService.saveMedia(files, productId).subscribe({
-            next: (data: any)=> {
+            next: (_)=> {
                 this.toastService.success("Produit enregistré")
                 this.products = []
                 this.loadProducts()
             },
-            error: (err) => {
+            error: (_) => {
                this.toastService.error("erreur lors de l'enregistrement du produit")
             }
         })

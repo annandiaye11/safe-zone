@@ -106,6 +106,7 @@ public class UserServiceImpl implements UserService {
 
         String encodedNewPassword = passwordEncoder.encode(request.getNewPassword());
         user.setPassword(encodedNewPassword);
+        userRepository.save(user);
         response.put("message", "Le mot de passe a été changé");
         response.put("user", user);
         return response;

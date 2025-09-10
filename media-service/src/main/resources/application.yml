@@ -61,6 +61,6 @@ aws:
 
 logging:
   level:
-    org.apache.kafka: WARN
-    kafka: WARN
+    org.apache.kafka: ERROR
+    kafka: ERROR
 

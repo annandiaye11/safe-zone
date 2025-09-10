@@ -116,16 +116,12 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
-    public ResponseEntity<ChangePasswordResponse> updatePassword( String id,
-       ChangePasswordRequest request) {
+    public ResponseEntity<Map<String, Object>> updatePassword( String id, ChangePasswordRequest request) {
+        Map<String, Object> responses = userService.updatePassword(id, request);
 
-        if (id == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(new ChangePasswordResponse(false, "Utilisateur non authentifié"));
+        if (responses.get("message").equals("User not found") || responses.get("message").equals("Current password is incorrect")) {
+            return ResponseEntity.status(400).body(responses);
         }
-
-        userService.updatePassword(id, request);
-
-        return ResponseEntity.ok(new ChangePasswordResponse(true, "Mot de passe mis à jour avec succès"));
+        return ResponseEntity.status(200).body(responses);
     }
 }

@@ -37,7 +37,7 @@ public interface UserController {
     ResponseEntity<UserOneResponse> updateUser(@RequestParam("imagePath") MultipartFile imageFile, @RequestParam("userId") String userId);
 
     @PatchMapping("/{id}/changePassword")
-    ResponseEntity<ChangePasswordResponse> updatePassword(@PathVariable("id") String id,
+    ResponseEntity<Map<String, Object>> updatePassword(@PathVariable("id") String id,
             @Valid @RequestBody ChangePasswordRequest request
             );
 

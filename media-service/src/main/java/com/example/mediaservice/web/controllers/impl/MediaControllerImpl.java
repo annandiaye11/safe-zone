@@ -7,6 +7,7 @@ import com.example.mediaservice.utils.mappers.MapperMedia;
 import com.example.mediaservice.web.controllers.MediaController;
 import com.example.mediaservice.web.dto.requests.MediaDtoAll;
 import com.example.mediaservice.web.dto.responses.MediaResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,6 +19,7 @@ import java.util.Map;
 
 
 @RestController
+@Slf4j
 public class MediaControllerImpl implements MediaController {
     private final MediaService mediaService;
     private final S3Service s3Service;
@@ -122,6 +124,8 @@ public class MediaControllerImpl implements MediaController {
 
     @Override
     public ResponseEntity<Map<String, Object>> deleteByImagePath(String imagePath) {
+        log.info("deleteByImagePath: {}", imagePath);
+
         Media media = mediaService.getAllMedias().stream()
                 .filter(m -> m.getImagePath().equals(imagePath))
                 .findFirst()

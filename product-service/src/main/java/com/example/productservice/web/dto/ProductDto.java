@@ -22,7 +22,6 @@ public class ProductDto {
     @NotBlank(message = "Description must not be blank")
     @NotNull(message = "Description must not be null")
     @Size(max = 500, message = "Description must not exceed 500 characters")
-    @Pattern(regexp = "^[a-zA-Z0-9\\s,.'\"-]*$", message = "Description can only contain alphanumeric characters, spaces, commas, periods, apostrophes, quotes, and hyphens")
     private String description;
 
     @NotNull(message = "Product price must not be null")

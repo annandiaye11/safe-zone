@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 
 public interface UserService {
     List<User> getAllUsers();
@@ -16,5 +17,5 @@ public interface UserService {
     User delete(User user);
     User getCurrentUser();
     User updateAvatar(MultipartFile imageFile, String userId);
-    void updatePassword(String id, ChangePasswordRequest request);
+    Map<String, Object> updatePassword(String id, ChangePasswordRequest request);
 }

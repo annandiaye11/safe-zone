@@ -23,7 +23,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -88,21 +90,25 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updatePassword(String id, ChangePasswordRequest request) {
-//        // Récupérer l'utilisateur
+    public Map<String, Object> updatePassword(String id, ChangePasswordRequest request) {
+        HashMap<String, Object> response = new HashMap<>();
+
         User user = userRepository.findById(id).orElse(null);
-//                .orElseThrow(() -> new RuntimeException("User not found"));
-        // Vérifier le mot de passe actuel
-        assert user != null;
-        if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
-            throw new InvalidPasswordException("Mot de passe actuel incorrect");
+        if (user == null) {
+            response.put("message", "Cet utilisateur n'existe pas");
+            return response;
         }
 
-        // Encoder et sauvegarder le nouveau mot de passe
+        if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
+            response.put("message", "Le mot de passe actuel n'est pas correcte");
+            return response;
+        }
+
         String encodedNewPassword = passwordEncoder.encode(request.getNewPassword());
         user.setPassword(encodedNewPassword);
-
-        userRepository.save(user);
+        response.put("message", "Le mot de passe a été changé");
+        response.put("user", user);
+        return response;
     }
 
 

@@ -63,10 +63,6 @@ export class Profile implements OnInit {
                 this.toastService.error(err)
             }
         })
-
-        //console.log("user agent", navigator.userAgent)
-        //console.log("product", navigator.product)
-        //console.log("product sub", navigator.productSub)
     }
 
 
@@ -106,21 +102,15 @@ export class Profile implements OnInit {
             currentPassword: this.passwordData.currentPassword,
             newPassword: this.passwordData.newPassword
         };
-        console.log('Data envoyée au back : ', passwordUpdateData);
 
         this.userService.updatePassword(passwordUpdateData, this.user.id).subscribe({
             next: (response: any) => {
-                console.log('Mot de passe modifié avec succès', response);
                 this.toastService.success('Mot de passe modifié avec succès !')
                 this.cancelPasswordEdit();
             },
             error: (error) => {
-                console.error('Erreur lors de la modification du mot de passe', error);
-                if (error.status === 400) {
-                    this.toastService.error('Les mots de passe ne correspondent pas')
-                } else {
-                    this.toastService.error('Erreur lors de la modification du mot de passe')
-                }
+                this.toastService.error('Erreur lors de la modification du mot de passe : ' + error.error.message)
+
             }
         });
     }

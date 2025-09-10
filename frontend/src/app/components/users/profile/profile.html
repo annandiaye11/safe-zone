@@ -57,6 +57,7 @@
                 @if (showPasswordForm) {
                     <div class="password-form-section">
                         <h3>Modifier le mot de passe</h3>
+
                         <form (ngSubmit)="updatePassword()" #passwordForm="ngForm">
                             <div class="form-group">
                                 <label>Mot de passe actuel</label>
@@ -66,6 +67,7 @@
                                     name="currentPassword"
                                     placeholder="Votre mot de passe actuel"
                                     required
+                                    autocomplete="new-password"
                                 />
                             </div>
 
@@ -78,6 +80,7 @@
                                     placeholder="Nouveau mot de passe (min. 6 caractères)"
                                     required
                                     minlength="6"
+                                    autocomplete="new-password"
                                 />
                             </div>
 
@@ -89,6 +92,7 @@
                                     name="confirmPassword"
                                     placeholder="Confirmer le nouveau mot de passe"
                                     required
+                                    autocomplete="new-password"
                                 />
                                 @if (passwordData.newPassword && passwordData.confirmPassword && passwordData.newPassword !== passwordData.confirmPassword) {
                                     <small class="error-text">Les mots de passe ne correspondent pas</small>

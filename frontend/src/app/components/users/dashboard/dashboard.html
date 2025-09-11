@@ -85,9 +85,15 @@
                             }">
                                 <span class="status-dot"></span>
                                 <span class="status-text">
-                                    @if (product.quantity === 0) { Épuisé }
-                                    @if (product.quantity > 0 && product.quantity < 10) { Stock faible }
-                                    @if (product.quantity >= 10) { En stock }
+                                    @if (product.quantity === 0) {
+                                        Épuisé
+                                    }
+                                    @if (product.quantity > 0 && product.quantity < 10) {
+                                        Stock faible
+                                    }
+                                    @if (product.quantity >= 10) {
+                                        En stock
+                                    }
                                 </span>
                             </div>
                         </div>
@@ -137,7 +143,7 @@
         [editingProduct]="editingProduct"
         [(isFormOpen)]="isFormOpen"
         (saveProduct)="handleSaveProduct($event)"
-        [(selectedFiles)] = "selectedFiles"
+        [(selectedFiles)]="selectedFiles"
         (selectedFilesChange)="onMediaFile($event)"
         [(mediaForDelete)]="mediaForDelete"
         (mediaForDeleteChange)="onMediaForDelete($event)"

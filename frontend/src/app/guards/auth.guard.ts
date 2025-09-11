@@ -9,7 +9,8 @@ export class AuthGuard implements CanActivate {
 
     constructor(
         private utilsService: UtilsService
-    ) {}
+    ) {
+    }
 
     canActivate() {
         console.log("Can I access to this page right now ?: ", !this.utilsService.isAuthenticated());

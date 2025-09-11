@@ -6,31 +6,33 @@ spring:
     web:
         resources:
             add-mappings: false
+    profiles:
+        active: ${SPRING_PROFILES_ACTIVE}
 
     cloud:
         gateway:
             server:
                 webflux:
                     routes:
-                        - id: user-service
-                          uri: lb://user-service
-                          predicates:
-                              - Path=/api/v1/users/**
+                        -   id: user-service
+                            uri: lb://user-service
+                            predicates:
+                                - Path=/api/v1/users/**
 
-                        - id: user-service
-                          uri: lb://user-service
-                          predicates:
-                              - Path=/api/v1/auth/**
+                        -   id: user-service
+                            uri: lb://user-service
+                            predicates:
+                                - Path=/api/v1/auth/**
 
-                        - id: product-service
-                          uri: lb://product-service
-                          predicates:
-                              - Path=/api/v1/products/**
+                        -   id: product-service
+                            uri: lb://product-service
+                            predicates:
+                                - Path=/api/v1/products/**
 
-                        - id: media-service
-                          uri: lb://media-service
-                          predicates:
-                              - Path=/api/v1/media/**
+                        -   id: media-service
+                            uri: lb://media-service
+                            predicates:
+                                - Path=/api/v1/media/**
 
                     globalcors:
                         cors-configurations:
@@ -42,13 +44,6 @@ spring:
                                 allowed-headers: "*"
                                 allow-credentials: true
 
-
-eureka:
-    client:
-        register-with-eureka: true
-        fetch-registry: true
-        service-url:
-            defaultZone: http://localhost:${EUREKA_SERVER_PORT}/eureka/
 management:
     endpoints:
         web:

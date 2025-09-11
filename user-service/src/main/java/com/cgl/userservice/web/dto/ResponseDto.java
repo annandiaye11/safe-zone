@@ -1,6 +1,5 @@
 package com.cgl.userservice.web.dto;
 
-import jakarta.validation.constraints.Email;
 import lombok.*;
 
 @Getter

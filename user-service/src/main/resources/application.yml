@@ -1,64 +1,53 @@
 spring:
-  config:
-    import: optional:file:./.env[.properties]
+    config:
+        import: optional:file:./.env[.properties]
 
-  application:
-    name: user-service
+    application:
+        name: user-service
 
-  web:
-    resources:
-      add-mappings: false
+    web:
+        resources:
+            add-mappings: false
 
-  data:
-    mongodb:
-#        database: ${DB_NAME}
-#        username: ${DB_USER}
-#        password: ${DB_PASSWORD}
-#        port: ${DB_PORT}
-#        host: ${DB_HOST}
-#        auto-index-creation: true
-#        authentication-database: ${DB_AUTH_DB}
-      uri: mongodb+srv://${DB_USER}:${DB_PASSWORD}@buy0x.mqr2hhc.mongodb.net/?retryWrites=true&w=majority&appName=buy0x
-      database: ${DB_NAME}
-      auto-index-creation: true
-  kafka:
-    bootstrap-servers: localhost:9092, localhost:9093
-    producer:
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.apache.kafka.common.serialization.StringSerializer
-    consumer:
-      group-id: user-service
-      auto-offset-reset: earliest
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    profiles:
+        active: ${SPRING_PROFILES_ACTIVE}
 
-eureka:
-  client:
-    register-with-eureka: true
-    fetch-registry: true
-    service-url:
-      defaultZone: http://localhost:${EUREKA_SERVER_PORT}/eureka/
+    data:
+        mongodb:
+            uri: mongodb+srv://${DB_USER}:${DB_PASSWORD}@buy0x.mqr2hhc.mongodb.net/?retryWrites=true&w=majority&appName=buy0x
+            database: ${DB_NAME}
+            auto-index-creation: true
+
+    kafka:
+        bootstrap-servers: localhost:9092, localhost:9093
+        producer:
+            key-serializer: org.apache.kafka.common.serialization.StringSerializer
+            value-serializer: org.apache.kafka.common.serialization.StringSerializer
+        consumer:
+            group-id: user-service
+            auto-offset-reset: earliest
+            key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+            value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
 
 application:
-  security:
-    jwt:
-      secret: ${JWT_SECRET}
-      expiration-ms: 3600000
-      refresh-expiration: 3600000
-
-springdoc:
-  api-docs:
-    enabled: true
-  swagger-ui:
-    enabled: true
-    path: /swagger-ui.html
+    security:
+        jwt:
+            secret: ${JWT_SECRET}
+            expiration-ms: 3600000
+            refresh-expiration: 3600000
 
 server:
-  port: 8081
+    port: 8081
+
 aws:
-  s3:
-    bucket: hackaton-groupe10
-  region: eu-north-1
-  credentials:
-    access-key: ${AWS_ACCESS_KEY_ID}
-    secret-key: ${AWS_SECRET_ACCESS_KEY}
+    s3:
+        bucket: hackaton-groupe10
+    region: eu-north-1
+    credentials:
+        access-key: ${AWS_ACCESS_KEY_ID}
+        secret-key: ${AWS_SECRET_ACCESS_KEY}
+
+logging:
+    level:
+        org.apache.kafka: ERROR
+        kafka: ERROR

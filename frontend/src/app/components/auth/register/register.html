@@ -2,7 +2,7 @@
 <div class="auth-container">
     <div class="auth-card">
         <div class="auth-header">
-            <a routerLink="/" class="go-home" >
+            <a class="go-home" routerLink="/">
                 <span class="material-symbols-outlined">home</span>
                 Page d'accueil
             </a>
@@ -10,18 +10,19 @@
             <p class="auth-subtitle">Rejoignez-nous et commencez votre aventure</p>
         </div>
 
-        <form autocomplete="off" class="auth-form" enctype="multipart/form-data" [formGroup]="registerFormData" (ngSubmit)="onSubmit()">
+        <form (ngSubmit)="onSubmit()" [formGroup]="registerFormData" autocomplete="off" class="auth-form"
+              enctype="multipart/form-data">
             <div class="form-group">
                 <label for="name">Nom complet</label>
                 <div class="input-wrapper">
                     <span class="input-icon">👤</span>
                     <input
+                        formControlName="name"
                         id="name"
                         name="name"
-                        placeholder="John DOE"
                         pattern="^[a-zA-ZÀ-ÿ '-]+$"
+                        placeholder="John DOE"
                         type="text"
-                        formControlName="name"
                     >
                 </div>
                 @if (registerFormData.get('name')?.invalid && registerFormData.get('name')?.touched) {
@@ -34,12 +35,12 @@
                 <div class="input-wrapper">
                     <span class="input-icon">📧</span>
                     <input
+                        formControlName="email"
                         id="email"
                         name="email"
-                        placeholder="votre@email.com"
                         pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+                        placeholder="votre@email.com"
                         type="email"
-                        formControlName="email"
                     >
                 </div>
                 @if (registerFormData.get('email')?.invalid && registerFormData.get('email')?.touched) {
@@ -52,12 +53,12 @@
                 <div class="input-wrapper">
                     <span class="input-icon">🔒</span>
                     <input
+                        formControlName="password"
                         id="password"
                         name="password"
-                        placeholder="••••••••"
                         pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}"
+                        placeholder="••••••••"
                         type="password"
-                        formControlName="password"
                     >
                 </div>
                 @if (registerFormData.get('password')?.invalid && registerFormData.get('password')?.touched) {
@@ -70,13 +71,13 @@
                 <div class="input-wrapper">
                     <span class="input-icon">🎯</span>
                     <select
+                        class="role-select"
+                        formControlName="role"
                         id="role"
                         name="role"
-                        formControlName="role"
-                        class="role-select"
                         pattern="^(CLIENT|SELLER)$"
                     >
-                        <option value="CLIENT" selected>Client</option>
+                        <option selected value="CLIENT">Client</option>
                         <option value="SELLER">Vendeur</option>
                     </select>
                 </div>
@@ -104,7 +105,7 @@
                 </div>
             }
 
-            <button type="submit" class="submit-btn" [disabled]="registerFormData.invalid">
+            <button [disabled]="registerFormData.invalid" class="submit-btn" type="submit">
                 <span class="btn-icon">✨</span>
                 Créer mon compte
             </button>
@@ -113,7 +114,7 @@
         <div class="auth-footer">
             <p class="auth-link">
                 Déjà un compte ?
-                <a routerLink="/login" class="link-primary">Se connecter</a>
+                <a class="link-primary" routerLink="/login">Se connecter</a>
             </p>
         </div>
     </div>

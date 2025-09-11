@@ -9,7 +9,8 @@ export class AuthorizationGuard implements CanActivate {
 
     constructor(
         private utilsService: UtilsService
-    ) {}
+    ) {
+    }
 
     canActivate() {
         console.log("Am I seller ?: ", this.utilsService.isAuthenticated() && this.utilsService.isSeller())

@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
 import java.util.Collection;
 import java.util.List;
 
@@ -32,21 +33,25 @@ public class User implements UserDetails {
     Role role;
     @Field("avatar")
     String avatar;
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
-    }
-    public  User(String name, String email, String password, Role role, String avatar) {
+
+    public User(String name, String email, String password, Role role, String avatar) {
         this.name = name;
         this.email = email;
         this.password = password;
         this.role = role;
         this.avatar = avatar;
     }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
+    }
+
     @Override
     public String getPassword() {
         return this.password;
     }
+
     @Override
     public String getUsername() {
         return this.email;

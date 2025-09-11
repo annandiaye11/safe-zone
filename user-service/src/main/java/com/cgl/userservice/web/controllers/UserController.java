@@ -1,13 +1,11 @@
 package com.cgl.userservice.web.controllers;
 
-import com.cgl.userservice.web.dto.*;
+import com.cgl.userservice.web.dto.ChangePasswordRequest;
+import com.cgl.userservice.web.dto.UserDto;
+import com.cgl.userservice.web.dto.UserOneResponse;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PostAuthorize;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,7 +24,7 @@ public interface UserController {
     @PutMapping("/{id}")
     ResponseEntity<Map<String, Object>> updateUser(@PathVariable String id, @RequestBody @Valid UserDto userDto);
 
-   // @PreAuthorize("#id ==  authentication.principal.id")
+    // @PreAuthorize("#id ==  authentication.principal.id")
     @DeleteMapping("/{id}")
     ResponseEntity<Map<String, Object>> deleteUser(@PathVariable String id);
 
@@ -38,7 +36,7 @@ public interface UserController {
 
     @PatchMapping("/{id}/changePassword")
     ResponseEntity<Map<String, Object>> updatePassword(@PathVariable("id") String id,
-            @Valid @RequestBody ChangePasswordRequest request
-            );
+                                                       @Valid @RequestBody ChangePasswordRequest request
+    );
 
 }

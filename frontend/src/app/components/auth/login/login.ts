@@ -54,7 +54,7 @@ export class Login implements OnInit {
                 this.toastService.success("Utilisateur connecte avec succes")
             },
             error: (_) => {
-                this.toastService.error("Erreur: Ce utilisateur n'existe pas ou le mot de passe est incorrect !", 3000 );
+                this.toastService.error("Erreur: Ce utilisateur n'existe pas ou le mot de passe est incorrect !", 3000);
 
             }
         })

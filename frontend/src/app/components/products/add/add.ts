@@ -41,15 +41,31 @@ export class Add implements OnInit {
     @Input() selectedFiles: File[] | null = [];
     @Input() mediaForDelete: string[] | null = [];
     @Output() mediaForDeleteChange = new EventEmitter<string[]>();
-    constructor(private userService: UserService, private toastService :ToastService, private mediaService : MediaService) {
+    user!: any
+    filePreviewUrls: string[] = [];
+    protected readonly console = console;
+
+    constructor(private userService: UserService, private toastService: ToastService, private mediaService: MediaService) {
     }
-    user! :any
+
+    get isEditing(): boolean {
+        return this.editingProduct !== null;
+    }
+
+    get modalTitle(): string {
+        return this.isEditing ? 'Modifier le produit' : 'Ajouter un produit';
+    }
+
+    get submitButtonText(): string {
+        return this.isEditing ? 'Modifier' : 'Ajouter';
+    }
+
     ngOnInit(): void {
         console.log('Données reçues du parent :', this.formData);
         console.log('Produit en édition :', this.editingProduct);
         console.log("Données reçues de selectedFiles", typeof this.selectedFiles![0])
         this.userService.getProfile().subscribe({
-            next: (data: User)=> {
+            next: (data: User) => {
                 this.user = data;
             },
             error: (err) => {
@@ -64,7 +80,7 @@ export class Add implements OnInit {
         this.selectedFilesChange.emit([])
         this.isFormOpenChange.emit(false);
         this.editingProduct = null;
-        this.formData = {id: null, name: '', description: '', price: 0, quantity: 0 };
+        this.formData = {id: null, name: '', description: '', price: 0, quantity: 0};
     }
 
     onSubmit() {
@@ -82,32 +98,9 @@ export class Add implements OnInit {
 
             console.log('Sauvegarde du produit :', productData);
             this.saveProduct.emit(productData);
-           // this.closeForm();
+            // this.closeForm();
         }
     }
-
-    private validateForm(): boolean {
-        if (!this.formData.name.trim()) {
-            this.toastService.warning("Veuillez renseigner le nom du produit")
-            return false;
-        }
-        if (!this.formData.description.trim()) {
-            this.toastService.warning("Veuillez renseigner la description du produit")
-            return false;
-        }
-        if (this.formData.price <= 0) {
-            this.toastService.warning('Le prix doit être supérieur à 0')
-            return false;
-        }
-        if (this.formData.quantity < 0) {
-            this.toastService.warning('La quantité ne peut pas être négative')
-            return false;
-        }
-        return true;
-    }
-
-
-    filePreviewUrls: string[] = [];
 
     // Gestion de la sélection de fichiers
     onFileSelect(event: any) {
@@ -156,26 +149,17 @@ export class Add implements OnInit {
         }
     }
 
-    private resetFileInput(): void {
-        const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
-        if (fileInput) {
-            fileInput.value = '';
-        }
-    }
-
     // Générer aperçu du fichier
     getFilePreview(file: any): string | null {
         if (file instanceof File) {
             return URL.createObjectURL(file);
         }
         if (typeof file === 'string') {
-                return file;
+            return file;
         }
         console.error("Type de fichier non supporté :", file);
         return null;
     }
-
-
 
     // Formater la taille du fichier
     formatFileSize(bytes: number): string {
@@ -186,17 +170,30 @@ export class Add implements OnInit {
         return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
     }
 
-    get isEditing(): boolean {
-        return this.editingProduct !== null;
+    private validateForm(): boolean {
+        if (!this.formData.name.trim()) {
+            this.toastService.warning("Veuillez renseigner le nom du produit")
+            return false;
+        }
+        if (!this.formData.description.trim()) {
+            this.toastService.warning("Veuillez renseigner la description du produit")
+            return false;
+        }
+        if (this.formData.price <= 0) {
+            this.toastService.warning('Le prix doit être supérieur à 0')
+            return false;
+        }
+        if (this.formData.quantity < 0) {
+            this.toastService.warning('La quantité ne peut pas être négative')
+            return false;
+        }
+        return true;
     }
 
-    get modalTitle(): string {
-        return this.isEditing ? 'Modifier le produit' : 'Ajouter un produit';
+    private resetFileInput(): void {
+        const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+        if (fileInput) {
+            fileInput.value = '';
+        }
     }
-
-    get submitButtonText(): string {
-        return this.isEditing ? 'Modifier' : 'Ajouter';
-    }
-
-    protected readonly console = console;
 }

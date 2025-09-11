@@ -5,7 +5,6 @@ import {User} from '../entity/User';
 import {Auth} from '../entity/Auth';
 import {Router} from '@angular/router';
 import {AuthStateService} from './auth.state.service';
-import {tap} from 'rxjs';
 import {UtilsService} from './utils.service';
 
 @Injectable({
@@ -19,7 +18,8 @@ export class AuthService {
         private route: Router,
         private authState: AuthStateService,
         private utilsService: UtilsService
-    ) {}
+    ) {
+    }
 
     login(credentials: Auth) {
         return this.http.post(`${this.apiUrl}/login`, credentials)

@@ -1,6 +1,5 @@
 package com.cgl.userservice.web.dto;
 
-import com.cgl.userservice.data.entities.User;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;

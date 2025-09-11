@@ -22,8 +22,8 @@ public interface MediaController {
     ResponseEntity<Map<String, Object>> getMediaByProductId(@PathVariable String id);
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    ResponseEntity<Map<String, Object>> createMedia( @RequestParam("imagePath") List<MultipartFile> imageFile,
-                                                     @RequestParam("productId") String productId);
+    ResponseEntity<Map<String, Object>> createMedia(@RequestParam("imagePath") List<MultipartFile> imageFile,
+                                                    @RequestParam("productId") String productId);
 
     @PutMapping("/{id}")
     ResponseEntity<Map<String, Object>> updateMedia(@PathVariable String id, @RequestBody @Valid MediaDtoAll mediaDtoAll);

@@ -2,7 +2,6 @@ package com.cgl.userservice.utils.mapper;
 
 import com.cgl.userservice.data.entities.User;
 import com.cgl.userservice.data.enums.Role;
-import com.cgl.userservice.web.dto.RequestDto;
 import com.cgl.userservice.web.dto.UserAllResponse;
 import com.cgl.userservice.web.dto.UserDto;
 import com.cgl.userservice.web.dto.UserOneResponse;

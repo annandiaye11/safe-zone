@@ -209,6 +209,7 @@ $transition: all 0.3s ease;
         max-height: 400px;
     }
 }
+
 .avatar-section {
     display: flex;
     align-items: center;
@@ -546,6 +547,7 @@ $transition: all 0.3s ease;
         padding: 1rem;
     }
 }
+
 // Responsive pour le bouton mot de passe
 @media (max-width: 768px) {
     .card-header .header-actions {

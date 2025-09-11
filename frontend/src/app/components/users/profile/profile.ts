@@ -21,7 +21,7 @@ export class Profile implements OnInit {
 
     user!: any
     isEditing = false;
-    formData : User = {
+    formData: User = {
         id: '',
         name: '',
         email: '',
@@ -36,14 +36,15 @@ export class Profile implements OnInit {
         newPassword: '',
         confirmPassword: ''
     };
-
+    protected readonly Role = Role;
 
     constructor(
         private userService: UserService,
         private utilservice: UtilsService,
         private router: Router,
         private toastService: ToastService,
-    ) {}
+    ) {
+    }
 
     ngOnInit() {
         if (!this.utilservice.isAuthenticated()) {
@@ -51,20 +52,19 @@ export class Profile implements OnInit {
             return;
         }
 
-         this.userService.getProfile().subscribe({
-            next: (data: User)=> {
-               this.user = data;
+        this.userService.getProfile().subscribe({
+            next: (data: User) => {
+                this.user = data;
 
                 this.formData = {...data};
-               this.formData.password = "ftkkeit"
+                this.formData.password = "ftkkeit"
                 // console.log("formData: ", this.formData)
-             },
+            },
             error: (err) => {
                 this.toastService.error(err)
             }
         })
     }
-
 
     togglePasswordForm() {
         this.showPasswordForm = !this.showPasswordForm;
@@ -126,17 +126,17 @@ export class Profile implements OnInit {
 
     saveProfile() {
         this.user = {...this.formData};
-       this.userService.updateProfile(this.user).subscribe({
-           next: (data: any) => {
-               this.user = data.user;
-               this.toastService.success("Utilisateur modifié")
+        this.userService.updateProfile(this.user).subscribe({
+            next: (data: any) => {
+                this.user = data.user;
+                this.toastService.success("Utilisateur modifié")
                 this.user.password = "ftkkeit"
                 this.cancelEdit();
-           },
-           error: (err) => {
-               this.toastService.error("Erreur lors de la modification de l'utilisateur" + err)
-           }
-       })
+            },
+            error: (err) => {
+                this.toastService.error("Erreur lors de la modification de l'utilisateur" + err)
+            }
+        })
 
     }
 
@@ -158,6 +158,4 @@ export class Profile implements OnInit {
             reader.readAsDataURL(file);
         }
     }
-
-    protected readonly Role = Role;
 }

@@ -19,7 +19,7 @@ public class S3Service {
 
     @Value("${aws.s3.bucket}")
     private String bucketName;
-    
+
     @Value("${aws.region}")
     private String region;
 

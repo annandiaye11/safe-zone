@@ -6,27 +6,32 @@ import {User} from '../entity/User';
 import {Role} from '../entity/Role';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class UserService {
-    token= "";
+    token = "";
     apiUrl = `${environment.apiURL}/users`
+
     constructor(
         private http: HttpClient
-    ) {}
-
-    getUserByToken(token: string) {}
-    getRole(role: string): Role{
-      return role == 'ROLE_SELLER' ? Role.SELLER : Role.CLIENT;
+    ) {
     }
-    getProfile():Observable<User> {
-        this.token =  localStorage.getItem('user-token')!;
+
+    getUserByToken(token: string) {
+    }
+
+    getRole(role: string): Role {
+        return role == 'ROLE_SELLER' ? Role.SELLER : Role.CLIENT;
+    }
+
+    getProfile(): Observable<User> {
+        this.token = localStorage.getItem('user-token')!;
         const headers = this.getHeaders(this.token);
         return this.http.get(`${this.apiUrl}/me`, {headers}) as Observable<User>;
     }
 
     updateProfile(user: User): Observable<any> {
-        this.token =  localStorage.getItem('user-token')!;
+        this.token = localStorage.getItem('user-token')!;
         const headers = this.getHeaders(this.token);
         return this.http.put(`${this.apiUrl}/${user.id}`, user, {headers}) as Observable<any>;
     }
@@ -49,8 +54,8 @@ export class UserService {
         });
     }
 
-    updatePassword(passwordData: { currentPassword: string, newPassword: string },  userId :string): Observable<any> {
-        this.token =  localStorage.getItem('user-token')!;
+    updatePassword(passwordData: { currentPassword: string, newPassword: string }, userId: string): Observable<any> {
+        this.token = localStorage.getItem('user-token')!;
         const headers = this.getHeaders(this.token);
         return this.http.patch(`${this.apiUrl}/${userId}/changePassword`, passwordData, {headers});
     }

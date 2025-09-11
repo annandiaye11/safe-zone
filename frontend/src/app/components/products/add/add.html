@@ -1,5 +1,5 @@
 @if (isFormOpen) {
-    <div class="modal" >
+    <div class="modal">
         <div class="modal-content">
             <div class="modal-header">
                 <h2>{{ modalTitle }}</h2>
@@ -70,7 +70,8 @@
                 </div>
             </form>
         </div>
-    </div><div class="modal" >
+    </div>
+    <div class="modal">
         <div class="modal-content">
             <div class="modal-header">
                 <h2>{{ modalTitle }}</h2>
@@ -154,7 +155,7 @@
                     </div>
 
                     <!-- Prévisualisation des fichiers sélectionnés -->
-                    @if (selectedFiles!.length > 0){
+                    @if (selectedFiles!.length > 0) {
                         <div class="file-preview">
                             <h4>Images sélectionnées :</h4>
                             <div class="file-grid">
@@ -166,12 +167,14 @@
                                         </div>
                                         <div class="file-details">
                                             <span class="file-name">{{ file.name || file }}</span>
-                                            @if (file.size){
-                                                <span class="file-size" >{{ formatFileSize(file.size) }}</span>
+                                            @if (file.size) {
+                                                <span class="file-size">{{ formatFileSize(file.size) }}</span>
                                             }
 
                                         </div>
-                                        <button type="button" class="remove-file-btn" (click)="removeFile(i)" title="Supprimer">×</button>
+                                        <button type="button" class="remove-file-btn" (click)="removeFile(i)"
+                                                title="Supprimer">×
+                                        </button>
                                     </div>
                                 }
                             </div>

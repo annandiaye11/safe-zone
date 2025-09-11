@@ -7,20 +7,21 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
 
-  private final ProductRepository productRepository;
+    private final ProductRepository productRepository;
 
-  @Override
+    @Override
     public Product create(Product product) {
-      return productRepository.save(product);
+        return productRepository.save(product);
     }
 
     @Override
     public Product getById(String id) {
-       return productRepository.findById(id).orElse(null);
+        return productRepository.findById(id).orElse(null);
     }
 
     @Override
@@ -30,7 +31,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<Product> getByUserId(String userId) {
-       List<Product> products = productRepository.findByUserId(userId);
+        List<Product> products = productRepository.findByUserId(userId);
         if (products.isEmpty()) {
             return null;
         }
@@ -39,7 +40,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<Product> getAllProducts() {
-       List<Product> products = productRepository.findAll();
+        List<Product> products = productRepository.findAll();
         if (products.isEmpty()) {
             return null;
         }

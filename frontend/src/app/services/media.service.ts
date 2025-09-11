@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {environment} from '../../environments/environment.development';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable} from 'rxjs';
@@ -6,16 +6,17 @@ import {Media} from '../entity/Media';
 import {UtilsService} from './utils.service';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class MediaService {
-    token= "";
+    token = "";
     apiUrl = environment.apiURL + '/media';
 
     constructor(
         private http: HttpClient,
         private utilService: UtilsService
-    ) {}
+    ) {
+    }
 
     getHeaders(token: string) {
         return new HttpHeaders({
@@ -32,7 +33,7 @@ export class MediaService {
         const formData = new FormData();
         file.forEach(f => formData.append("imagePath", f));
         formData.append("productId", productId);
-        return this.http.post<Media>(`${this.apiUrl}`, formData, { headers });
+        return this.http.post<Media>(`${this.apiUrl}`, formData, {headers});
     }
 
     getMediaByProduitId(productId: string): Observable<any> {
@@ -40,7 +41,7 @@ export class MediaService {
         const headers = new HttpHeaders({
             Authorization: `Bearer ${this.token}`
         });
-        return this.http.get<any>(`${this.apiUrl}/product/${productId}`, { headers });
+        return this.http.get<any>(`${this.apiUrl}/product/${productId}`, {headers});
     }
 
     deleteMedia(id: string): Observable<any> {
@@ -48,7 +49,7 @@ export class MediaService {
         const headers = new HttpHeaders({
             Authorization: `Bearer ${this.token}`
         });
-        return this.http.delete<any>(`${this.apiUrl}/${id}`, { headers });
+        return this.http.delete<any>(`${this.apiUrl}/${id}`, {headers});
     }
 
 

@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {Router, RouterLink, RouterLinkActive} from '@angular/router';
+import {Router, RouterLink} from '@angular/router';
 import {AuthStateService} from '../../../services/auth.state.service';
 
 @Component({
@@ -16,7 +16,8 @@ export class Header implements OnInit {
     constructor(
         private authState: AuthStateService,
         protected router: Router
-    ) {}
+    ) {
+    }
 
     ngOnInit() {
         this.authState.isAuthenticated$.subscribe(value => {

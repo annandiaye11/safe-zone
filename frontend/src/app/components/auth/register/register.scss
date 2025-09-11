@@ -20,12 +20,13 @@ $transition: all 0.3s ease;
     border-radius: 8px;
     text-decoration: none;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .go-home span {
     font-size: 20px; /* icône plus grande */
 }
+
 // Auth Container
 .auth-container {
     min-height: 100vh;
@@ -267,7 +268,8 @@ $transition: all 0.3s ease;
     gap: 1rem;
     margin-bottom: 2rem;
 }
-.acceuil{
+
+.acceuil {
     font-size: 1rem;
 }
 

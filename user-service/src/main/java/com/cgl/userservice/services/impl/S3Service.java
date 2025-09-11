@@ -1,7 +1,6 @@
 package com.cgl.userservice.services.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,7 +18,7 @@ public class S3Service {
 
     @Value("${aws.s3.bucket}")
     private String bucketName;
-    
+
     @Value("${aws.region}")
     private String region;
 

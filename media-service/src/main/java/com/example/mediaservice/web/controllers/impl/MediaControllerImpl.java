@@ -23,10 +23,12 @@ import java.util.Map;
 public class MediaControllerImpl implements MediaController {
     private final MediaService mediaService;
     private final S3Service s3Service;
+
     public MediaControllerImpl(MediaService mediaService, S3Service s3Service) {
         this.mediaService = mediaService;
         this.s3Service = s3Service;
     }
+
     @Override
     public ResponseEntity<Map<String, Object>> getAllMedias() {
         HashMap<String, Object> response = new HashMap<>();

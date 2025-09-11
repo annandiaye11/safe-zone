@@ -8,7 +8,7 @@
 
     <div class="auth-card">
         <div class="auth-header">
-            <a routerLink="/" class="go-home" >
+            <a class="go-home" routerLink="/">
                 <span class="material-symbols-outlined">home</span>
                 Page d'accueil
             </a>
@@ -16,19 +16,19 @@
             <p class="auth-subtitle">Bienvenue ! Connectez-vous pour continuer</p>
         </div>
 
-        <form autocomplete="off" class="auth-form" [formGroup]="loginFormData" (ngSubmit)="onSubmit()">
+        <form (ngSubmit)="onSubmit()" [formGroup]="loginFormData" autocomplete="off" class="auth-form">
             <div class="form-group">
                 <label for="email">Adresse email</label>
                 <div class="input-wrapper">
                     <span class="input-icon">📧</span>
                     <input
+                        formControlName="email"
                         id="email"
                         name="email"
-                        placeholder="votre@email.com"
-                        type="email"
                         pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
-                        formControlName="email"
+                        placeholder="votre@email.com"
                         required
+                        type="email"
                     >
                 </div>
                 @if (loginFormData.get('email')?.invalid && loginFormData.get('email')?.touched) {
@@ -41,13 +41,13 @@
                 <div class="input-wrapper">
                     <span class="input-icon">🔒</span>
                     <input
+                        formControlName="password"
                         id="password"
                         name="password"
-                        placeholder="••••••••"
-                        type="password"
                         pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}"
-                        formControlName="password"
+                        placeholder="••••••••"
                         required
+                        type="password"
                     >
                 </div>
                 @if (loginFormData.get('password')?.invalid && loginFormData.get('password')?.touched) {
@@ -57,14 +57,14 @@
 
             <div class="form-options">
                 <label class="checkbox-wrapper">
-                    <input type="checkbox" id="remember">
+                    <input id="remember" type="checkbox">
                     <span class="checkmark"></span>
                     Se souvenir de moi
                 </label>
-                <a href="#" class="forgot-link">Mot de passe oublié ?</a>
+                <a class="forgot-link" href="#">Mot de passe oublié ?</a>
             </div>
 
-            <button type="submit" class="submit-btn" [disabled]="loginFormData.invalid">
+            <button [disabled]="loginFormData.invalid" class="submit-btn" type="submit">
                 <span class="btn-icon">🚀</span>
                 Se connecter
             </button>
@@ -73,7 +73,7 @@
         <div class="auth-footer">
             <p class="auth-link">
                 Pas encore de compte ?
-                <a routerLink="/register" class="link-primary">Créer un compte</a>
+                <a class="link-primary" routerLink="/register">Créer un compte</a>
             </p>
         </div>
     </div>

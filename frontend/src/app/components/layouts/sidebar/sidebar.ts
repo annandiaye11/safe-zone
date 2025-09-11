@@ -1,34 +1,33 @@
 import {Component, OnInit} from '@angular/core';
-import {Router, RouterLink, RouterLinkActive} from "@angular/router";
-import {AuthService} from '../../../services/auth.service';
-import {UtilsService} from '../../../services/utils.service';
+import {Router, RouterLink} from "@angular/router";
 import {UserService} from '../../../services/user.service';
-import {User} from '../../../entity/User';
 import {AuthStateService} from '../../../services/auth.state.service';
 import {Link} from '../../../entity/Link';
 import {NgClass} from '@angular/common';
 
 @Component({
-  selector: 'app-sidebar',
+    selector: 'app-sidebar',
     imports: [
         RouterLink,
         NgClass,
     ],
-  templateUrl: './sidebar.html',
-  styleUrl: './sidebar.scss'
+    templateUrl: './sidebar.html',
+    styleUrl: './sidebar.scss'
 })
 export class Sidebar implements OnInit {
     activeLink = 'produits';
     isAuthenticated: boolean = false;
     user: any
+    protected readonly Link = Link;
 
     constructor(
         private authState: AuthStateService,
         private userService: UserService,
         private router: Router,
-    ) {}
+    ) {
+    }
 
-    setActiveLink(linkName : Link): boolean {
+    setActiveLink(linkName: Link): boolean {
         return this.router.url === linkName;
     }
 
@@ -56,6 +55,4 @@ export class Sidebar implements OnInit {
             }
         })
     }
-
-    protected readonly Link = Link;
 }

@@ -4,10 +4,10 @@ import {ToastService} from '../../services/toast.service';
 import {Toast} from '../../entity/Toast';
 
 @Component({
-  selector: 'app-toast',
-  imports: [],
-  templateUrl: './toast.component.html',
-  styleUrl: './toast.component.scss'
+    selector: 'app-toast',
+    imports: [],
+    templateUrl: './toast.component.html',
+    styleUrl: './toast.component.scss'
 })
 export class ToastComponent implements OnInit, OnDestroy {
 
@@ -16,12 +16,13 @@ export class ToastComponent implements OnInit, OnDestroy {
 
     constructor(
         private toastService: ToastService,
-    ) {}
+    ) {
+    }
 
     ngOnInit() {
         this.toastService.toasts$
             .pipe(takeUntil(this.destroy$))
-            .subscribe((toasts:any) => {
+            .subscribe((toasts: any) => {
                 console.log(toasts);
                 this.toasts = toasts;
             })

@@ -551,11 +551,12 @@ $transition: all 0.3s ease;
         flex-direction: column;
     }
 }
+
 .arrow {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    background: rgba(0,0,0,0.5);
+    background: rgba(0, 0, 0, 0.5);
     color: white;
     border: none;
     padding: 6px 12px;
@@ -565,5 +566,10 @@ $transition: all 0.3s ease;
     z-index: 2;
 }
 
-.arrow.left { left: 10px; }
-.arrow.right { right: 10px; }
+.arrow.left {
+    left: 10px;
+}
+
+.arrow.right {
+    right: 10px;
+}

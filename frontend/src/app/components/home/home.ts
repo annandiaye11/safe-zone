@@ -1,9 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {Product} from '../../entity/Product';
-import {NgForOf, NgIf} from '@angular/common';
 import {RouterLink} from '@angular/router';
-import {environment} from '../../../environments/environment.development';
 import {ProductService} from '../../services/product.service';
 import {MediaService} from '../../services/media.service';
 import {JwtService} from '../../services/jwt.service';
@@ -28,7 +26,7 @@ export class Home implements OnInit {
 
     constructor(
         private productService: ProductService,
-        private mediaService : MediaService,
+        private mediaService: MediaService,
         private jwtService: JwtService,
         private utilsService: UtilsService,
         private authState: AuthStateService
@@ -48,6 +46,14 @@ export class Home implements OnInit {
 
         // 🔹 charger les produits
         this.loadProducts();
+    }
+
+    prevImage(productId: string) {
+        this.utilsService.prev(this.products, productId, this.currentIndexes)
+    }
+
+    nextImage(productId: string) {
+        this.utilsService.next(this.products, productId, this.currentIndexes)
     }
 
     private loadProducts() {
@@ -79,14 +85,6 @@ export class Home implements OnInit {
                 console.error('Erreur lors de la récupération des produits', err);
             }
         });
-    }
-
-    prevImage(productId: string) {
-       this.utilsService.prev(this.products, productId, this.currentIndexes)
-    }
-
-    nextImage(productId: string) {
-        this.utilsService.next(this.products, productId, this.currentIndexes)
     }
 
 }

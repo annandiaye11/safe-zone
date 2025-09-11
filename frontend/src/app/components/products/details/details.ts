@@ -24,8 +24,10 @@ export class Details implements OnInit {
     editForm: Product | null = null;
     quantity: number = 1;
     currentImage: Media | null = null;
-    constructor(private route: ActivatedRoute, private router: Router, private productService: ProductService, private mediaService : MediaService) {
+
+    constructor(private route: ActivatedRoute, private router: Router, private productService: ProductService, private mediaService: MediaService) {
     }
+
     ngOnInit() {
         const id = this.route.snapshot.paramMap.get('id');
         this.productService.getProductById(id!).subscribe({
@@ -50,16 +52,20 @@ export class Details implements OnInit {
         })
 
     }
+
     selectImage(media: Media) {
         this.currentImage = media;
     }
+
     handleQuantityChange(event: any) {
         this.quantity = event.target.value;
     }
+
     handleEditFormSubmit() {
         this.product!.quantity = this.quantity;
         this.productService.saveOrUpdateProduct(this.product!).subscribe({
-            next: (data: any)=> {}
+            next: (data: any) => {
+            }
         })
     }
 }

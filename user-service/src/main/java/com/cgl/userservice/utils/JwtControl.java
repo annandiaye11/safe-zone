@@ -3,7 +3,6 @@ package com.cgl.userservice.utils;
 
 import com.cgl.userservice.data.entities.User;
 import com.cgl.userservice.services.LoginService;
-import com.cgl.userservice.services.impl.LoginServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -36,7 +35,7 @@ public class JwtControl extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
-        
+
         String header = request.getHeader("Authorization");
 
         if (header != null && header.startsWith("Bearer ")) {
@@ -58,7 +57,7 @@ public class JwtControl extends OncePerRequestFilter {
                 System.err.println("Erreur lors du traitement du token JWT: " + e.getMessage());
             }
         }
-        
+
         filterChain.doFilter(request, response);
     }
 }

@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
-import { jwtDecode } from 'jwt-decode';
+import {Injectable} from '@angular/core';
+import {jwtDecode} from 'jwt-decode';
 import {JwtPayLoad} from '../entity/JwtPayLoad';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class JwtService {
 

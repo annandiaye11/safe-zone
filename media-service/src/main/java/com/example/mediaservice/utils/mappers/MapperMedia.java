@@ -1,7 +1,6 @@
 package com.example.mediaservice.utils.mappers;
 
 import com.example.mediaservice.data.entities.Media;
-import com.example.mediaservice.services.impl.S3Service;
 import com.example.mediaservice.web.dto.requests.MediaDtoAll;
 import com.example.mediaservice.web.dto.responses.MediaResponse;
 import lombok.Getter;

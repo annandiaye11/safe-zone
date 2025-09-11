@@ -9,14 +9,16 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
 public class ProductControllerImpl implements ProductController {
-    private  final ProductService productService;
+    private final ProductService productService;
 
     @Override
     public ResponseEntity<ProductDto> create(@RequestBody @Valid ProductDto productDto) {
@@ -36,7 +38,7 @@ public class ProductControllerImpl implements ProductController {
     }
 
     private ResponseEntity<List<ProductDto>> getListResponseEntity(List<Product> products) {
-        if (products == null || products.isEmpty() ) {
+        if (products == null || products.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
         List<ProductDto> productDtos = products.stream()
@@ -79,7 +81,7 @@ public class ProductControllerImpl implements ProductController {
 
     @Override
     public ResponseEntity<List<ProductDto>> getByUserId(@PathVariable("userId") String userId) {
-    List<Product> products = productService.getByUserId(userId);
+        List<Product> products = productService.getByUserId(userId);
         return getListResponseEntity(products);
     }
 

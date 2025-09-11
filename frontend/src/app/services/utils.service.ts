@@ -3,11 +3,10 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Role} from '../entity/Role';
 import {Router} from '@angular/router';
 import {JwtService} from './jwt.service';
-import {map} from 'rxjs';
 import {Product} from '../entity/Product';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class UtilsService implements OnInit {
 
@@ -17,7 +16,8 @@ export class UtilsService implements OnInit {
         private router: Router,
         private jwtService: JwtService,
         private http: HttpClient,
-    ) {}
+    ) {
+    }
 
     ngOnInit() {
         this.getToken()
@@ -75,7 +75,7 @@ export class UtilsService implements OnInit {
         return this.http.get('https://free.freeipapi.com/api/json')
     }
 
-    prev(products : Product[], productId: string, currentIndexes: { [key: string]: number }) {
+    prev(products: Product[], productId: string, currentIndexes: { [key: string]: number }) {
         const product = products.find(p => p.id === productId);
         if (!product || !product.images) return;
 
@@ -86,7 +86,7 @@ export class UtilsService implements OnInit {
         }
     }
 
-    next(products : Product[], productId: string, currentIndexes: { [key: string]: number }) {
+    next(products: Product[], productId: string, currentIndexes: { [key: string]: number }) {
         const product = products.find(p => p.id === productId);
         if (!product || !product.images) return;
 

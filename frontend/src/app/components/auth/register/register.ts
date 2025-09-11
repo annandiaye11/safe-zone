@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {Router, RouterLink} from '@angular/router';
 import {AuthService} from '../../../services/auth.service';
 import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
@@ -6,7 +6,6 @@ import {Role} from '../../../entity/Role';
 import {User} from '../../../entity/User';
 import {UserService} from '../../../services/user.service';
 import {ToastService} from '../../../services/toast.service';
-import {ToastComponent} from '../../toast/toast.component';
 
 @Component({
     selector: 'app-register',
@@ -20,13 +19,14 @@ import {ToastComponent} from '../../toast/toast.component';
 })
 export class Register {
     registerFormData;
+    selectedFile: File | null = null;
 
     constructor(
         private fb: FormBuilder,
         private authService: AuthService,
         private route: Router,
         private userService: UserService,
-        private toastService : ToastService,
+        private toastService: ToastService,
     ) {
         this.registerFormData = this.fb.group({
             name: ['', [Validators.required]],
@@ -36,7 +36,6 @@ export class Register {
             avatar: [null],
         })
     }
-    selectedFile: File | null = null;
 
     onFileSelected(event: Event) {
         const input = event.target as HTMLInputElement;
@@ -71,7 +70,7 @@ export class Register {
                                 console.log(data)
                             },
                             error: (_) => {
-                                this.toastService.error("Erreur lors de l'enregistrement de l'avatar: " )
+                                this.toastService.error("Erreur lors de l'enregistrement de l'avatar: ")
                             }
                         })
                     }

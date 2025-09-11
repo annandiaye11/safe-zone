@@ -2,31 +2,20 @@ package com.cgl.userservice.services.impl;
 
 import com.cgl.userservice.data.entities.User;
 import com.cgl.userservice.data.repositories.UserRepository;
-import com.cgl.userservice.exception.InvalidPasswordException;
-import com.cgl.userservice.exception.UserNotFoundException;
 import com.cgl.userservice.services.UserEventPublisher;
 import com.cgl.userservice.services.UserService;
 import com.cgl.userservice.web.dto.ChangePasswordRequest;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.HttpStatus;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
 
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -53,9 +42,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User create(User user) {
-      user.setPassword(passwordEncoder.encode(user.getPassword()));
-      userRepository.save(user);
-      return user;
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        userRepository.save(user);
+        return user;
     }
 
     @Override

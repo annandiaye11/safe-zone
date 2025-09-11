@@ -8,10 +8,10 @@ import {AuthStateService} from './services/auth.state.service';
 import {ToastComponent} from './components/toast/toast.component';
 
 @Component({
-  selector: 'app-root',
+    selector: 'app-root',
     imports: [RouterOutlet, Sidebar, Header, ToastComponent],
-  templateUrl: './app.html',
-  styleUrl: './app.scss'
+    templateUrl: './app.html',
+    styleUrl: './app.scss'
 })
 export class App implements OnInit, OnDestroy {
     protected title = 'frontend';
@@ -21,7 +21,8 @@ export class App implements OnInit, OnDestroy {
     constructor(
         private jwtService: UtilsService,
         private authState: AuthStateService
-    ) {}
+    ) {
+    }
 
     ngOnInit() {
         this.authState.loadAuthState()

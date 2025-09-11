@@ -8,30 +8,30 @@
 
     <!-- Profil -->
     <div class="sidebar-profile">
-        <img class="avatar" src="{{ user?.avatar === null ? 'assets/podium.jpg' : user?.avatar }}" alt="avatar">
+        <img alt="avatar" class="avatar" src="{{ user?.avatar === null ? 'assets/podium.jpg' : user?.avatar }}">
         <h4 class="username">{{ user?.name }}</h4>
         <p class="email">{{ user?.email }}</p>
     </div>
 
     <!-- Navigation -->
     <nav class="sidebar-nav">
-        <a [routerLink]="Link.HOME"
-           [ngClass]="['nav-link', setActiveLink(Link.HOME) ? 'active' : '']">
+        <a [ngClass]="['nav-link', setActiveLink(Link.HOME) ? 'active' : '']"
+           [routerLink]="Link.HOME">
             <span>🛍️</span>
             Home
         </a>
 
-        <a [routerLink]="Link.DashBoard"
-           [ngClass]="['nav-link', setActiveLink(Link.DashBoard) ? 'active' : '']">
+        <a [ngClass]="['nav-link', setActiveLink(Link.DashBoard) ? 'active' : '']"
+           [routerLink]="Link.DashBoard">
 
-        <span>📊</span>
+            <span>📊</span>
             Dashboard
         </a>
 
-        <a [routerLink]="Link.Account"
-           [ngClass]="['nav-link', setActiveLink(Link.Account) ? 'active' : '']">
+        <a [ngClass]="['nav-link', setActiveLink(Link.Account) ? 'active' : '']"
+           [routerLink]="Link.Account">
 
-        <span>👤</span>
+            <span>👤</span>
             Accounts
         </a>
     </nav>
@@ -40,7 +40,7 @@
     <!-- Bouton Logout -->
     <div class="sidebar-footer">
         @if (!isAuthenticated) {
-            <a routerLink="/login" class="nav-link" >
+            <a routerLink="/login" class="nav-link">
                 <span>🚪</span>
                 Connexion
             </a>

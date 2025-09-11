@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {Toast} from '../entity/Toast';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class ToastService {
     private toastsSubject = new BehaviorSubject<Toast[]>([]);

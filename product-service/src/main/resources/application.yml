@@ -1,57 +1,38 @@
 spring:
-  config:
-    import: optional:file:./.env[.properties]
+    config:
+        import: optional:file:./.env[.properties]
 
-  application:
-    name: product-service
+    application:
+        name: product-service
 
-  web:
-    resources:
-      add-mappings: false
+    web:
+        resources:
+            add-mappings: false
 
-  data:
-    mongodb:
-#        database: ${DB_NAME}
-#        username: ${DB_USER}
-#        password: ${DB_PASSWORD}
-#        port: ${DB_PORT}
-#        host: ${DB_HOST}
-#        auto-index-creation: true
-#        authentication-database: ${DB_AUTH_DB}
-      uri: mongodb+srv://${DB_USER}:${DB_PASSWORD}@buy0x.mqr2hhc.mongodb.net/?retryWrites=true&w=majority&appName=buy0x
-      database: ${DB_NAME}
-      auto-index-creation: true
-  kafka:
-    bootstrap-servers: localhost:9092, localhost:9093
-    producer:
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.apache.kafka.common.serialization.StringSerializer
-    consumer:
-      group-id: product-service
-      auto-offset-reset: earliest
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    profiles:
+        active: ${SPRING_PROFILES_ACTIVE}
 
-eureka:
-    client:
-        register-with-eureka: true
-        fetch-registry: true
-        service-url:
-          defaultZone: http://localhost:${EUREKA_SERVER_PORT}/eureka/
+    data:
+        mongodb:
+            uri: mongodb+srv://${DB_USER}:${DB_PASSWORD}@buy0x.mqr2hhc.mongodb.net/?retryWrites=true&w=majority&appName=buy0x
+            database: ${DB_NAME}
+            auto-index-creation: true
 
-#application:
-#  security:
-#    jwt:
-#      secret: ${JWT_SECRET}
-#      expiration-ms: 600000
-#      refresh-expiration: 3600000
-
-#springdoc:
-#api-docs:
-#enabled: true
-#swagger-ui:
-#enabled: true
-#path: /swagger-ui.html
+    kafka:
+        bootstrap-servers: localhost:9092, localhost:9093
+        producer:
+            key-serializer: org.apache.kafka.common.serialization.StringSerializer
+            value-serializer: org.apache.kafka.common.serialization.StringSerializer
+        consumer:
+            group-id: product-service
+            auto-offset-reset: earliest
+            key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+            value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
 
 server:
-  port: 8082
+    port: 8082
+
+logging:
+    level:
+        org.apache.kafka: ERROR
+        kafka: ERROR

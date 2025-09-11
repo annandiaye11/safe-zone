@@ -6,21 +6,17 @@ spring:
     web:
         resources:
             add-mappings: false
+    profiles:
+        active: ${SPRING_PROFILES_ACTIVE}
 
 server:
     port: ${EUREKA_SERVER_PORT}
-
-eureka:
-    instance:
-        hostname: localhost
-    client:
-        register-with-eureka: false
-        fetch-registry: false
-        service-url:
-            defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
 
 management:
     endpoints:
         web:
             exposure:
-                include: "*"
+                include: health,info
+    endpoint:
+        health:
+            show-details: always

@@ -1,7 +1,7 @@
 <div class="product-detail">
     <div class="container">
         <nav class="breadcrumb-nav">
-            <a routerLink="/" class="breadcrumb-link">🏠 Accueil</a>
+            <a class="breadcrumb-link" routerLink="/">🏠 Accueil</a>
             <span class="breadcrumb-separator">/</span>
             <span class="breadcrumb-current">Détails Produit</span>
         </nav>
@@ -26,16 +26,16 @@
                                     @if (currentImage !== null) {
                                         <img
                                             [src]="currentImage.imagePath"
-                                         alt="">
+                                            alt="">
                                     }
                                 } @else {
-                                    <img src="assets/podium.jpg" alt="Vue du produit" />
+                                    <img src="assets/podium.jpg" alt="Vue du produit"/>
                                 }
                             </div>
                             <div class="product-gallery">
                                 @for (productImage of product.images; track productImage.id) {
                                     <div class="gallery-thumb" (click)="selectImage(productImage!)">
-                                        <img src="{{ productImage.imagePath }}" alt="Vue {{ productImage.id }}" />
+                                        <img src="{{ productImage.imagePath }}" alt="Vue {{ productImage.id }}"/>
                                     </div>
                                 }
                             </div>
@@ -65,14 +65,26 @@
                                     'stock-green': product.quantity >= 10
                                 }">
                                     <span class="stock-icon">
-                                        @if (product.quantity === 0) { ❌ }
-                                        @if (product.quantity > 0 && product.quantity < 10) { ⚠️ }
-                                        @if (product.quantity >= 10) { ✅ }
+                                        @if (product.quantity === 0) {
+                                            ❌
+                                        }
+                                        @if (product.quantity > 0 && product.quantity < 10) {
+                                            ⚠️
+                                        }
+                                        @if (product.quantity >= 10) {
+                                            ✅
+                                        }
                                     </span>
                                     <span class="stock-text">
-                                        @if (product.quantity === 0) { Épuisé }
-                                        @if (product.quantity > 0 && product.quantity < 10) { Stock limité: {{ product.quantity }} disponibles }
-                                        @if (product.quantity >= 10) { En stock: {{ product.quantity }} disponibles }
+                                        @if (product.quantity === 0) {
+                                            Épuisé
+                                        }
+                                        @if (product.quantity > 0 && product.quantity < 10) {
+                                            Stock limité: {{ product.quantity }} disponibles
+                                        }
+                                        @if (product.quantity >= 10) {
+                                            En stock: {{ product.quantity }} disponibles
+                                        }
                                     </span>
                                 </div>
                             </div>
@@ -82,7 +94,8 @@
                                     <label>Quantité:</label>
                                     <div class="quantity-controls">
                                         <button class="qty-btn" [disabled]="quantity <= 1">-</button>
-                                        <input type="number" [(ngModel)]="quantity" min="1" max="{{ product.quantity }}" class="qty-input">
+                                        <input type="number" [(ngModel)]="quantity" min="1" max="{{ product.quantity }}"
+                                               class="qty-input">
                                         <button class="qty-btn" [disabled]="quantity >= product.quantity">+</button>
                                     </div>
                                 </div>

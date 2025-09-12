@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Router, RouterLink} from '@angular/router';
 import {AuthService} from '../../../services/auth.service';
 import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
@@ -17,7 +17,7 @@ import {ToastService} from '../../../services/toast.service';
     templateUrl: './register.html',
     styleUrl: './register.scss'
 })
-export class Register {
+export class Register implements OnInit {
     registerFormData;
     selectedFile: File | null = null;
 
@@ -45,6 +45,9 @@ export class Register {
         }
     }
 
+    ngOnInit() {
+        this.toastService.success("Page register chargée avec succes", 3000)
+    }
 
     onSubmit() {
         console.log(this.registerFormData.value)

@@ -47,8 +47,6 @@ spring:
 management:
     endpoints:
         web:
-            exposure:
-                include: health,info
             cors:
                 allowed-headers: "*"
                 allowed-methods: GET,POST,PUT,DELETE,OPTIONS

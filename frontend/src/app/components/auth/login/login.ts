@@ -35,7 +35,7 @@ export class Login implements OnInit {
     }
 
     ngOnInit() {
-        this.toastService.success("Page login chargee avec succes", 3000)
+        this.toastService.success("Page login chargée avec succes", 3000)
     }
 
     onSubmit() {

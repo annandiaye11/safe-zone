@@ -3,13 +3,13 @@ services:
         image: mongo:latest
         container_name: mongo-database
         restart: unless-stopped
-        ports:
-            - "27017:27017"
+#        ports:
+#            - "27017:27017"
         volumes:
             - mongodb_data:/data/db
         environment:
-            - MONGO_INITDB_ROOT_USERNAME=${DB_USER}
-            - MONGO_INITDB_ROOT_PASSWORD=${DB_PASSWORD}
+            - MONGO_INITDB_ROOT_USERNAME=${DB_USERNAME}
+            - MONGO_INITDB_ROOT_PASSWORD=${DB_PASS}
             - MONGO_INITDB_DATABASE=${DB_NAME}
         networks:
             - buy01-network
@@ -62,7 +62,7 @@ services:
         networks:
             - buy01-network
         healthcheck:
-            test: [ "CMD", "curl", "-f", "http://eureka-service:8761/actuator/health || exit 1" ]
+            test: [ "CMD", "curl", "-f", "http://localhost:8761/actuator/health" ]
             interval: 30s
             timeout: 10s
             retries: 3
@@ -77,15 +77,17 @@ services:
         ports:
             - "8080:8080"
         environment:
-            - EUREKA_SERVER_PORT=${EUREKA_SERVER_PORT}
-            - SPRING_PROFILES_ACTIVE=docker
+            -   EUREKA_SERVER_PORT=${EUREKA_SERVER_PORT}
+            -   SPRING_PROFILES_ACTIVE=docker
+            -   KEY_STORE_PASSWORD=${KEY_STORE_PASSWORD}
+            -   KEY_ALIAS=${KEY_ALIAS}
         depends_on:
             eureka-server:
                 condition: service_healthy
         networks:
             - buy01-network
         healthcheck:
-            test: [ "CMD", "curl", "-f", "http://localhost:8080/actuator/health" ]
+            test: [ "CMD", "curl", "-kf", "https://localhost:8080/actuator/health" ]
             interval: 30s
             timeout: 10s
             retries: 2
@@ -96,11 +98,20 @@ services:
             dockerfile: ./user-service/Dockerfile
         container_name: user-service
         restart: unless-stopped
-        ports:
-            - "8081:8081"
+#        ports:
+#            - "8081:8081"
         environment:
             - EUREKA_SERVER_PORT=${EUREKA_SERVER_PORT}
             - SPRING_PROFILES_ACTIVE=docker
+            - DB_USERNAME=${DB_USERNAME}
+            - DB_PASS=${DB_PASS}
+            - DB_NAME=${DB_NAME}
+            - DB_HOSTNAME=${DB_HOSTNAME}
+            - DB_PORT=${DB_PORT}
+            - DB_AUTH_DB=${DB_AUTH_DB}
+            - JWT_SECRET=${JWT_SECRET}
+            - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+            - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
         depends_on:
             eureka-server:
                 condition: service_healthy
@@ -120,11 +131,17 @@ services:
             dockerfile: ./product-service/Dockerfile
         container_name: product-service
         restart: unless-stopped
-        ports:
-            - "8082:8082"
+#        ports:
+#            - "8082:8082"
         environment:
             - EUREKA_SERVER_PORT=${EUREKA_SERVER_PORT}
             - SPRING_PROFILES_ACTIVE=docker
+            - DB_USERNAME=${DB_USERNAME}
+            - DB_PASS=${DB_PASS}
+            - DB_NAME=${DB_NAME}
+            - DB_HOSTNAME=${DB_HOSTNAME}
+            - DB_PORT=${DB_PORT}
+            - DB_AUTH_DB=${DB_AUTH_DB}
         depends_on:
             eureka-server:
                 condition: service_healthy
@@ -144,11 +161,19 @@ services:
             dockerfile: ./media-service/Dockerfile
         container_name: media-service
         restart: unless-stopped
-        ports:
-            - "8083:8083"
+#        ports:
+#            - "8083:8083"
         environment:
             - EUREKA_SERVER_PORT=${EUREKA_SERVER_PORT}
             - SPRING_PROFILES_ACTIVE=docker
+            - DB_USERNAME=${DB_USERNAME}
+            - DB_PASS=${DB_PASS}
+            - DB_NAME=${DB_NAME}
+            - DB_HOSTNAME=${DB_HOSTNAME}
+            - DB_PORT=${DB_PORT}
+            - DB_AUTH_DB=${DB_AUTH_DB}
+            - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+            - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
         depends_on:
             eureka-server:
                 condition: service_healthy
@@ -161,6 +186,18 @@ services:
             interval: 30s
             timeout: 10s
             retries: 2
+
+    frontend:
+        build:
+            context: ./frontend
+            dockerfile: Dockerfile
+        container_name: frontend
+        restart: unless-stopped
+        ports:
+            - "4200:4200"
+        depends_on:
+            api-gateway:
+                condition: service_healthy
 
 volumes:
     mongodb_data:

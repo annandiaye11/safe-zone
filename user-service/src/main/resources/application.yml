@@ -12,12 +12,6 @@ spring:
     profiles:
         active: ${SPRING_PROFILES_ACTIVE}
 
-    data:
-        mongodb:
-            uri: mongodb+srv://${DB_USER}:${DB_PASSWORD}@buy0x.mqr2hhc.mongodb.net/?retryWrites=true&w=majority&appName=buy0x
-            database: ${DB_NAME}
-            auto-index-creation: true
-
     kafka:
         bootstrap-servers: localhost:9092, localhost:9093
         producer:

@@ -6,3 +6,12 @@ eureka:
         fetch-registry: false
         service-url:
             defaultZone: http://${eureka.instance.hostname}:${EUREKA_SERVER_PORT}/eureka/
+
+management:
+    endpoints:
+        web:
+            exposure:
+                include: health,info
+    endpoint:
+        health:
+            show-details: always

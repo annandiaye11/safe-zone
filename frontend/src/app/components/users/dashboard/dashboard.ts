@@ -201,10 +201,12 @@ export class Dashboard implements OnInit {
     deleteMedia(mediaIds: string[]) {
         for (let mediaId of mediaIds) {
             this.mediaService.deleteMedia(mediaId).subscribe({
-                next: (data: any) => {
+                next: (_) => {
                     this.toastService.success("Media supprimé")
+                    this.products = []
+                    this.loadProducts()
                 },
-                error: (err) => {
+                error: (_) => {
                     this.toastService.error("erreur lors de la suppression du media")
                 }
 

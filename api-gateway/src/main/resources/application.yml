@@ -7,7 +7,7 @@ spring:
         resources:
             add-mappings: false
     profiles:
-        active: ${SPRING_PROFILES_ACTIVE}
+        active: ${SPRING_PROFILES_ACTIVE:dev}
 
     cloud:
         gateway:

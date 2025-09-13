@@ -151,14 +151,22 @@ npm start
 - 👉 [http://localhost:4200](http://localhost:4200)
 - 👉 [http://127.0.0.1:4200](http://127.0.0.1:4200)
 
+##### 6. Default credentials
+- Seller (Admin):
+  - Email: `ftk@user.com`
+  - Password: `Passer@123`
+- Client (User):
+    - Email: `johndoe@user.com`
+    - Password: `Passer@123`
+
 ### Docker Compose
 
 #### 1. start all services
 
 ```shell
-docker-compose up --build
+docker-compose up -d
 # OR
-docker compose up --build
+docker compose up -d
 ```
 
 #### 2. Check logs
@@ -189,4 +197,4 @@ docker compose down -v
 
 [![GitHub](https://img.shields.io/badge/Fatima%20Keita-FTK?style=for-the-badge&labelColor=green&logo=gitea&logoColor=darkgreen&color=white)](https://learn.zone01dakar.sn/git/fakeita)\
 [![GitHub](https://img.shields.io/badge/Anna%20Ndiaye-ANN?style=for-the-badge&labelColor=green&logo=gitea&logoColor=darkgreen&color=white)](https://learn.zone01dakar.sn/git/annndiaye)\
-[![GitHub](https://img.shields.io/badge/Franchis%20Janel%20MOKOMBA-JAM?style=for-the-badge&labelColor=green&logo=gitea&logoColor=darkgreen&color=white)](https://learn.zone01dakar.sn/git/fakeita)
+[![GitHub](https://img.shields.io/badge/Franchis%20Janel%20MOKOMBA-JAM?style=for-the-badge&labelColor=green&logo=gitea&logoColor=darkgreen&color=white)](https://learn.zone01dakar.sn/git/fmokomba)

@@ -25,6 +25,16 @@
         <spring.cloud.dependencies.version>2025.0.0</spring.cloud.dependencies.version>
     </properties>
 
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <activatedProperties>dev</activatedProperties>
+            </properties>
+        </profile>
+    </profiles>
+
+
     <dependencyManagement>
         <dependencies>
             <dependency>

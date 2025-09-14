@@ -20,10 +20,15 @@ show_menu() {
 
 kill_processes() {
 	echo ">>> Killing existing processes..."
+	# shellcheck disable=SC2046
 	kill -9 $(lsof -t -i:8761)
+	# shellcheck disable=SC2046
 	kill -9 $(lsof -t -i:8080)
+	# shellcheck disable=SC2046
 	kill -9 $(lsof -t -i:8081)
+	# shellcheck disable=SC2046
 	kill -9 $(lsof -t -i:8082)
+	# shellcheck disable=SC2046
 	kill -9 $(lsof -t -i:8083)
 	pkill -f "ng serve"
 	sleep 10
@@ -35,6 +40,7 @@ run_local() {
 
 	echo ">>> Backend (Spring Boot services)"
 	kill_processes
+	stop_docker
 
 	mvn clean package -DskipTests -pl eureka-server -am
 	java -jar eureka-server/target/*.jar> $LOG_DIR/eureka-server.log 2>&1 &
@@ -48,8 +54,10 @@ run_local() {
 	java -jar media-service/target/*.jar> $LOG_DIR/media-service.log 2>&1 &
 
 	echo ">>> Frontend (Angular)"
+	# shellcheck disable=SC2164
 	cd frontend
 	ng serve > ../$LOG_DIR/frontend.log 2>&1 &
+	# shellcheck disable=SC2103
 	cd ..
 
 	echo ">>> Services are running in background."
@@ -59,6 +67,8 @@ run_local() {
 run_docker() {
 	echo ">>> Starting DOCKER environment..."
 	kill_processes
+	stop_docker
+	docker compose build
 	docker compose up -d
 }
 

@@ -6,12 +6,15 @@ public enum Role {
 
     public static Role getRole(String nomRole) {
         String nom = nomRole.toLowerCase();
+
         if (nom.equalsIgnoreCase("client")) {
             return Role.CLIENT;
         }
+
         if (nom.equalsIgnoreCase("seller")) {
             return Role.SELLER;
         }
+
         return null;
     }
 }

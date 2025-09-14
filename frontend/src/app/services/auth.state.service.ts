@@ -21,6 +21,10 @@ export class AuthStateService {
         this.loadAuthState();
     }
 
+    updateUser(user: any) {
+        this.userSubject.next(user);
+    }
+
     loadAuthState() {
         const authenticated = this.utilsService.isAuthenticated();
         this.isAuthenticatedSubject.next(authenticated);

@@ -20,6 +20,7 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
+
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserEventPublisher userEventPublisher;
@@ -101,9 +102,9 @@ public class UserServiceImpl implements UserService {
         return response;
     }
 
-
     private String getCurrentUserEmail() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
         if (authentication != null && authentication.isAuthenticated()
                 && authentication.getPrincipal() instanceof UserDetails userDetails) {
             return userDetails.getUsername();
@@ -111,5 +112,4 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException("User is not authenticated");
         }
     }
-
 }

@@ -42,9 +42,9 @@ public class ProductServiceImpl implements ProductService {
     public List<Product> getAllProducts() {
         List<Product> products = productRepository.findAll();
         if (products.isEmpty()) {
-            return null;
+            return List.of();
         }
-        return products;
+        return productRepository.findAll();
     }
 
     @Override

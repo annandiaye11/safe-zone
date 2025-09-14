@@ -1,4 +1,4 @@
-import {CanActivate} from '@angular/router';
+import {CanActivate, Router} from '@angular/router';
 import {UtilsService} from '../services/utils.service';
 import {Injectable} from '@angular/core';
 
@@ -8,12 +8,16 @@ import {Injectable} from '@angular/core';
 export class AuthorizationGuard implements CanActivate {
 
     constructor(
-        private utilsService: UtilsService
+        private utilsService: UtilsService,
+        private router: Router,
     ) {
     }
 
     canActivate() {
-        console.log("Am I seller ?: ", this.utilsService.isAuthenticated() && this.utilsService.isSeller())
+        if (!this.utilsService.isAuthenticated()) {
+            this.router.navigate(['/login']).then()
+        }
+
         return this.utilsService.isAuthenticated() && this.utilsService.isSeller()
     }
 }

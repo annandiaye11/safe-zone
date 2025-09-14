@@ -42,7 +42,6 @@ export class Add implements OnInit {
     @Input() mediaForDelete: string[] | null = [];
     @Output() mediaForDeleteChange = new EventEmitter<string[]>();
     user!: any
-    filePreviewUrls: string[] = [];
     protected readonly console = console;
 
     constructor(private userService: UserService, private toastService: ToastService, private mediaService: MediaService) {
@@ -188,12 +187,5 @@ export class Add implements OnInit {
             return false;
         }
         return true;
-    }
-
-    private resetFileInput(): void {
-        const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
-        if (fileInput) {
-            fileInput.value = '';
-        }
     }
 }

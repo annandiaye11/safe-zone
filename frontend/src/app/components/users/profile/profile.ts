@@ -7,6 +7,7 @@ import {UserService} from '../../../services/user.service';
 import {Router} from '@angular/router';
 import {UtilsService} from '../../../services/utils.service';
 import {ToastService} from '../../../services/toast.service';
+import {AuthStateService} from '../../../services/auth.state.service';
 
 @Component({
     selector: 'app-profile',
@@ -40,14 +41,15 @@ export class Profile implements OnInit {
 
     constructor(
         private userService: UserService,
-        private utilservice: UtilsService,
+        private utilsService: UtilsService,
         private router: Router,
         private toastService: ToastService,
+        private authState: AuthStateService,
     ) {
     }
 
     ngOnInit() {
-        if (!this.utilservice.isAuthenticated()) {
+        if (!this.utilsService.isAuthenticated()) {
             this.router.navigate(['/login']).then();
             return;
         }
@@ -132,6 +134,8 @@ export class Profile implements OnInit {
                 this.toastService.success("Utilisateur modifié")
                 this.user.password = "ftkkeit"
                 this.cancelEdit();
+
+                this.authState.updateUser(this.user)
             },
             error: (err) => {
                 this.toastService.error("Erreur lors de la modification de l'utilisateur" + err)
@@ -147,14 +151,20 @@ export class Profile implements OnInit {
                 this.toastService.error('Le fichier doit faire moins de 5MB');
                 return;
             }
+
             if (!file.type.startsWith('image/')) {
                 this.toastService.error('Veuillez sélectionner une image')
                 return;
             }
+
             const reader = new FileReader();
             reader.onload = (e: any) => {
                 this.formData.avatar = e.target.result;
+
+                const updatedUser = {...this.user, avatar: e.target.result};
+                this.authState.updateUser(updatedUser)
             };
+
             reader.readAsDataURL(file);
         }
     }

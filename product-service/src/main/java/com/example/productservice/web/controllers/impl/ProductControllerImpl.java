@@ -38,9 +38,14 @@ public class ProductControllerImpl implements ProductController {
     }
 
     private ResponseEntity<List<ProductDto>> getListResponseEntity(List<Product> products) {
-        if (products == null || products.isEmpty()) {
+        /*if (products == null || products.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }*/
+        // Return emptyList if no products found
+        if (products.isEmpty()) {
+            return ResponseEntity.ok().body(List.of());
         }
+
         List<ProductDto> productDtos = products.stream()
                 .map(ProductMapper::toDto)
                 .toList();

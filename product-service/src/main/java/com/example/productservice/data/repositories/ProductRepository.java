@@ -13,7 +13,7 @@ public interface ProductRepository extends MongoRepository<Product, String> {
 
     void deleteProductsByUserId(String userId);
 
-    List<Product> getProductsByUserId(String userId);
+    // List<Product> getProductsByUserId(String userId);
 
     Product getByName(String name);
 }

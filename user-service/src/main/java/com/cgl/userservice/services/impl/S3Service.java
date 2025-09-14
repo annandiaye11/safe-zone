@@ -30,6 +30,7 @@ public class S3Service {
 
             String originalFilename = file.getOriginalFilename() != null ?
                     file.getOriginalFilename() : "file";
+
             String fileName = System.currentTimeMillis() + "_" +
                     originalFilename.replaceAll("[^a-zA-Z0-9._-]", "_");
 
@@ -54,7 +55,7 @@ public class S3Service {
         }
     }
 
-    public String uploadFile(MultipartFile file, String customBucketName, String key) {
+    /*public String uploadFile(MultipartFile file, String customBucketName, String key) {
         try {
             if (file == null || file.isEmpty()) {
                 throw new IllegalArgumentException("Le fichier ne peut pas être vide");
@@ -91,5 +92,5 @@ public class S3Service {
         } catch (Exception e) {
             throw new RuntimeException("Erreur suppression S3: " + e.getMessage(), e);
         }
-    }
+    }*/
 }

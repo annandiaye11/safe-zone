@@ -22,25 +22,22 @@ import java.util.List;
 public class User implements UserDetails {
     @Id
     String id;
+
     @Field("name")
     String name;
+
     @Indexed(unique = true)
     @Field("email")
     String email;
+
     @Field("password")
     String password;
+
     @Field("role")
     Role role;
+
     @Field("avatar")
     String avatar;
-
-    public User(String name, String email, String password, Role role, String avatar) {
-        this.name = name;
-        this.email = email;
-        this.password = password;
-        this.role = role;
-        this.avatar = avatar;
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

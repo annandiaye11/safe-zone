@@ -9,6 +9,7 @@ import {MediaService} from '../../../services/media.service';
 import {UtilsService} from '../../../services/utils.service';
 import {JwtService} from '../../../services/jwt.service';
 import {ToastService} from '../../../services/toast.service';
+import {Router} from '@angular/router';
 
 @Component({
     selector: 'app-dashboard',
@@ -46,6 +47,7 @@ export class Dashboard implements OnInit {
     userId: string | null = null;
 
     constructor(private productService: ProductService,
+                private router: Router,
                 private mediaService: MediaService,
                 private utilsService: UtilsService,
                 private jwtService: JwtService,
@@ -53,6 +55,11 @@ export class Dashboard implements OnInit {
     }
 
     ngOnInit() {
+        if (!this.utilsService.isAuthenticated()) {
+            this.router.navigate(['/login']).then();
+            return;
+        }
+
         this.userId = this.jwtService.getUserId(this.utilsService.getToken());
         if (this.userId != null) this.loadProducts();
     }

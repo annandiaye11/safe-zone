@@ -70,7 +70,7 @@ pipeline {
                 echo '🎨 Compilation du frontend Angular...'
                 dir("${FRONTEND_DIR}") {
                     sh 'npm install'
-                    sh 'ng build --configuration production'
+                    sh 'npx ng build --configuration production'
                 }
                 echo '✅ Frontend compilé avec succès'
             }
@@ -114,7 +114,8 @@ pipeline {
                 dir("${FRONTEND_DIR}") {
                     script {
                         try {
-                            sh 'npm run test -- --watch=false --browsers=ChromeHeadless'
+                            sh 'npm ci'
+                            sh 'npx ng test -- --watch=false --browsers=ChromeHeadless'
                             echo '✅ Tests frontend réussis'
                         } catch (Exception e) {
                             echo '⚠️ Tests frontend échoués (non bloquant)'
@@ -353,7 +354,7 @@ def deployLocally() {
                 nohup http-server dist/frontend -p 4200 -a 0.0.0.0 > ../frontend.log 2>&1 &
             else
                 # Fallback vers ng serve si http-server n'est pas disponible
-                nohup ng serve --host 0.0.0.0 --port 4200 > ../frontend.log 2>&1 &
+                nohup npx ng serve --host 0.0.0.0 --port 4200 > ../frontend.log 2>&1 &
             fi
         '''
     }

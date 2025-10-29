@@ -69,8 +69,16 @@ pipeline {
             steps {
                 echo '🎨 Compilation du frontend Angular...'
                 dir("${FRONTEND_DIR}") {
-                    sh 'npm install'
-                    sh 'npx ng build --configuration production'
+                    sh '''
+                        export PATH="/opt/nodejs/v22.13.0/bin:$PATH"
+                        echo "🔧 Utilisation de Node.js version: $(node --version)"
+                        echo "📦 Utilisation de npm version: $(npm --version)"
+                        npm install
+                    '''
+                    sh '''
+                        export PATH="/opt/nodejs/v22.13.0/bin:$PATH"
+                        npx ng build --configuration production
+                    '''
                 }
                 echo '✅ Frontend compilé avec succès'
             }
@@ -114,8 +122,14 @@ pipeline {
                 dir("${FRONTEND_DIR}") {
                     script {
                         try {
-                            sh 'npm ci'
-                            sh 'npx ng test -- --watch=false --browsers=ChromeHeadless'
+                            sh '''
+                                export PATH="/opt/nodejs/v22.13.0/bin:$PATH"
+                                npm ci
+                            '''
+                            sh '''
+                                export PATH="/opt/nodejs/v22.13.0/bin:$PATH"
+                                npx ng test -- --watch=false --browsers=ChromeHeadless
+                            '''
                             echo '✅ Tests frontend réussis'
                         } catch (Exception e) {
                             echo '⚠️ Tests frontend échoués (non bloquant)'

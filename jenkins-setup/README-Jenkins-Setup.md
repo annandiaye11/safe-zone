@@ -100,7 +100,7 @@ sudo apt install jenkins
 ### 5.2 Configuration Pipeline
 1. Pipeline → Definition: `Pipeline script from SCM`
 2. SCM: `Git`
-3. Repository URL: `https://learn.zone01dakar.sn/git/fmokomba/buy-01.git`
+3. Repository URL: `https://learn.zone01dakar.sn/git/annndiaye/mr-jenk.git`
 4. Credentials: `gitea-credentials`
 5. Branch: `*/main`
 6. Script Path: `Jenkinsfile`

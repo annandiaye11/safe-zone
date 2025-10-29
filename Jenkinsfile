@@ -51,7 +51,7 @@ pipeline {
             steps {
                 echo '📥 Récupération du code depuis Gitea...'
                 git branch: 'main',
-                    url: 'https://learn.zone01dakar.sn/git/fmokomba/buy-01.git',
+                    url: 'https://learn.zone01dakar.sn/git/annndiaye/mr-jenk.git',
                     credentialsId: 'gitea-credentials'
                 echo '✅ Code récupéré avec succès'
             }

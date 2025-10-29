@@ -68,7 +68,7 @@ pipeline {
             steps {
                 echo '📥 Récupération du code...'
                 git branch: 'main',
-                    url: 'https://learn.zone01dakar.sn/git/fmokomba/buy-01.git',
+                    url: 'https://learn.zone01dakar.sn/git/annndiaye/mr-jenk.git',
                     credentialsId: 'gitea-credentials'
                 
                 // Archiver le workspace pour les autres agents

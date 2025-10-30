@@ -131,7 +131,8 @@ pipeline {
                             sh '''
                                 export PATH="/opt/nodejs/v22.13.0/bin:$PATH"
                                 npm ci
-                                npx ng test --watch=false --browsers=ChromeHeadless
+                                # Utiliser la configuration CI avec Puppeteer
+                                npm run test:ci
                             '''
                             echo '✅ Tests frontend réussis'
                         } catch (Exception e) {

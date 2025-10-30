@@ -1,6 +1,11 @@
 pipeline {
     agent any
 
+    options {
+        // Forcer un checkout propre à chaque build
+        skipDefaultCheckout(true)
+    }
+
     tools {
         maven 'Maven-3.9'
         nodejs 'NodeJS-22'
@@ -50,6 +55,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 echo '📥 Récupération du code depuis Gitea...'
+                cleanWs()
                 git branch: 'main',
                     url: 'https://learn.zone01dakar.sn/git/annndiaye/mr-jenk.git',
                     credentialsId: 'gitea-credentials'

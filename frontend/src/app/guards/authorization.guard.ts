@@ -13,11 +13,12 @@ export class AuthorizationGuard implements CanActivate {
     ) {
     }
 
-    canActivate() {
+    canActivate(): boolean {
         if (!this.utilsService.isAuthenticated()) {
-            this.router.navigate(['/login']).then()
+            this.router.navigate(['/login']).then();
+            return false;
         }
 
-        return this.utilsService.isAuthenticated() && this.utilsService.isSeller()
+        return this.utilsService.isAuthenticated() && this.utilsService.isSeller();
     }
 }

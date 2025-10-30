@@ -2,8 +2,9 @@ pipeline {
     agent any
 
     options {
-        // Forcer un checkout propre à chaque build
         skipDefaultCheckout(true)
+        timeout(time: 30, unit: 'MINUTES')
+        buildDiscarder(logRotator(numToKeepStr: '10'))
     }
 
     tools {
@@ -12,10 +13,7 @@ pipeline {
     }
 
     triggers {
-        // Déclencher un build toutes les nuits à 2h du matin
         cron('0 2 * * *')
-        
-        // Déclencher un build lors des commits (nécessite webhook configuré)
         githubPush()
     }
 
@@ -26,11 +24,11 @@ pipeline {
         NOTIFICATION_EMAIL = 'annandiayr161@gmail.com'
         EUREKA_PORT = '8761'
         GATEWAY_PORT = '8080'
-        USER_SERVICE_PORT = '8081'
-        PRODUCT_SERVICE_PORT = '8082'
-        MEDIA_SERVICE_PORT = '8083'
         BACKUP_DIR = '/tmp/jenkins-backups'
         DEPLOYMENT_TIMESTAMP = "${new Date().format('yyyyMMdd-HHmmss')}"
+        // Optimisation Docker
+        DOCKER_BUILDKIT = '1'
+        COMPOSE_DOCKER_CLI_BUILD = '1'
     }
 
     parameters {
@@ -49,6 +47,11 @@ pipeline {
             defaultValue: true,
             description: 'Déployer avec Docker Compose ?'
         )
+        booleanParam(
+            name: 'FORCE_REBUILD',
+            defaultValue: false,
+            description: 'Forcer la reconstruction des images Docker ?'
+        )
     }
 
     stages {
@@ -66,7 +69,7 @@ pipeline {
         stage('Build Backend Services') {
             steps {
                 echo '🔨 Compilation des microservices Spring Boot...'
-                sh 'mvn clean install -DskipTests'
+                sh 'mvn clean install -DskipTests -T 4'
                 echo '✅ Backend compilé avec succès'
             }
         }
@@ -77,12 +80,9 @@ pipeline {
                 dir("${FRONTEND_DIR}") {
                     sh '''
                         export PATH="/opt/nodejs/v22.13.0/bin:$PATH"
-                        echo "🔧 Utilisation de Node.js version: $(node --version)"
-                        echo "📦 Utilisation de npm version: $(npm --version)"
+                        echo "🔧 Node.js version: $(node --version)"
+                        echo "📦 npm version: $(npm --version)"
                         npm install
-                    '''
-                    sh '''
-                        export PATH="/opt/nodejs/v22.13.0/bin:$PATH"
                         npx ng build --configuration production
                     '''
                 }
@@ -131,10 +131,7 @@ pipeline {
                             sh '''
                                 export PATH="/opt/nodejs/v22.13.0/bin:$PATH"
                                 npm ci
-                            '''
-                            sh '''
-                                export PATH="/opt/nodejs/v22.13.0/bin:$PATH"
-                                npx ng test -- --watch=false --browsers=ChromeHeadless
+                                npx ng test --watch=false --browsers=ChromeHeadless
                             '''
                             echo '✅ Tests frontend réussis'
                         } catch (Exception e) {
@@ -151,7 +148,10 @@ pipeline {
             }
             steps {
                 echo '🐳 Construction des images Docker...'
-                sh 'docker-compose build'
+                script {
+                    def buildFlag = params.FORCE_REBUILD ? '--no-cache' : ''
+                    sh "docker-compose build ${buildFlag}"
+                }
                 echo '✅ Images Docker construites'
             }
         }
@@ -166,7 +166,6 @@ pipeline {
                               submitter: 'admin'
                     }
 
-                    // Création d'une sauvegarde avant déploiement
                     createBackup()
 
                     try {
@@ -188,24 +187,70 @@ pipeline {
             steps {
                 echo '🏥 Vérification de la santé de l\'application...'
                 script {
+                    // Attente progressive pour le démarrage complet
+                    echo '⏳ Attente du démarrage de MongoDB et Kafka (30s)...'
+                    sleep(time: 30, unit: 'SECONDS')
+                    
+                    echo '⏳ Attente du démarrage d\'Eureka Server (30s)...'
+                    sleep(time: 30, unit: 'SECONDS')
+                    
+                    echo '⏳ Attente de l\'enregistrement des services (45s)...'
                     sleep(time: 45, unit: 'SECONDS')
+                    
                     try {
-                        // Vérification Eureka Server (HTTP)
-                        sh "curl -f http://localhost:${EUREKA_PORT}/actuator/health || exit 1"
-                        echo '✅ Eureka Server est en vie'
+                        // Vérification Eureka Server
+                        def eurekaHealth = sh(
+                            script: "curl -s -o /dev/null -w '%{http_code}' http://localhost:${EUREKA_PORT}/actuator/health",
+                            returnStdout: true
+                        ).trim()
                         
-                        // Vérification API Gateway (HTTPS avec SSL auto-signé)
-                        sh "curl -kf https://localhost:${GATEWAY_PORT}/actuator/health || exit 1"
-                        echo '✅ API Gateway est en vie'
+                        if (eurekaHealth == '200') {
+                            echo '✅ Eureka Server est opérationnel'
+                        } else {
+                            error("Eureka Server non accessible (HTTP ${eurekaHealth})")
+                        }
                         
-                        // Vérification des services via Docker (internes)
-                        sh "docker exec user-service curl -f http://localhost:8081/actuator/health || echo 'User Service non accessible'"
-                        sh "docker exec product-service curl -f http://localhost:8082/actuator/health || echo 'Product Service non accessible'"
-                        sh "docker exec media-service curl -f http://localhost:8083/actuator/health || echo 'Media Service non accessible'"
+                        // Vérification API Gateway
+                        def gatewayHealth = sh(
+                            script: "curl -k -s -o /dev/null -w '%{http_code}' https://localhost:${GATEWAY_PORT}/actuator/health",
+                            returnStdout: true
+                        ).trim()
                         
-                        echo '✅ Services principaux sont opérationnels'
+                        if (gatewayHealth == '200') {
+                            echo '✅ API Gateway est opérationnel'
+                        } else {
+                            error("API Gateway non accessible (HTTP ${gatewayHealth})")
+                        }
+                        
+                        // Vérification des microservices via Docker
+                        echo '🔍 Vérification des microservices...'
+                        sh '''
+                            docker exec user-service curl -s -f http://localhost:8081/actuator/health || echo "⚠️ User Service: en cours de démarrage"
+                            docker exec product-service curl -s -f http://localhost:8082/actuator/health || echo "⚠️ Product Service: en cours de démarrage"
+                            docker exec media-service curl -s -f http://localhost:8083/actuator/health || echo "⚠️ Media Service: en cours de démarrage"
+                        '''
+                        
+                        // Vérification du frontend
+                        def frontendRunning = sh(
+                            script: "docker ps --filter 'name=frontend' --filter 'status=running' --format '{{.Names}}'",
+                            returnStdout: true
+                        ).trim()
+                        
+                        if (frontendRunning) {
+                            echo '✅ Frontend est en cours d\'exécution'
+                        } else {
+                            echo '⚠️ Frontend container non trouvé ou arrêté'
+                        }
+                        
+                        // Affichage de l'état des conteneurs
+                        echo '📊 État des conteneurs:'
+                        sh 'docker-compose ps'
+                        
+                        echo '✅ Health check terminé avec succès'
+                        
                     } catch (Exception e) {
                         echo '❌ Health check échoué'
+                        sh 'docker-compose logs --tail=50'
                         error("Health check failed: ${e.message}")
                     }
                 }
@@ -233,7 +278,7 @@ pipeline {
                     )
                     echo '📧 Email de succès envoyé'
                 } catch (Exception e) {
-                    echo "⚠️ Impossible d'envoyer l'email de succès: ${e.message}"
+                    echo "⚠️ Impossible d'envoyer l'email: ${e.message}"
                 }
             }
         }
@@ -257,7 +302,7 @@ pipeline {
                     )
                     echo '📧 Email d\'échec envoyé'
                 } catch (Exception e) {
-                    echo "⚠️ Impossible d'envoyer l'email d'échec: ${e.message}"
+                    echo "⚠️ Impossible d'envoyer l'email: ${e.message}"
                 }
             }
         }
@@ -272,26 +317,31 @@ pipeline {
 def deployWithDocker() {
     echo '🐳 Déploiement avec Docker Compose...'
     sh '''
-        # Arrêt forcé de tous les conteneurs et nettoyage
         echo "🧹 Nettoyage des conteneurs existants..."
-        docker-compose down || true
-        docker stop $(docker ps -q) 2>/dev/null || true
+        docker-compose down -v || true
         docker container prune -f || true
         
-        # Libération forcée des ports
         echo "🔓 Libération des ports..."
         fuser -k 8080/tcp 2>/dev/null || true
         fuser -k 8090/tcp 2>/dev/null || true
+        fuser -k 4200/tcp 2>/dev/null || true
         
-        # Attendre la libération des ressources
         sleep 5
         
-        echo "🚀 Démarrage des nouveaux conteneurs..."
-        # Démarrage avec build si nécessaire
-        docker-compose up -d --build
+        echo "🚀 Démarrage des conteneurs..."
+        # Démarrage séquentiel pour éviter les problèmes de dépendances
+        docker-compose up -d mongodb zookeeper kafka1 kafka2
+        sleep 20
         
-        # Vérification que les conteneurs sont bien démarrés
-        sleep 15
+        docker-compose up -d eureka-server
+        sleep 30
+        
+        docker-compose up -d api-gateway user-service product-service media-service
+        sleep 20
+        
+        docker-compose up -d frontend
+        
+        echo "✅ Tous les services sont démarrés"
         docker-compose ps
     '''
     echo '✅ Déploiement Docker réussi'
@@ -300,52 +350,44 @@ def deployWithDocker() {
 def createBackup() {
     echo '💾 Création d\'une sauvegarde...'
     sh """
-        # Création du répertoire de sauvegarde
         mkdir -p ${BACKUP_DIR}
         
-        # Sauvegarde des JAR actuels
         if ls */target/*.jar 1> /dev/null 2>&1; then
             tar -czf ${BACKUP_DIR}/backup-${DEPLOYMENT_TIMESTAMP}.tar.gz */target/*.jar
             echo '✅ Sauvegarde des JAR créée'
         fi
         
-        # Sauvegarde de la configuration Docker
         if [ -f docker-compose.yml ]; then
             cp docker-compose.yml ${BACKUP_DIR}/docker-compose-${DEPLOYMENT_TIMESTAMP}.yml
             echo '✅ Sauvegarde Docker Compose créée'
         fi
         
-        # Conserver seulement les 5 dernières sauvegardes
-        ls -t ${BACKUP_DIR}/backup-*.tar.gz | tail -n +6 | xargs -r rm
+        ls -t ${BACKUP_DIR}/backup-*.tar.gz 2>/dev/null | tail -n +6 | xargs -r rm
     """
 }
 
 def rollbackDeployment() {
     echo '🔄 Rollback du déploiement...'
     sh """
-        # Récupération de la dernière sauvegarde
         LATEST_BACKUP=\$(ls -t ${BACKUP_DIR}/backup-*.tar.gz 2>/dev/null | head -n 1)
         
         if [ -n "\$LATEST_BACKUP" ]; then
             echo "Restauration depuis: \$LATEST_BACKUP"
             
-            # Arrêt des services actuels
-            docker-compose down || true
+            docker-compose down -v || true
             pkill -f "java -jar" || true
             
-            # Restauration des JAR
             tar -xzf "\$LATEST_BACKUP" -C ./
             
             echo '✅ Rollback terminé'
         else
-            echo '❌ Aucune sauvegarde trouvée pour le rollback'
+            echo '❌ Aucune sauvegarde trouvée'
         fi
     """
     
-    // Redémarrage conditionnel en Groovy
     if (params.DEPLOY_DOCKER) {
         echo '🐳 Redémarrage avec Docker...'
-        sh 'docker-compose up -d'
+        deployWithDocker()
     } else {
         deployLocally()
     }
@@ -354,32 +396,25 @@ def rollbackDeployment() {
 def deployLocally() {
     echo '🖥️ Déploiement local...'
     sh '''
-        # Arrêt des services existants
         pkill -f "java -jar" || true
         pkill -f "ng serve" || true
         
-        # Démarrage des services backend
         nohup java -jar eureka-server/target/*.jar --server.port=${EUREKA_PORT} > eureka.log 2>&1 &
         sleep 10
         nohup java -jar api-gateway/target/*.jar --server.port=${GATEWAY_PORT} > gateway.log 2>&1 &
-        nohup java -jar user-service/target/*.jar --server.port=${USER_SERVICE_PORT} > user.log 2>&1 &
-        nohup java -jar product-service/target/*.jar --server.port=${PRODUCT_SERVICE_PORT} > product.log 2>&1 &
-        nohup java -jar media-service/target/*.jar --server.port=${MEDIA_SERVICE_PORT} > media.log 2>&1 &
+        nohup java -jar user-service/target/*.jar --server.port=8081 > user.log 2>&1 &
+        nohup java -jar product-service/target/*.jar --server.port=8082 > product.log 2>&1 &
+        nohup java -jar media-service/target/*.jar --server.port=8083 > media.log 2>&1 &
     '''
     
-    // Déploiement du frontend
     dir('frontend') {
         sh '''
-            # Pour production, on peut servir les fichiers statiques via nginx
-            # ou utiliser http-server au lieu de ng serve
             if command -v http-server &> /dev/null; then
                 nohup http-server dist/frontend -p 4200 -a 0.0.0.0 > ../frontend.log 2>&1 &
             else
-                # Fallback vers ng serve si http-server n'est pas disponible
                 nohup npx ng serve --host 0.0.0.0 --port 4200 > ../frontend.log 2>&1 &
             fi
         '''
     }
     echo '✅ Déploiement local réussi'
 }
-

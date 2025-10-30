@@ -273,12 +273,21 @@ pipeline {
 def deployWithDocker() {
     echo '🐳 Déploiement avec Docker Compose...'
     sh '''
-        # Arrêt des conteneurs existants
+        # Arrêt forcé de tous les conteneurs et nettoyage
+        echo "🧹 Nettoyage des conteneurs existants..."
         docker-compose down || true
-        
-        # Nettoyage des conteneurs orphelins
+        docker stop $(docker ps -q) 2>/dev/null || true
         docker container prune -f || true
         
+        # Libération forcée des ports
+        echo "🔓 Libération des ports..."
+        fuser -k 8080/tcp 2>/dev/null || true
+        fuser -k 8090/tcp 2>/dev/null || true
+        
+        # Attendre la libération des ressources
+        sleep 5
+        
+        echo "🚀 Démarrage des nouveaux conteneurs..."
         # Démarrage avec build si nécessaire
         docker-compose up -d --build
         
@@ -328,19 +337,19 @@ def rollbackDeployment() {
             # Restauration des JAR
             tar -xzf "\$LATEST_BACKUP" -C ./
             
-            # Redémarrage avec la version précédente
-            if [ "${params.DEPLOY_DOCKER}" == "true" ]; then
-                docker-compose up -d
-            else
-                deployLocally()
-            fi
-            
             echo '✅ Rollback terminé'
         else
             echo '❌ Aucune sauvegarde trouvée pour le rollback'
-            error('No backup found for rollback')
         fi
     """
+    
+    // Redémarrage conditionnel en Groovy
+    if (params.DEPLOY_DOCKER) {
+        echo '🐳 Redémarrage avec Docker...'
+        sh 'docker-compose up -d'
+    } else {
+        deployLocally()
+    }
 }
 
 def deployLocally() {

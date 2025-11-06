@@ -264,18 +264,17 @@ pipeline {
             echo '🎉 Pipeline exécuté avec succès !'
             script {
                 try {
-                    emailext (
-                        subject: "✅ BUILD SUCCESS: ${env.JOB_NAME} - Build #${env.BUILD_NUMBER}",
-                        body: """
-                            <h2>✅ Build Réussi</h2>
-                            <p><strong>Projet:</strong> ${env.JOB_NAME}</p>
-                            <p><strong>Build:</strong> #${env.BUILD_NUMBER}</p>
-                            <p><strong>Environnement:</strong> ${params.ENVIRONMENT}</p>
-                            <p><strong>Durée:</strong> ${currentBuild.durationString}</p>
-                            <p><strong>URL:</strong> <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
-                        """,
+                    mail(
                         to: "${NOTIFICATION_EMAIL}",
-                        mimeType: 'text/html'
+                        body: """
+                            ✅ Build Réussi
+                            Projet: ${env.JOB_NAME}
+                            Build: #${env.BUILD_NUMBER}
+                            Environnement:${params.ENVIRONMENT}
+                            Durée:${currentBuild.durationString}
+                            URL:${env.BUILD_URL} ${env.BUILD_URL}
+                        """,
+                        // mimeType: 'text/html'
                     )
                     echo '📧 Email de succès envoyé'
                 } catch (Exception e) {
@@ -288,18 +287,10 @@ pipeline {
             echo '❌ Pipeline échoué !'
             script {
                 try {
-                    emailext (
-                        subject: "❌ BUILD FAILED: ${env.JOB_NAME} - Build #${env.BUILD_NUMBER}",
-                        body: """
-                            <h2>❌ Build Échoué</h2>
-                            <p><strong>Projet:</strong> ${env.JOB_NAME}</p>
-                            <p><strong>Build:</strong> #${env.BUILD_NUMBER}</p>
-                            <p><strong>Environnement:</strong> ${params.ENVIRONMENT}</p>
-                            <p><strong>Durée:</strong> ${currentBuild.durationString}</p>
-                            <p><strong>URL:</strong> <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
-                        """,
+                    mail(
                         to: "${NOTIFICATION_EMAIL}",
-                        mimeType: 'text/html'
+                        subject: "❌ BUILD FAILED: ${env.JOB_NAME} - Build #${env.BUILD_NUMBER}",
+                        body: "Le build a échoué. Veuillez vérifier les détails ici: ${env.BUILD_URL}"
                     )
                     echo '📧 Email d\'échec envoyé'
                 } catch (Exception e) {

@@ -26,6 +26,12 @@ pipeline {
         GATEWAY_PORT = '8080'
         BACKUP_DIR = '/tmp/jenkins-backups'
         DEPLOYMENT_TIMESTAMP = "${new Date().format('yyyyMMdd-HHmmss')}"
+        
+        // Docker Hub Configuration
+        DOCKERHUB_USERNAME = 'annandiaye'
+        DOCKERHUB_CREDENTIALS = 'dockerhub-credentials'
+        IMAGE_TAG = "${BUILD_NUMBER}"
+        
         // Optimisation Docker
         DOCKER_BUILDKIT = '1'
         COMPOSE_DOCKER_CLI_BUILD = '1'
@@ -148,12 +154,77 @@ pipeline {
                 expression { params.DEPLOY_DOCKER == true }
             }
             steps {
-                echo '🐳 Construction des images Docker...'
+                echo '🐳 Construction et push des images Docker vers Docker Hub...'
                 script {
                     def buildFlag = params.FORCE_REBUILD ? '--no-cache' : ''
-                    sh "docker-compose build ${buildFlag}"
+                    
+                    withDockerRegistry([credentialsId: "${DOCKERHUB_CREDENTIALS}", url: ""]) {
+                        sh '''
+                            # Build et push de chaque service backend
+                            for service in ${BACKEND_SERVICES}; do
+                                echo "🔨 Construction de l'image $service..."
+                                docker build ${buildFlag} -t ${DOCKERHUB_USERNAME}/${service}:${IMAGE_TAG} ./$service
+                                docker push ${DOCKERHUB_USERNAME}/${service}:${IMAGE_TAG}
+                                
+                                # Tag et push latest
+                                docker tag ${DOCKERHUB_USERNAME}/${service}:${IMAGE_TAG} ${DOCKERHUB_USERNAME}/${service}:latest
+                                docker push ${DOCKERHUB_USERNAME}/${service}:latest
+                                
+                                echo "✅ ${service} poussé vers Docker Hub"
+                            done
+                            
+                            # Build et push du frontend
+                            echo "🔨 Construction de l'image frontend..."
+                            docker build ${buildFlag} -t ${DOCKERHUB_USERNAME}/frontend:${IMAGE_TAG} ./frontend
+                            docker push ${DOCKERHUB_USERNAME}/frontend:${IMAGE_TAG}
+                            
+                            # Tag et push latest
+                            docker tag ${DOCKERHUB_USERNAME}/frontend:${IMAGE_TAG} ${DOCKERHUB_USERNAME}/frontend:latest
+                            docker push ${DOCKERHUB_USERNAME}/frontend:latest
+                            
+                            echo "✅ Frontend poussé vers Docker Hub"
+                        '''
+                    }
                 }
-                echo '✅ Images Docker construites'
+                echo '✅ Toutes les images Docker construites et poussées vers Docker Hub'
+            }
+            post {
+                success {
+                    echo '🎉 Images Docker Hub disponibles:'
+                    script {
+                        sh '''
+                            echo "📊 Images disponibles sur Docker Hub:"
+                            echo "  - ${DOCKERHUB_USERNAME}/api-gateway:${IMAGE_TAG}"
+                            echo "  - ${DOCKERHUB_USERNAME}/eureka-server:${IMAGE_TAG}"
+                            echo "  - ${DOCKERHUB_USERNAME}/user-service:${IMAGE_TAG}"
+                            echo "  - ${DOCKERHUB_USERNAME}/product-service:${IMAGE_TAG}"
+                            echo "  - ${DOCKERHUB_USERNAME}/media-service:${IMAGE_TAG}"
+                            echo "  - ${DOCKERHUB_USERNAME}/frontend:${IMAGE_TAG}"
+                        '''
+                    }
+                }
+            }
+        }
+
+        stage('Verify Docker Hub Images') {
+            when {
+                expression { params.DEPLOY_DOCKER == true }
+            }
+            steps {
+                echo '🔍 Vérification des images sur Docker Hub...'
+                script {
+                    def services = ['api-gateway', 'eureka-server', 'user-service', 'product-service', 'media-service', 'frontend']
+                    
+                    services.each { service ->
+                        sh """
+                            echo "🔍 Vérification ${service} sur Docker Hub..."
+                            docker pull ${DOCKERHUB_USERNAME}/${service}:${IMAGE_TAG}
+                            docker inspect ${DOCKERHUB_USERNAME}/${service}:${IMAGE_TAG} > /dev/null
+                            echo "✅ ${service}:${IMAGE_TAG} confirmé sur Docker Hub"
+                        """
+                    }
+                }
+                echo '✅ Toutes les images vérifiées sur Docker Hub'
             }
         }
 
@@ -307,8 +378,8 @@ pipeline {
 }
 
 def deployWithDocker() {
-    echo '🐳 Déploiement avec Docker Compose...'
-    sh '''
+    echo '🐳 Déploiement depuis Docker Hub...'
+    sh """
         echo "🧹 Nettoyage des conteneurs existants..."
         docker-compose down -v || true
         docker container prune -f || true
@@ -319,6 +390,22 @@ def deployWithDocker() {
         fuser -k 4200/tcp 2>/dev/null || true
         
         sleep 5
+        
+        echo "📥 Pull des images depuis Docker Hub..."
+        docker pull ${DOCKERHUB_USERNAME}/api-gateway:${IMAGE_TAG}
+        docker pull ${DOCKERHUB_USERNAME}/eureka-server:${IMAGE_TAG}
+        docker pull ${DOCKERHUB_USERNAME}/user-service:${IMAGE_TAG}
+        docker pull ${DOCKERHUB_USERNAME}/product-service:${IMAGE_TAG}
+        docker pull ${DOCKERHUB_USERNAME}/media-service:${IMAGE_TAG}
+        docker pull ${DOCKERHUB_USERNAME}/frontend:${IMAGE_TAG}
+        
+        echo "🏷️ Tag des images pour docker-compose..."
+        docker tag ${DOCKERHUB_USERNAME}/api-gateway:${IMAGE_TAG} api-gateway:latest
+        docker tag ${DOCKERHUB_USERNAME}/eureka-server:${IMAGE_TAG} eureka-server:latest
+        docker tag ${DOCKERHUB_USERNAME}/user-service:${IMAGE_TAG} user-service:latest
+        docker tag ${DOCKERHUB_USERNAME}/product-service:${IMAGE_TAG} product-service:latest
+        docker tag ${DOCKERHUB_USERNAME}/media-service:${IMAGE_TAG} media-service:latest
+        docker tag ${DOCKERHUB_USERNAME}/frontend:${IMAGE_TAG} frontend:latest
         
         echo "🚀 Démarrage des conteneurs..."
         # Démarrage séquentiel pour éviter les problèmes de dépendances
@@ -333,8 +420,12 @@ def deployWithDocker() {
         
         docker-compose up -d frontend
         
-        echo "✅ Tous les services sont démarrés"
+        echo "✅ Tous les services déployés depuis Docker Hub"
         docker-compose ps
+        
+        echo "📊 Images utilisées:"
+        docker images | grep -E "(${DOCKERHUB_USERNAME}|api-gateway|eureka-server|user-service|product-service|media-service|frontend)"
+    """
     '''
     echo '✅ Déploiement Docker réussi'
 }

@@ -2,6 +2,9 @@
 # On utilise Nginx, un serveur web de production léger et rapide.
 FROM nginx:alpine
 
+# Installer 'curl' pour que le health check fonctionne
+RUN apk add --no-cache curl
+
 # ÉTAPE 2: Copier les fichiers de l'application
 # On copie les fichiers que Jenkins a déjà construits (étape 'Build Frontend')
 # dans le dossier web par défaut de Nginx.

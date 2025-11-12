@@ -1,10 +1,14 @@
-FROM maven:3.8.4-openjdk-17-slim AS build
-WORKDIR /app
-COPY . .
-RUN mvn clean package -DskipTests -pl media-service -am
-
+# 1. Utiliser une image Java de base (légère)
 FROM eclipse-temurin:17-jdk-alpine
+
+# (Optionnel) Installer 'curl' pour les health checks
 RUN apk add --no-cache curl
+
+# Définir le répertoire de travail
 WORKDIR /app
-COPY --from=build /app/media-service/target/*.jar app.jar
+
+# 2. Copier le .jar que Jenkins a DÉJÀ construit
+COPY target/*.jar app.jar
+
+# 3. Démarrer l'application
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]

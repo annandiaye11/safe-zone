@@ -426,7 +426,6 @@ def deployWithDocker() {
         echo "📊 Images utilisées:"
         docker images | grep -E "(${DOCKERHUB_USERNAME}|api-gateway|eureka-server|user-service|product-service|media-service|frontend)"
     """
-    '''
     echo '✅ Déploiement Docker réussi'
 }
 

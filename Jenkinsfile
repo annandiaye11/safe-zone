@@ -492,6 +492,7 @@ def deployLocally() {
     
     dir('frontend') {
         sh '''
+            export PATH="/opt/nodejs/v22.13.0/bin:$PATH"
             if command -v http-server &> /dev/null; then
                 nohup http-server dist/frontend -p 4200 -a 0.0.0.0 > ../frontend.log 2>&1 &
             else

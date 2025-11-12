@@ -159,47 +159,18 @@ pipeline {
                     def buildFlag = params.FORCE_REBUILD ? '--no-cache' : ''
                     
                     withDockerRegistry([credentialsId: "${DOCKERHUB_CREDENTIALS}", url: ""]) {
-                        // Build des images en utilisant le répertoire racine pour avoir accès au POM parent
                         sh '''
                             # Build et push de chaque service backend
                             for service in ${BACKEND_SERVICES}; do
                                 echo "🔨 Construction de l'image $service..."
-                                
-                                # Créer un Dockerfile temporaire pour chaque service
-                                cat > $service/Dockerfile.tmp << EOF
-FROM maven:3.8.4-openjdk-17-slim AS build
-WORKDIR /app
-COPY pom.xml .
-COPY $service/pom.xml ./$service/
-# Copy all module poms for dependency resolution
-COPY api-gateway/pom.xml ./api-gateway/
-COPY eureka-server/pom.xml ./eureka-server/
-COPY user-service/pom.xml ./user-service/
-COPY product-service/pom.xml ./product-service/
-COPY media-service/pom.xml ./media-service/
-# Copy source code for specific service
-COPY $service/src ./$service/src
-RUN mvn clean package -DskipTests -pl $service -am
-
-FROM eclipse-temurin:17-jdk-alpine
-RUN apk add --no-cache curl
-WORKDIR /app
-COPY --from=build /app/$service/target/*.jar app.jar
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
-EOF
-                                
-                                # Build l'image depuis la racine
-                                docker build ${buildFlag} -f $service/Dockerfile.tmp -t ${DOCKERHUB_USERNAME}/$service:${IMAGE_TAG} .
-                                docker push ${DOCKERHUB_USERNAME}/$service:${IMAGE_TAG}
+                                docker build ${buildFlag} -t ${DOCKERHUB_USERNAME}/${service}:${IMAGE_TAG} ./$service
+                                docker push ${DOCKERHUB_USERNAME}/${service}:${IMAGE_TAG}
                                 
                                 # Tag et push latest
-                                docker tag ${DOCKERHUB_USERNAME}/$service:${IMAGE_TAG} ${DOCKERHUB_USERNAME}/$service:latest
-                                docker push ${DOCKERHUB_USERNAME}/$service:latest
+                                docker tag ${DOCKERHUB_USERNAME}/${service}:${IMAGE_TAG} ${DOCKERHUB_USERNAME}/${service}:latest
+                                docker push ${DOCKERHUB_USERNAME}/${service}:latest
                                 
-                                # Nettoyer le Dockerfile temporaire
-                                rm $service/Dockerfile.tmp
-                                
-                                echo "✅ $service poussé vers Docker Hub"
+                                echo "✅ ${service} poussé vers Docker Hub"
                             done
                             
                             # Build et push du frontend

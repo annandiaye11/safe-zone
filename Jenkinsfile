@@ -266,15 +266,15 @@ pipeline {
                 try {
                     mail(
                         to: "${NOTIFICATION_EMAIL}",
+                        subject: "✅ BUILD RÉUSSI: ${env.JOB_NAME} - Build #${env.BUILD_NUMBER}",
                         body: """
                             ✅ Build Réussi
                             Projet: ${env.JOB_NAME}
                             Build: #${env.BUILD_NUMBER}
-                            Environnement:${params.ENVIRONMENT}
-                            Durée:${currentBuild.durationString}
-                            URL:${env.BUILD_URL} ${env.BUILD_URL}
-                        """,
-                        // mimeType: 'text/html'
+                            Environnement: ${params.ENVIRONMENT}
+                            Durée: ${currentBuild.durationString}
+                            URL: ${env.BUILD_URL}
+                        """
                     )
                     echo '📧 Email de succès envoyé'
                 } catch (Exception e) {

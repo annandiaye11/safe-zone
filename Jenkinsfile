@@ -458,7 +458,7 @@ def rollbackDeployment() {
             echo "Restauration depuis: \$LATEST_BACKUP"
             
             docker-compose down -v || true
-            pkill -f "java -jar" || true
+            pkill -f 'java -jar' || true
             
             tar -xzf "\$LATEST_BACKUP" -C ./
             
@@ -479,8 +479,8 @@ def rollbackDeployment() {
 def deployLocally() {
     echo '🖥️ Déploiement local...'
     sh '''
-        pkill -f "java -jar" || true
-        pkill -f "ng serve" || true
+        pkill -f 'java -jar' || true
+        pkill -f 'ng serve' || true
         
         nohup java -jar eureka-server/target/*.jar --server.port=${EUREKA_PORT} > eureka.log 2>&1 &
         sleep 10

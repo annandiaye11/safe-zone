@@ -2,10 +2,13 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Subject, takeUntil} from 'rxjs';
 import {ToastService} from '../../services/toast.service';
 import {Toast} from '../../entity/Toast';
-
+import { CommonModule } from '@angular/common';
 @Component({
     selector: 'app-toast',
-    imports: [],
+    standalone: true,
+    imports: [
+        CommonModule
+    ],
     templateUrl: './toast.component.html',
     styleUrl: './toast.component.scss'
 })

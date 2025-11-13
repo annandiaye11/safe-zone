@@ -381,6 +381,12 @@ def deployWithDocker() {
     echo '🐳 Déploiement depuis Docker Hub...'
     sh """
         echo "🧹 Nettoyage des conteneurs existants..."
+        
+        # FORCER LA SUPPRESSION DES CONTENEURS PAR LEUR NOM
+        # C'est la nouvelle ligne qui corrige le bug de "Conflict"
+        docker rm -f mongo-database zookeeper kafka1 kafka2 frontend api-gateway eureka-server user-service product-service media-service || true
+
+        # On garde 'down' pour les réseaux et volumes
         docker-compose down -v || true
         docker container prune -f || true
         

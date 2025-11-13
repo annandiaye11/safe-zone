@@ -220,20 +220,19 @@ services:
             start_period: 60s
 
     frontend:
-        build:
-            context: ./frontend
-            dockerfile: Dockerfile
+    # On dit à Compose d'utiliser l'image taggée "latest" par Jenkins
+        # Le Jenkinsfile fait : docker tag annandiaye/frontend:79 frontend:latest
+        image: frontend:latest 
         container_name: frontend
         restart: unless-stopped
         ports:
-            - "4200:80" # <-- NOUVELLE LIGNE
+            - "4200:80"
         depends_on:
             api-gateway:
                 condition: service_healthy
         networks:
             - buy01-network
         healthcheck:
-            # test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:4200"]
             test: ["CMD", "curl", "-f", "http://localhost:80/"]
             interval: 15s
             timeout: 10s

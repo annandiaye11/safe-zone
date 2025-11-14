@@ -31,7 +31,7 @@ application:
             refresh-expiration: 3600000
 
 server:
-    port: 8081
+    port: ${USER_SERVICE_PORT}
 
 aws:
     s3:

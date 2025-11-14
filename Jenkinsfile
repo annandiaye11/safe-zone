@@ -21,7 +21,7 @@ pipeline {
         DOCKER_COMPOSE_FILE = 'docker-compose.yml'
         BACKEND_SERVICES = 'api-gateway eureka-server user-service product-service media-service'
         FRONTEND_DIR = 'frontend'
-        NOTIFICATION_EMAIL = 'annandiayr161@gmail.com'
+        NOTIFICATION_EMAIL = 'annandiayr161@gmail.com,janelpro9@gmail.com'
         EUREKA_PORT = '8761'
         GATEWAY_PORT = '8080'
         BACKUP_DIR = '/tmp/jenkins-backups'
@@ -88,7 +88,13 @@ pipeline {
                         export PATH="/opt/nodejs/v22.13.0/bin:$PATH"
                         echo "🔧 Node.js version: $(node --version)"
                         echo "📦 npm version: $(npm --version)"
-                        npm install
+                        if [ -f package-lock.json ]; then
+                            echo "✅ package-lock.json trouvé — utilisation de npm ci"
+                            npm ci
+                        else
+                            echo "ℹ️ Pas de lockfile — fallback sur npm install"
+                            npm install
+                        fi
                         npx ng build --configuration production
                     '''
                 }

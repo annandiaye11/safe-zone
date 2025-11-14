@@ -1,88 +1,123 @@
-# Buy 01 (Spring Boot Microservice + Angular)
+# Mr-Jenk (CI/CD Pipeline avec Jenkins + Docker Hub)
 
 ### 📖 Description
 
-This application is a simple e-commerce platform e2e based on an architecture of microservices developed with Spring
-Boot and Angular.
+Ce projet est une plateforme e-commerce complète basée sur une architecture de microservices développée avec Spring Boot et Angular, intégrée à une pipeline CI/CD Jenkins robuste avec déploiement Docker Hub.
 
-It enables:
+**Fonctionnalités principales :**
 
-- Registration and Authentication of users (CLIENT OR SELLER)
-- Product management by sellers only (full CRUD)
-- Media management (uploading and deleting product images with a 2 MB limit)
-- A simple Angular interface with a seller dashboard and public product catalog
+- Inscription et authentification des utilisateurs (CLIENT OU VENDEUR)
+- Gestion des produits par les vendeurs uniquement (CRUD complet)
+- Gestion des médias (téléchargement et suppression d'images produits avec limite de 2 MB)  
+- Interface Angular simple avec tableau de bord vendeur et catalogue produits public
+- **Pipeline CI/CD Jenkins automatisée avec Docker Hub**
+- **Tests automatisés (Backend Maven + Frontend Karma/Jasmine)**
+- **Déploiement conteneurisé avec Docker**
 
-The goal is to provide a secure, scalable, and maintainable architecture using Spring Security with JWT, Eureka for
-service discovery, and possibly Kafka for inter-service communication
+L'objectif est de fournir une architecture sécurisée, évolutive et maintenable avec Spring Security JWT, Eureka pour la découverte de services, et une pipeline CI/CD complète pour l'intégration et le déploiement continus.
 
 ### 🛠️ Technologies
 
-- `Backend:` Spring Boot, Spring Security, Spring Data MongoDB, Kafka (optional), Eureka, JWT
-- `Frontend:` Angular 20, RxJS
-- `Database:` MongoDB
-- `Infrastructure:` Docker, Docker Compose
-- `Security:` JWT, HTTPS/SSL
+- **Backend:** Spring Boot, Spring Security, Spring Data MongoDB, Eureka, JWT
+- **Frontend:** Angular 20, RxJS
+- **Database:** MongoDB
+- **Infrastructure:** Docker, Docker Compose, Jenkins, Docker Hub
+- **CI/CD:** Jenkins Pipeline (Groovy), Maven, npm, SonarQube
+- **Testing:** JUnit (Backend), Karma/Jasmine (Frontend), Puppeteer
+- **Security:** JWT, HTTPS/SSL, Jenkins Credentials
 
 ### 📂 Architecture
 
 ```text
-buy-01/
-├── api-gateway/         # Gateway for centralising calls to microservices
+mr-jenk/
+├── api-gateway/         # Gateway pour centraliser les appels aux microservices
 ├── eureka-server/       # Service Discovery (Eureka)
-├── user-service/        # User, role and profile management
-├── product-service/     # Product CRUD, management by sellers
-├── media-service/       # Media upload/management (product images)
-├── frontend/            # Angular application (UI)
-├── pom.xml              # Parent Maven
-└── docker-compose.yml   # Docker Compose
+├── user-service/        # Gestion utilisateurs, rôles et profils
+├── product-service/     # CRUD produits, gestion par vendeurs
+├── media-service/       # Upload/gestion média (images produits)
+├── frontend/            # Application Angular (UI)
+├── jenkins-setup/       # Documentation et configuration Jenkins
+├── scripts/            # Scripts de déploiement et utilitaires
+├── Jenkinsfile          # Pipeline CI/CD Jenkins (Groovy)
+├── docker-compose.yml   # Docker Compose pour développement local
+├── pom.xml              # Parent Maven multi-module
+└── README.md            # Documentation projet
 ```
 
-### ⚙️ Features
+### 🚀 Pipeline CI/CD
 
-#### 🔑 Users (User Service)
+La pipeline Jenkins automatise le processus de build, test et déploiement :
 
-- Registration as a customer or seller.
-- Authentication with JWT.
-- User profile management.
-- Avatar upload for sellers.
+#### **Étapes de la Pipeline :**
 
-#### 📦 Products (Product Service)
+1. **🔄 Checkout** - Récupération du code depuis Gitea
+2. **🔨 Build Backend** - Compilation Maven multi-module (4 threads parallèles)
+3. **🎨 Build Frontend** - Compilation Angular avec npm/Node.js
+4. **🧪 Test Backend** - Tests JUnit pour tous les microservices
+5. **🧪 Test Frontend** - Tests Karma/Jasmine avec Puppeteer (headless Chrome)
+6. **🐳 Build Docker Images** - Construction et push vers Docker Hub
+7. **✅ Verify Docker Hub** - Vérification des images poussées
+8. **🚀 Deploy** - Déploiement automatique (local ou Docker Hub)
+9. **🏥 Health Check** - Vérification de la santé des services
 
-- Full CRUD (Create, Read, Update, Delete).
-- Only accessible to authenticated sellers.
-- Association of images with products.
-- Access control: a seller can only manage their own products.
+#### **Configuration Docker Hub :**
 
-#### 🖼️ Media (Media Service)
+- **Username:** `annandiaye`
+- **Registry:** Docker Hub officiel
+- **Images générées:**
+  - `annandiaye/api-gateway:${BUILD_NUMBER}`
+  - `annandiaye/eureka-server:${BUILD_NUMBER}`
+  - `annandiaye/user-service:${BUILD_NUMBER}`
+  - `annandiaye/product-service:${BUILD_NUMBER}`
+  - `annandiaye/media-service:${BUILD_NUMBER}`
+  - `annandiaye/frontend:${BUILD_NUMBER}`
 
-- Secure image upload (PNG, JPG, JPEG).
-- Maximum size: 2 MB.
-- Backend and frontend validation.
-- Deletion/modification of images associated with products.
+### ⚙️ Fonctionnalités
+
+#### 🔑 Utilisateurs (User Service)
+
+- Inscription en tant que client ou vendeur.
+- Authentification avec JWT.
+- Gestion des profils utilisateurs.
+- Téléchargement d'avatar pour les vendeurs.
+
+#### 📦 Produits (Product Service)
+
+- CRUD complet (Créer, Lire, Mettre à jour, Supprimer).
+- Accessible uniquement aux vendeurs authentifiés.
+- Association d'images avec les produits.
+- Contrôle d'accès : un vendeur ne peut gérer que ses propres produits.
+
+#### 🖼️ Médias (Media Service)
+
+- Téléchargement sécurisé d'images (PNG, JPG, JPEG).
+- Taille maximale : 2 MB.
+- Validation backend et frontend.
+- Suppression/modification des images associées aux produits.
 
 #### 🌍 Frontend (Angular)
 
-- Sign In / Sign Up (with role management).
-- Seller dashboard: product and image management.
-- Public product catalogue (without advanced search/filter).
-- Error management (files too large, wrong format, etc.).
+- Connexion / Inscription (avec gestion des rôles).
+- Tableau de bord vendeur : gestion des produits et images.
+- Catalogue produits public (sans recherche/filtre avancé).
+- Gestion des erreurs (fichiers trop volumineux, mauvais format, etc.).
 
-### 🔐 Security
+### 🔐 Sécurité
 
-- Spring Security + JWT for authentication and authorisation.
-- Role-based access control (RBAC):
-    - `ROLE_CLIENT` → view only.
-    - `ROLE_SELLER` → product and media management.
-- Passwords are hashed and salted (BCrypt) before storage.
-- APIs never return sensitive information.
-- Communications must go through HTTPS (SSL/TLS).
-- Strict access: a seller can only modify their own products.
+- Spring Security + JWT pour l'authentification et l'autorisation.
+- Contrôle d'accès basé sur les rôles (RBAC) :
+    - `ROLE_CLIENT` → lecture seule.
+    - `ROLE_SELLER` → gestion des produits et médias.
+- Mots de passe hachés et salés (BCrypt) avant stockage.
+- Les APIs ne retournent jamais d'informations sensibles.
+- Communications obligatoires via HTTPS (SSL/TLS).
+- Accès strict : un vendeur ne peut modifier que ses propres produits.
 
 ### 🗄️ MongoDB
 
-Each microservice has its own database to promote decoupling (database per service pattern).
+Chaque microservice dispose de sa propre base de données pour favoriser le découplage (pattern database per service).
 
-#### 📌 Example : `user-service`
+#### 📌 Exemple : `user-service`
 
 ```json
 {
@@ -95,106 +130,159 @@ Each microservice has its own database to promote decoupling (database per servi
 }
 ```
 
-#### 📌 Example : `product-service`
+#### 📌 Exemple : `product-service`
 
 ```json
 {
     "id": "uuid",
     "name": "Lenovo Legion 5",
-    "description": "High-performance laptop for gaming and productivity",
+    "description": "Ordinateur portable haute performance pour jeu et productivité",
     "price": 1200000.00,
     "quantite": 10,
     "sellerId": "uuid_user"
 }
 ```
 
-### 🚀 Project launch
+### 🚀 Lancement du Projet
 
-#### 🔧 Prerequisites
+#### 🔧 Prérequis
 
+**Développement Local :**
 - Java 17+
-- Maven 3.8+
+- Maven 3.9+
 - Node.js 22+ / Angular CLI
 - Docker & Docker Compose
-- MongoDB (local and hosted)
+- MongoDB
 
-#### Steps
+**Pipeline Jenkins :**
+- Jenkins 2.4+ avec plugins : Pipeline, Docker, Git, NodeJS
+- Compte Docker Hub configuré
+- Identifiants Jenkins : `gitea-credentials`, `dockerhub-credentials`
 
-##### 1. Clone the project
+#### **Étapes de Déploiement**
+
+##### 1. Cloner le projet
 
 ```bash
-git clone https://learn.zone01dakar.sn/git/fmokomba/buy-01.git
-cd buy-01
+git clone https://learn.zone01dakar.sn/git/annndiaye/mr-jenk.git
+cd mr-jenk
 ```
 
-##### 2. Configure environment variables
+##### 2. Option A : Déploiement via Pipeline Jenkins
 
-```shell
-cp .env.example .env
+```bash
+# 1. Configurer Jenkins (voir jenkins-setup/README-Jenkins-Setup.md)
+# 2. Créer une nouvelle Pipeline pointant vers ce repo
+# 3. La pipeline se déclenche automatiquement sur git push
 ```
 
-##### 3. Launch microservices with Docker Compose
+##### 3. Option B : Développement Local avec Docker Compose
 
 ```shell
-docker-compose up --build
+# Lancer tous les services (MongoDB, Kafka, microservices)
+docker-compose up --build -d
+
+# Vérifier les logs
+docker-compose logs -f
 ```
 
-##### 4. Launch the frontend
+##### 4. Option C : Développement Local Manuel
 
 ```shell
+# Backend (depuis la racine)
+mvn clean install -DskipTests
+
+# Frontend
+cd frontend
 npm install
 npm start
 ```
 
-##### 5. Access the application
+##### 5. Accès à l'application
 
-- 👉 [http://localhost:4200](http://localhost:4200)
-- 👉 [http://127.0.0.1:4200](http://127.0.0.1:4200)
+- **Application :** [http://localhost:4200](http://localhost:4200)
+- **Eureka Dashboard :** [http://localhost:8761](http://localhost:8761)
+- **API Gateway :** [https://localhost:8080](https://localhost:8080)
 
-##### 6. Default credentials
-- Seller (Admin):
-  - Email: `ftk@user.com`
-  - Password: `Passer@123`
-- Client (User):
-    - Email: `johndoe@user.com`
-    - Password: `Passer@123`
+##### 6. Identifiants par défaut
 
-### Docker Compose
+- **Vendeur (Admin) :**
+  - Email : `ftk@user.com`
+  - Mot de passe : `Passer@123`
+- **Client (Utilisateur) :**
+  - Email : `johndoe@user.com`
+  - Mot de passe : `Passer@123`
 
-#### 1. start all services
+### 🐳 Gestion Docker
+
+#### **Docker Compose (Développement Local)**
 
 ```shell
+# Démarrer tous les services
 docker-compose up -d
-# OR
-docker compose up -d
-```
 
-#### 2. Check logs
-
-```shell
+# Vérifier les logs
 docker-compose logs -f
-# OR
-docker compose logs -f
-```
 
-#### 3. Stop all services
-
-```shell
+# Arrêter tous les services  
 docker-compose down
-# OR
-docker compose down
+
+# Supprimer volumes et données
+docker-compose down -v
 ```
 
-#### 5 Delete volumes
+#### **Images Docker Hub (Production)**
 
 ```shell
-docker-compose down -v
-# OR
-docker compose down -v
+# Pull des images depuis Docker Hub
+docker pull annandiaye/api-gateway:latest
+docker pull annandiaye/eureka-server:latest
+docker pull annandiaye/user-service:latest
+docker pull annandiaye/product-service:latest  
+docker pull annandiaye/media-service:latest
+docker pull annandiaye/frontend:latest
+
+# Déploiement via Jenkins ou script
+./scripts/deploy.sh
 ```
 
-### Authors
+### 🔧 Configuration Jenkins
 
-[![GitHub](https://img.shields.io/badge/Fatima%20Keita-FTK?style=for-the-badge&labelColor=green&logo=gitea&logoColor=darkgreen&color=white)](https://learn.zone01dakar.sn/git/fakeita)\
-[![GitHub](https://img.shields.io/badge/Anna%20Ndiaye-ANN?style=for-the-badge&labelColor=green&logo=gitea&logoColor=darkgreen&color=white)](https://learn.zone01dakar.sn/git/annndiaye)\
-[![GitHub](https://img.shields.io/badge/Franchis%20Janel%20MOKOMBA-JAM?style=for-the-badge&labelColor=green&logo=gitea&logoColor=darkgreen&color=white)](https://learn.zone01dakar.sn/git/fmokomba)
+Voir le guide détaillé dans `jenkins-setup/README-Jenkins-Setup.md`
+
+**Identifiants requis :**
+- `gitea-credentials` : Accès au dépôt Git
+- `dockerhub-credentials` : Nom d'utilisateur/Token Docker Hub
+
+**Plugins Jenkins nécessaires :**
+- Pipeline
+- Git 
+- Docker Pipeline
+- NodeJS
+- Maven Integration
+
+### 📊 Monitoring & Métriques
+
+**Health Checks automatiques :**
+
+- Eureka Server : `http://localhost:8761/actuator/health`
+- API Gateway : `https://localhost:8080/actuator/health` 
+- Services : `http://localhost:808X/actuator/health`
+
+**Pipeline Métriques :**
+
+- Build time tracking
+- Test coverage reports
+- Docker image sizes
+- Notifications email sur échec/succès
+
+### 🚀 Auteurs & Contributeurs
+
+[![GitHub](https://img.shields.io/badge/Anna%20Ndiaye-Lead%20DevOps-blue?style=for-the-badge&labelColor=green&logo=gitea&logoColor=darkgreen&color=blue)](https://learn.zone01dakar.sn/git/annndiaye)
+
+**Spécialisations :**
+
+- **Anna Ndiaye** : Architecture CI/CD, Jenkins Pipeline, Docker Hub Integration
+- **Équipe Buy-01** : Architecture microservices, développement Spring Boot/Angular
+
+**Projet Mr-Jenk :** Evolution CI/CD du projet Buy-01 avec focus sur DevOps et automation.

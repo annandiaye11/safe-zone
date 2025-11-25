@@ -63,11 +63,11 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                echo '📥 Récupération du code depuis Gitea...'
+                echo '📥 Récupération du code depuis GitHub...'
                 cleanWs()
                 git branch: 'main',
-                    url: 'https://learn.zone01dakar.sn/git/annndiaye/mr-jenk.git',
-                    credentialsId: 'gitea-credentials'
+                    url: 'https://github.com/annandiaye11/safe-zone.git',
+                    credentialsId: 'github-credentials'
                 echo '✅ Code récupéré avec succès'
             }
         }

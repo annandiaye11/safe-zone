@@ -1,0 +1,61 @@
+name: Frontend Analysis - Safe Zone
+
+on:
+  push:
+    branches:
+      - main
+      - clean-main
+    paths:
+      - 'frontend/**'
+  pull_request:
+    branches:
+      - main 
+      - clean-main
+    paths:
+      - 'frontend/**'
+
+jobs:
+  frontend-analysis:
+    name: Frontend SonarQube Analysis  
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: 🟢 Set up Node.js 22
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+      
+      - name: 📦 Install Frontend dependencies
+        working-directory: frontend
+        run: |
+          npm ci
+      
+      - name: 🧪 Run Frontend tests with coverage
+        working-directory: frontend
+        run: |
+          npm run test:ci || echo "⚠️ Tests failed but continuing analysis"
+      
+      - name: 🔍 SonarQube Frontend Analysis
+        uses: sonarqube-scanner-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        with:
+          projectBaseDir: frontend
+          args: >
+            -Dsonar.projectKey=safe-zone-frontend
+            -Dsonar.projectName="Safe-Zone Frontend"
+            -Dsonar.sources=src
+            -Dsonar.tests=src
+            -Dsonar.test.inclusions=**/*.spec.ts
+            -Dsonar.typescript.lcov.reportPaths=coverage/lcov.info
+            -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }}
+            -Dsonar.login=${{ secrets.SONAR_TOKEN }}

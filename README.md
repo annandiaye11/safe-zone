@@ -1,8 +1,8 @@
-# Mr-Jenk (CI/CD Pipeline avec Jenkins + Docker Hub)
+# Safe-Zone (E-commerce avec CI/CD + SonarQube)
 
 ### 📖 Description
 
-Ce projet est une plateforme e-commerce complète basée sur une architecture de microservices développée avec Spring Boot et Angular, intégrée à une pipeline CI/CD Jenkins robuste avec déploiement Docker Hub.
+**Safe-Zone** est une plateforme e-commerce sécurisée basée sur une architecture de microservices avec Spring Boot et Angular, intégrée à un pipeline DevOps complet incluant Jenkins, Docker Hub et **SonarQube pour la qualité de code**.
 
 **Fonctionnalités principales :**
 
@@ -22,9 +22,42 @@ L'objectif est de fournir une architecture sécurisée, évolutive et maintenabl
 - **Frontend:** Angular 20, RxJS
 - **Database:** MongoDB
 - **Infrastructure:** Docker, Docker Compose, Jenkins, Docker Hub
-- **CI/CD:** Jenkins Pipeline (Groovy), Maven, npm, SonarQube
+- **CI/CD:** Jenkins Pipeline (Groovy), Maven, npm
+- **Quality Assurance:** SonarQube, SonarCloud, JaCoCo Coverage
 - **Testing:** JUnit (Backend), Karma/Jasmine (Frontend), Puppeteer
-- **Security:** JWT, HTTPS/SSL, Jenkins Credentials
+- **Security:** JWT, HTTPS/SSL, Jenkins Credentials, Security Hotspots Detection
+
+### 📊 **SonarQube Integration (Quality Assurance)**
+
+**Safe-Zone** intègre une analyse de qualité de code complète avec **SonarQube** :
+
+#### 🎯 **Dual Setup**
+- **🌥️ SonarCloud (Production)** : Analyse automatique via GitHub Actions
+- **🐳 SonarQube Local (Development)** : Tests rapides avec Docker
+
+#### ✅ **Métriques de Qualité Atteintes**
+- **Security Rating:** A+ (0 vulnérabilités, 0 security hotspots)
+- **Maintainability Rating:** A+ (0% duplications, dette technique minimale)
+- **Reliability Rating:** A+ (0 bugs détectés)
+- **Coverage:** Rapports JaCoCo intégrés
+- **Quality Gate:** Passed ✅
+
+#### 🔧 **Outils Disponibles**
+```bash
+# Tests SonarQube locaux
+./test-sonar-local.sh run
+
+# Analyse rapide
+./analyze-local.sh
+
+# Coverage avec JaCoCo
+mvn clean test jacoco:report
+```
+
+#### 🔗 **Liens Utiles**
+- **SonarCloud Dashboard:** [https://sonarcloud.io/project/overview?id=annandiaye11_safe-zone](https://sonarcloud.io/project/overview?id=annandiaye11_safe-zone)
+- **GitHub Actions:** [https://github.com/annandiaye11/safe-zone/actions](https://github.com/annandiaye11/safe-zone/actions)
+- **Documentation complète:** [`docs/SONARQUBE-INTEGRATION.md`](docs/SONARQUBE-INTEGRATION.md)
 
 ### 📂 Architecture
 
@@ -46,12 +79,19 @@ mr-jenk/
 
 ### 🚀 Pipeline CI/CD
 
-La pipeline Jenkins automatise le processus de build, test et déploiement :
+La pipeline CI/CD combine Jenkins (déploiement) et GitHub Actions (analyse qualité) pour un flux complet :
 
-#### **Étapes de la Pipeline :**
+#### **GitHub Actions - Analyse Qualité (SonarCloud):**
 
-1. **🔄 Checkout** - Récupération du code depuis Gitea
-2. **🔨 Build Backend** - Compilation Maven multi-module (4 threads parallèles)
+1. **🔍 Analyse Backend** - Analysis Maven/Java avec JaCoCo coverage
+2. **🔍 Analyse Frontend** - Analyse Angular/TypeScript avec npm audit
+3. **🛡️ Quality Gate** - Vérification des métriques qualité requises
+4. **📊 Reporting** - Rapports détaillés sur SonarCloud
+
+#### **Jenkins Pipeline - Build & Deploy :**
+
+1. **🔄 Checkout** - Récupération du code depuis GitHub
+2. **🔨 Build Backend** - Compilation Maven multi-module (4 threads parallèles)  
 3. **🎨 Build Frontend** - Compilation Angular avec npm/Node.js
 4. **🧪 Test Backend** - Tests JUnit pour tous les microservices
 5. **🧪 Test Frontend** - Tests Karma/Jasmine avec Puppeteer (headless Chrome)
@@ -148,6 +188,7 @@ Chaque microservice dispose de sa propre base de données pour favoriser le déc
 #### 🔧 Prérequis
 
 **Développement Local :**
+
 - Java 17+
 - Maven 3.9+
 - Node.js 22+ / Angular CLI
@@ -155,9 +196,17 @@ Chaque microservice dispose de sa propre base de données pour favoriser le déc
 - MongoDB
 
 **Pipeline Jenkins :**
+
 - Jenkins 2.4+ avec plugins : Pipeline, Docker, Git, NodeJS
 - Compte Docker Hub configuré
 - Identifiants Jenkins : `gitea-credentials`, `dockerhub-credentials`
+
+**Analyse Qualité :**
+
+- SonarQube Community Edition (local) via Docker
+- SonarCloud (production) intégré à GitHub Actions
+- JaCoCo pour la couverture de code Java
+- ESLint/TypeScript pour l'analyse frontend
 
 #### **Étapes de Déploiement**
 
@@ -246,17 +295,40 @@ docker pull annandiaye/frontend:latest
 ./scripts/deploy.sh
 ```
 
-### 🔧 Configuration Jenkins
+### � Analyse Qualité (SonarQube)
+
+#### **SonarQube Local (Développement)**
+
+```shell
+# Démarrer SonarQube local avec Docker
+docker-compose -f docker-compose-sonar.yml up -d
+
+# Analyser le projet
+./test-sonar-local.sh
+
+# Interface web : http://localhost:9000
+# Login: admin / admin
+```
+
+#### **SonarCloud (Production)**
+
+L'analyse s'exécute automatiquement via GitHub Actions sur chaque push/PR.
+- **Projet:** [safe-zone sur SonarCloud](https://sonarcloud.io/project/overview?id=ndiaye-anna_safe-zone)
+- **Métriques actuelles:** Toutes les notes **A** (Security/Maintainability/Reliability)
+
+### �🔧 Configuration Jenkins
 
 Voir le guide détaillé dans `jenkins-setup/README-Jenkins-Setup.md`
 
 **Identifiants requis :**
+
 - `gitea-credentials` : Accès au dépôt Git
 - `dockerhub-credentials` : Nom d'utilisateur/Token Docker Hub
 
 **Plugins Jenkins nécessaires :**
+
 - Pipeline
-- Git 
+- Git
 - Docker Pipeline
 - NodeJS
 - Maven Integration
@@ -276,13 +348,27 @@ Voir le guide détaillé dans `jenkins-setup/README-Jenkins-Setup.md`
 - Docker image sizes
 - Notifications email sur échec/succès
 
-### 🚀 Auteurs & Contributeurs
+### � Ressources & Documentation
+
+#### **Documentation Technique**
+- 📖 **[Configuration SonarQube complète](docs/SONARQUBE-INTEGRATION.md)** - Guide détaillé d'intégration
+- 🔧 **[Setup Jenkins](jenkins-setup/README-Jenkins-Setup.md)** - Installation et configuration
+- 📋 **[Processus Code Review](docs/CODE-REVIEW-PROCESS.md)** - Workflow d'équipe
+- 🔔 **[Configuration Notifications](docs/NOTIFICATIONS-SETUP.md)** - Alertes et reporting
+
+#### **Environnements & Outils**
+- 🌐 **[SonarCloud Dashboard](https://sonarcloud.io/project/overview?id=ndiaye-anna_safe-zone)** - Analyse qualité production
+- 🐳 **[Docker Hub Registry](https://hub.docker.com/u/annandiaye)** - Images containers
+- ⚙️ **[GitHub Actions](https://github.com/ndiaye-anna/safe-zone/actions)** - Pipeline CI/CD
+- 📊 **Eureka Dashboard:** [http://localhost:8761](http://localhost:8761) (local)
+
+### �🚀 Auteurs & Contributeurs
 
 [![GitHub](https://img.shields.io/badge/Anna%20Ndiaye-Lead%20DevOps-blue?style=for-the-badge&labelColor=green&logo=gitea&logoColor=darkgreen&color=blue)](https://learn.zone01dakar.sn/git/annndiaye)
 
 **Spécialisations :**
 
-- **Anna Ndiaye** : Architecture CI/CD, Jenkins Pipeline, Docker Hub Integration
+- **Anna Ndiaye** : Architecture CI/CD, Jenkins Pipeline, Docker Hub Integration, SonarQube Integration
 - **Équipe Buy-01** : Architecture microservices, développement Spring Boot/Angular
 
-**Projet Mr-Jenk :** Evolution CI/CD du projet Buy-01 avec focus sur DevOps et automation.
+**Projet Safe-Zone :** Evolution CI/CD du projet Buy-01 avec intégration complète SonarQube et focus DevOps.

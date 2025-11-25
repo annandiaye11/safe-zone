@@ -1,2 +1,6 @@
 .idea
 logs/
+# Environment variables with secrets
+.env
+.env.local
+.env.*.local

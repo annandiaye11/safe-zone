@@ -1,0 +1,17 @@
+spring:
+    data:
+        mongodb:
+            database: ${DB_NAME}
+            username: ${DB_USERNAME}
+            password: ${DB_PASS}
+            port: ${DB_PORT}
+            host: ${DB_HOSTNAME}
+            auto-index-creation: true
+            authentication-database: ${DB_AUTH_DB}
+
+eureka:
+    client:
+        register-with-eureka: true
+        fetch-registry: true
+        service-url:
+            defaultZone: http://eureka-server:${EUREKA_SERVER_PORT}/eureka/

@@ -1,0 +1,93 @@
+<div class="app-container">
+    <!-- Header -->
+    <!-- Body -->
+    <main>
+        <section class="hero-section">
+            <div class="hero-content">
+                <h1 class="hero-title">Découvrez notre univers shopping </h1>
+            </div>
+        </section>
+
+        <section class="products-section">
+            <div class="section-header">
+                <h2>Nos Produits</h2>
+                <p>Trouvez ce qui vous convient parmi notre collection</p>
+            </div>
+
+            <div class="products-grid">
+                @for (product of products; track product.id) {
+                    <div class="product-card">
+
+                        <!-- SLIDER -->
+                        <div class="product-slider">
+                            @if (product.images?.length! > 1) {
+                                <button class="arrow left" (click)="prevImage(product.id!)">&#10094;</button>
+                            }
+                            <!-- image actuelle -->
+                            <div class="product-image">
+                                <img
+                                    [src]="
+                                      product.images && product.images.length > 0
+                                        ? product.images[currentIndexes[product.id!] || 0].imagePath
+                                        : 'assets/podium.jpg'
+                                    "
+                                    alt="{{ product.name }}"
+                                />
+
+                            </div>
+
+                            @if (product.images?.length! > 1) {
+                                <button class="arrow right" (click)="nextImage(product.id!)">&#10095;</button>
+                            }
+                            <!-- badge stock -->
+                            @if (product.quantity === 0) {
+                                <span class="badge stock">Épuisé</span>
+                            }
+                            @if (product.quantity > 0 && product.quantity < 10) {
+                                <span class="badge limited">Stock limité</span>
+                            }
+                        </div>
+
+                        <!-- Infos produit -->
+                        <div class="product-content">
+                            <div class="product-header">
+                                <h3 class="product-title">{{ product.name }}</h3>
+                            </div>
+                            <p class="product-description">{{ product.description }}</p>
+
+                            <div class="product-footer">
+                                <div class="price-info">
+                                    <span class="price">{{ product.price.toFixed(2) }} fcfa</span>
+                                    <div class="stock-info">
+                                        <span class="stock-label">Stock:</span>
+                                        <span class="stock-value"
+                                              [class.low]="product.quantity < 10"
+                                              [class.out]="product.quantity === 0">
+                                        {{ product.quantity }}
+              </span>
+                                    </div>
+                                </div>
+
+                                <div class="product-actions">
+                                    <button class="btn-secondary">🛒</button>
+                                    <a [routerLink]="['/details', product.id]">
+                                        <button class="btn-primary">Détails</button>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+
+            @if (products.length === 0) {
+                <div class="empty-state">
+                    <div class="empty-icon">📦</div>
+                    <h3>Aucun produit disponible</h3>
+                    <p>Revenez plus tard pour découvrir nos nouveaux produits</p>
+                </div>
+            }
+        </section>
+    </main>
+</div>

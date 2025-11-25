@@ -1,0 +1,179 @@
+<div class="profile-page">
+    <!-- Body -->
+    <main class="profile-main">
+        <div class="profile-container">
+            <!-- Header -->
+            <div class="profile-header">
+                <h1 class="page-title">Mon Profil</h1>
+                <p class="page-subtitle">Gérez vos informations personnelles</p>
+            </div>
+
+            <div class="profile-card">
+                <div class="card-header">
+                    <div class="avatar-section">
+                        <div class="avatar-container">
+                            @if (isEditing ? formData.avatar : "") {
+                                <img src="{{isEditing ? formData.avatar : null}}" class="avatar-img"
+                                     alt="{{formData.name}}"/>
+                            }
+                            @if (!(isEditing ? formData.avatar : null)) {
+                                @if (formData.avatar) {
+                                    <img src="{{formData.avatar}}" class="avatar-img" alt="{{formData.name}}"/>
+                                } @else {
+                                    <div class="avatar-fallback">👤</div>
+                                }
+
+                            }
+
+                            @if (isEditing) {
+                                <div class="avatar-overlay">
+                                    <label class="avatar-upload">
+                                        📷
+                                        <input type="file" accept="image/*" (change)="handleAvatarChange($event)"
+                                               hidden/>
+                                    </label>
+                                </div>
+                            }
+                        </div>
+                        <div class="profile-info">
+                            <h2 class="profile-name">{{ isEditing ? 'Modifier le profil' : formData.name }}</h2>
+                            <div class="profile-role">
+                                <span [ngClass]="{
+                                    'role-seller': formData.role === 'SELLER',
+                                }" class="role-badge">
+                                    {{ formData.role === Role.SELLER ? 'Vendeur' : 'Acheteur' }}
+                                </span>
+                            </div>
+                            <p class="profile-email">{{ formData.email }}</p>
+                        </div>
+                    </div>
+                    <!-- Bouton modifier mot de passe -->
+                    <div class="header-actions">
+                        <button (click)="togglePasswordForm()" class="btn-password" title="Modifier le mot de passe">
+                            🔒 Mot de passe
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Formulaire de modification du mot de passe -->
+                @if (showPasswordForm) {
+                    <div class="password-form-section">
+                        <h3>Modifier le mot de passe</h3>
+
+                        <form (ngSubmit)="updatePassword()" #passwordForm="ngForm" autocomplete="off">
+                            <div class="form-group">
+                                <label>Mot de passe actuel</label>
+                                <input
+                                    type="password"
+                                    [(ngModel)]="passwordData.currentPassword"
+                                    name="currentPassword"
+                                    placeholder="Votre mot de passe actuel"
+                                    required
+                                    autocomplete="new-password"
+                                />
+                            </div>
+
+                            <div class="form-group">
+                                <label>Nouveau mot de passe</label>
+                                <input
+                                    type="password"
+                                    [(ngModel)]="passwordData.newPassword"
+                                    name="newPassword"
+                                    placeholder="Nouveau mot de passe (min. 6 caractères)"
+                                    required
+                                    minlength="6"
+                                    autocomplete="new-password"
+                                />
+                            </div>
+
+                            <div class="form-group">
+                                <label>Confirmer le nouveau mot de passe</label>
+                                <input
+                                    type="password"
+                                    [(ngModel)]="passwordData.confirmPassword"
+                                    name="confirmPassword"
+                                    placeholder="Confirmer le nouveau mot de passe"
+                                    required
+                                    autocomplete="new-password"
+                                />
+                                @if (passwordData.newPassword && passwordData.confirmPassword && passwordData.newPassword !== passwordData.confirmPassword) {
+                                    <small class="error-text">Les mots de passe ne correspondent pas</small>
+                                }
+                            </div>
+
+                            <div class="password-actions">
+                                <button type="button" class="btn-secondary" (click)="cancelPasswordEdit()">
+                                    Annuler
+                                </button>
+                                <button
+                                    type="submit"
+                                    class="btn-save"
+                                    [disabled]="!passwordForm.valid || passwordData.newPassword !== passwordData.confirmPassword"
+                                >
+                                    💾 Modifier le mot de passe
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                }
+
+                <div class="card-content">
+                    <div class="form-section">
+                        <h3>Informations personnelles</h3>
+
+                        <div class="form-group">
+                            <label>Nom complet</label>
+                            <input
+                                [(ngModel)]="formData.name"
+                                [disabled]="!isEditing"
+                                placeholder="Votre nom complet"
+                            />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input
+                                [(ngModel)]="formData.email"
+                                [disabled]="!isEditing"
+                                placeholder="votre@email.com"
+                                type="email"
+                            />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Rôle</label>
+                            <input
+                                [(ngModel)]="formData.role"
+                                [disabled]="true"
+                                placeholder="votre@email.com"
+                                type="text"
+                            />
+                        </div>
+
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="actions">
+                        @if (!isEditing) {
+                            <button class="btn-primary" (click)="editProfile()">
+                                ✏️ Modifier le profil
+                            </button>
+                        }
+                        @if (isEditing) {
+                            <div class="edit-actions">
+                                <button class="btn-secondary" (click)="cancelEdit()">
+                                    Annuler
+                                </button>
+                                <button class="btn-save" (click)="saveProfile()">
+                                    💾 Sauvegarder
+                                </button>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+

@@ -1,0 +1,121 @@
+<!--<app-toast></app-toast>-->
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="auth-header">
+            <a class="go-home" routerLink="/">
+                <span class="material-symbols-outlined">home</span>
+                Page d'accueil
+            </a>
+            <h1 class="auth-title">Créer un compte</h1>
+            <p class="auth-subtitle">Rejoignez-nous et commencez votre aventure</p>
+        </div>
+
+        <form (ngSubmit)="onSubmit()" [formGroup]="registerFormData" autocomplete="off" class="auth-form"
+              enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="name">Nom complet</label>
+                <div class="input-wrapper">
+                    <span class="input-icon">👤</span>
+                    <input
+                        formControlName="name"
+                        id="name"
+                        name="name"
+                        pattern="^[a-zA-ZÀ-ÿ '-]+$"
+                        placeholder="John DOE"
+                        type="text"
+                    >
+                </div>
+                @if (registerFormData.get('name')?.invalid && registerFormData.get('name')?.touched) {
+                    <p class="error-message">Veuillez entrer un nom valide</p>
+                }
+            </div>
+
+            <div class="form-group">
+                <label for="email">Adresse email</label>
+                <div class="input-wrapper">
+                    <span class="input-icon">📧</span>
+                    <input
+                        formControlName="email"
+                        id="email"
+                        name="email"
+                        pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+                        placeholder="votre@email.com"
+                        type="email"
+                    >
+                </div>
+                @if (registerFormData.get('email')?.invalid && registerFormData.get('email')?.touched) {
+                    <p class="error-message">Veuillez entrer une adresse email valide</p>
+                }
+            </div>
+
+            <div class="form-group">
+                <label for="password">Mot de passe</label>
+                <div class="input-wrapper">
+                    <span class="input-icon">🔒</span>
+                    <input
+                        formControlName="password"
+                        id="password"
+                        name="password"
+                        pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}"
+                        placeholder="••••••••"
+                        type="password"
+                    >
+                </div>
+                @if (registerFormData.get('password')?.invalid && registerFormData.get('password')?.touched) {
+                    <p class="error-message">Veuillez entrer un mot de passe valide</p>
+                }
+            </div>
+
+            <div class="form-group">
+                <label for="role">Vous êtes ?</label>
+                <div class="input-wrapper">
+                    <span class="input-icon">🎯</span>
+                    <select
+                        class="role-select"
+                        formControlName="role"
+                        id="role"
+                        name="role"
+                        pattern="^(CLIENT|SELLER)$"
+                    >
+                        <option selected value="CLIENT">Client</option>
+                        <option value="SELLER">Vendeur</option>
+                    </select>
+                </div>
+            </div>
+
+            @if (registerFormData.get('role')?.valid && registerFormData.get('role')?.value === 'SELLER') {
+                <div class="form-group">
+                    <label for="avatar">Photo de profil</label>
+                    <div class="avatar-upload">
+                        <div class="avatar-preview">
+                            <div class="avatar-placeholder">
+                                <span>📷</span>
+                                <p>Cliquez pour ajouter une photo</p>
+                            </div>
+                        </div>
+                        <input
+                            accept="image/*"
+                            id="avatar"
+                            name="avatar"
+                            type="file"
+                            class="avatar-input"
+                            (change)="onFileSelected($event)"
+                        >
+                    </div>
+                </div>
+            }
+
+            <button [disabled]="registerFormData.invalid" class="submit-btn" type="submit">
+                <span class="btn-icon">✨</span>
+                Créer mon compte
+            </button>
+        </form>
+
+        <div class="auth-footer">
+            <p class="auth-link">
+                Déjà un compte ?
+                <a class="link-primary" routerLink="/login">Se connecter</a>
+            </p>
+        </div>
+    </div>
+</div>

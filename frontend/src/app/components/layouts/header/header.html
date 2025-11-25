@@ -1,0 +1,20 @@
+<header class="header">
+    <div class="logo">
+        <a class="logo_link" routerLink="/">BUY-01</a>
+    </div>
+    @if (router.url != '/') {
+        <div class="menu">
+            <a routerLink="/" class="menu_item">Catalogue</a>
+        </div>
+    }
+    <div class="search-user-cart">
+        <!--<button class="icon-btn nav-link">🛒</button>-->
+        @if (!isAuthenticated) {
+            <button (click)="onLogin()" class="nav-link" [hidden]="isAuthenticated">Connexion</button>
+        }
+        @if (isAuthenticated) {
+            <button class="logout-btn" (click)="onLogout()" [hidden]="isAuthenticated">Déconnexion</button>
+            <button class="icon-btn nav-link" (click)="onProfile()">👤</button>
+        }
+    </div>
+</header>

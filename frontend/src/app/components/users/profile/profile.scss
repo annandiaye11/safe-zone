@@ -1,0 +1,587 @@
+// Variables
+$app-bg: #1a191c;
+$primary-color: #547792;
+$secondary-color: #213448;
+$accent-color: #94B4C1;
+$text-light: #ecefca;
+$success-color: #10B981;
+$warning-color: #F59E0B;
+$error-color: #EF4444;
+$border-radius: 12px;
+$transition: all 0.3s ease;
+
+.profile-page {
+    min-height: 100vh;
+    background: linear-gradient(135deg, $app-bg 0%, #2a2a2a 100%);
+    color: $text-light;
+    font-family: 'Inter', 'Segoe UI', Roboto, "Helvetica Neue", sans-serif;
+    position: relative;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.02)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.02)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+        pointer-events: none;
+    }
+}
+
+.profile-main {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+    position: relative;
+    z-index: 1;
+}
+
+.profile-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+// Header
+.profile-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    position: relative;
+
+    .back-link {
+        margin-bottom: 1rem;
+
+        a {
+            color: $accent-color;
+            text-decoration: none;
+            font-weight: 500;
+            transition: $transition;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+
+            &:hover {
+                color: $text-light;
+                text-decoration: underline;
+            }
+        }
+    }
+
+
+    .page-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, $text-light, $accent-color);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 0.5rem;
+    }
+
+    .page-subtitle {
+        font-size: 1.1rem;
+        color: rgba(255, 255, 255, 0.7);
+    }
+}
+
+// Profile Card
+.profile-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: $border-radius;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.card-header {
+    background: linear-gradient(135deg, rgba(84, 119, 146, 0.1) 0%, rgba(148, 180, 193, 0.05) 100%);
+    padding: 2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+
+    .header-actions {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+    }
+}
+
+.btn-password {
+    padding: 0.75rem 1.25rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 8px;
+    color: $text-light;
+    font-weight: 600;
+    cursor: pointer;
+    transition: $transition;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.2);
+        border-color: $accent-color;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    &:active {
+        transform: translateY(0);
+    }
+}
+
+// Formulaire de modification du mot de passe
+.password-form-section {
+    padding: 2rem;
+    background: rgba(239, 68, 68, 0.05);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    animation: slideDown 0.3s ease-out;
+
+    h3 {
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: $text-light;
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        &::before {
+            content: '🔒';
+            font-size: 1.2rem;
+        }
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+
+        .error-text {
+            display: block;
+            font-size: 0.85rem;
+            color: $error-color;
+            margin-top: 0.5rem;
+            font-weight: 500;
+        }
+    }
+}
+
+.password-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+
+    .btn-secondary, .btn-save {
+        min-width: 140px;
+        justify-content: center;
+
+        &:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+
+            &:hover {
+                transform: none !important;
+                box-shadow: none !important;
+            }
+        }
+    }
+}
+
+// Animation pour l'apparition du formulaire
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+        max-height: 0;
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+        max-height: 400px;
+    }
+}
+
+.avatar-section {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.avatar-container {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 4px solid $primary-color;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    transition: $transition;
+
+    &:hover {
+        transform: scale(1.05);
+        border-color: $accent-color;
+    }
+
+    .avatar-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .avatar-fallback {
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, $primary-color, $accent-color);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+        color: white;
+    }
+
+    .avatar-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: $transition;
+        cursor: pointer;
+
+        &:hover {
+            opacity: 1;
+        }
+    }
+
+    .avatar-upload {
+        color: white;
+        font-size: 1.5rem;
+        cursor: pointer;
+        transition: $transition;
+
+        &:hover {
+            transform: scale(1.1);
+        }
+    }
+}
+
+.profile-info {
+    flex: 1;
+    min-width: 200px;
+
+    .profile-name {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: $text-light;
+        margin-bottom: 0.5rem;
+    }
+
+    .profile-role {
+        margin-bottom: 0.5rem;
+    }
+
+    .role-badge {
+        display: inline-block;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+
+        &.role-seller {
+            background: linear-gradient(135deg, $warning-color, #ea580c);
+            color: white;
+        }
+
+        &.role-buyer {
+            background: linear-gradient(135deg, $success-color, #059669);
+            color: white;
+        }
+    }
+
+    .profile-email {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 1rem;
+    }
+}
+
+// Card Content
+.card-content {
+    padding: 2rem;
+}
+
+.form-section {
+    margin-bottom: 2rem;
+
+    h3 {
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: $text-light;
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+
+    label {
+        display: block;
+        font-weight: 600;
+        color: $text-light;
+        margin-bottom: 0.5rem;
+    }
+
+    input, select {
+        width: 100%;
+        padding: 0.875rem 1rem;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: $text-light;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: $transition;
+
+        &::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        &:focus {
+            outline: none;
+            border-color: $primary-color;
+            box-shadow: 0 0 0 3px rgba(84, 119, 146, 0.2);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        &:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            background: rgba(255, 255, 255, 0.05);
+        }
+    }
+
+    .form-hint {
+        display: block;
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.6);
+        margin-top: 0.5rem;
+    }
+}
+
+// Actions
+.actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.btn-primary, .btn-secondary, .btn-save {
+    padding: 0.875rem 2rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: $transition;
+    border: none;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, $primary-color, $accent-color);
+    color: white;
+    box-shadow: 0 8px 25px rgba(84, 119, 146, 0.3);
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 35px rgba(84, 119, 146, 0.4);
+    }
+}
+
+.btn-secondary {
+    background: transparent;
+    color: $text-light;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: $accent-color;
+        transform: translateY(-2px);
+    }
+}
+
+.btn-save {
+    background: linear-gradient(135deg, $success-color, #059669);
+    color: white;
+    box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 35px rgba(16, 185, 129, 0.4);
+    }
+}
+
+.edit-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+// Profile Stats
+.profile-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+}
+
+.stat-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: $border-radius;
+    backdrop-filter: blur(10px);
+    transition: $transition;
+
+    &:hover {
+        transform: translateY(-3px);
+        background: rgba(255, 255, 255, 0.15);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .stat-icon {
+        font-size: 2rem;
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+    }
+
+    .stat-info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    .stat-number {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: $accent-color;
+    }
+
+    .stat-label {
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.7);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+    .profile-main {
+        padding: 1rem;
+    }
+
+    .profile-header .page-title {
+        font-size: 2rem;
+    }
+
+    .avatar-section {
+        flex-direction: column;
+        text-align: center;
+        gap: 1.5rem;
+    }
+
+    .profile-stats {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .edit-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .btn-primary, .btn-secondary, .btn-save {
+        width: 100%;
+        justify-content: center;
+    }
+
+}
+
+@media (max-width: 480px) {
+    .profile-header .page-title {
+        font-size: 1.5rem;
+    }
+
+    .avatar-container {
+        width: 100px;
+        height: 100px;
+    }
+
+    .card-header, .card-content {
+        padding: 1.5rem;
+    }
+
+    .stat-card {
+        padding: 1rem;
+    }
+}
+
+// Responsive pour le bouton mot de passe
+@media (max-width: 768px) {
+    .card-header .header-actions {
+        position: static;
+        margin-top: 1rem;
+        display: flex;
+        justify-content: center;
+    }
+
+    .btn-password {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .password-actions {
+        justify-content: center;
+
+        .btn-secondary, .btn-save {
+            flex: 1;
+            min-width: auto;
+        }
+    }
+}
+
+@media (max-width: 480px) {
+    .password-form-section {
+        padding: 1.5rem;
+    }
+
+    .password-actions {
+        flex-direction: column;
+
+        .btn-secondary, .btn-save {
+            width: 100%;
+        }
+    }
+}

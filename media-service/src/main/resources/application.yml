@@ -1,0 +1,41 @@
+spring:
+    config:
+        import: optional:file:./.env[.properties]
+
+    application:
+        name: media-service
+
+    web:
+        resources:
+            add-mappings: false
+
+    profiles:
+        active: ${SPRING_PROFILES_ACTIVE}
+
+    kafka:
+        bootstrap-servers: localhost:9092, localhost:9093
+        producer:
+            key-serializer: org.apache.kafka.common.serialization.StringSerializer
+            value-serializer: org.apache.kafka.common.serialization.StringSerializer
+        consumer:
+            group-id: media-service
+            auto-offset-reset: earliest
+            key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+            value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
+server:
+    port: ${MEDIA_SERVICE_PORT}
+
+aws:
+    s3:
+        bucket: hackaton-groupe10
+    region: eu-north-1
+    credentials:
+        access-key: ${AWS_ACCESS_KEY_ID}
+        secret-key: ${AWS_SECRET_ACCESS_KEY}
+
+logging:
+    level:
+        org.apache.kafka: ERROR
+        kafka: ERROR
+

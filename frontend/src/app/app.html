@@ -1,0 +1,14 @@
+<app-toast></app-toast>
+<div class="app-container">
+    <app-sidebar [hidden]="!showSidebar()"></app-sidebar>
+    <!--@if (!hideNavbar()) {
+        <v!--    <app-header></app-header>--v>
+        <app-sidebar></app-sidebar>
+    }-->
+    <main class="app-content">
+        <app-header [hidden]="!showHeader()"></app-header>
+        <router-outlet></router-outlet>
+    </main>
+</div>
+<!--<app-footer></app-footer>-->
+

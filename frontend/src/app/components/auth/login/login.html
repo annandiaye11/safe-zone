@@ -1,0 +1,80 @@
+<div class="auth-container">
+
+    <app-toast></app-toast>
+
+    <div class="auth-background">
+        <div class="auth-pattern"></div>
+    </div>
+
+    <div class="auth-card">
+        <div class="auth-header">
+            <a class="go-home" routerLink="/">
+                <span class="material-symbols-outlined">home</span>
+                Page d'accueil
+            </a>
+            <h1 class="auth-title">Connexion</h1>
+            <p class="auth-subtitle">Bienvenue ! Connectez-vous pour continuer</p>
+        </div>
+
+        <form (ngSubmit)="onSubmit()" [formGroup]="loginFormData" autocomplete="off" class="auth-form">
+            <div class="form-group">
+                <label for="email">Adresse email</label>
+                <div class="input-wrapper">
+                    <span class="input-icon">📧</span>
+                    <input
+                        formControlName="email"
+                        id="email"
+                        name="email"
+                        pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+                        placeholder="votre@email.com"
+                        required
+                        type="email"
+                    >
+                </div>
+                @if (loginFormData.get('email')?.invalid && loginFormData.get('email')?.touched) {
+                    <p class="error-message">Veuillez entrer une adresse email valide</p>
+                }
+            </div>
+
+            <div class="form-group">
+                <label for="password">Mot de passe</label>
+                <div class="input-wrapper">
+                    <span class="input-icon">🔒</span>
+                    <input
+                        formControlName="password"
+                        id="password"
+                        name="password"
+                        pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}"
+                        placeholder="••••••••"
+                        required
+                        type="password"
+                    >
+                </div>
+                @if (loginFormData.get('password')?.invalid && loginFormData.get('password')?.touched) {
+                    <p class="error-message">Veuillez entrer un mot de passe valide</p>
+                }
+            </div>
+
+            <div class="form-options">
+                <label class="checkbox-wrapper">
+                    <input id="remember" type="checkbox">
+                    <span class="checkmark"></span>
+                    Se souvenir de moi
+                </label>
+                <a class="forgot-link" href="#">Mot de passe oublié ?</a>
+            </div>
+
+            <button [disabled]="loginFormData.invalid" class="submit-btn" type="submit">
+                <span class="btn-icon">🚀</span>
+                Se connecter
+            </button>
+        </form>
+
+        <div class="auth-footer">
+            <p class="auth-link">
+                Pas encore de compte ?
+                <a class="link-primary" routerLink="/register">Créer un compte</a>
+            </p>
+        </div>
+    </div>
+</div>

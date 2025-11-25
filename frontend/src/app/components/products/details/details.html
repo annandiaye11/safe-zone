@@ -1,0 +1,115 @@
+<div class="product-detail">
+    <div class="container">
+        <nav class="breadcrumb-nav">
+            <a class="breadcrumb-link" routerLink="/">🏠 Accueil</a>
+            <span class="breadcrumb-separator">/</span>
+            <span class="breadcrumb-current">Détails Produit</span>
+        </nav>
+        @if (!product) {
+            <div class="not-found">
+                <div class="not-found-icon">❌</div>
+                <h2>Produit non trouvé</h2>
+                <p>Le produit que vous recherchez n'existe pas ou a été supprimé.</p>
+                <a routerLink="/" class="btn-back-home">Retour à l'accueil</a>
+            </div>
+        }
+
+        <!-- Produit trouvé -->
+        @if (product) {
+            <div class="product-container">
+                @if (!isEditing) {
+                    <div class="product-view">
+                        <!-- Image du produit -->
+                        <div class="product-image-section">
+                            <div class="product-image">
+                                @if (product.images && product.images.length > 0) {
+                                    @if (currentImage !== null) {
+                                        <img
+                                            [src]="currentImage.imagePath"
+                                            alt="">
+                                    }
+                                } @else {
+                                    <img src="assets/podium.jpg" alt="Vue du produit"/>
+                                }
+                            </div>
+                            <div class="product-gallery">
+                                @for (productImage of product.images; track productImage.id) {
+                                    <div class="gallery-thumb" (click)="selectImage(productImage!)">
+                                        <img src="{{ productImage.imagePath }}" alt="Vue {{ productImage.id }}"/>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
+                        <!-- Infos produit -->
+                        <div class="product-info-section">
+                            <div class="product-header">
+                                <h1 class="product-title">{{ product.name }}</h1>
+                            </div>
+
+                            <div class="product-price">
+                                <span class="price-amount">{{ product.price | number:'1.2-2' }} fcfa</span>
+                                <span class="price-label">Prix TTC</span>
+                            </div>
+
+                            <div class="product-description">
+                                <h3>Description</h3>
+                                <p>{{ product.description }}</p>
+                            </div>
+
+                            <div class="product-stock">
+                                <h3>Disponibilité</h3>
+                                <div class="stock-status" [ngClass]="{
+                                    'stock-red': product.quantity === 0,
+                                    'stock-orange': product.quantity > 0 && product.quantity < 10,
+                                    'stock-green': product.quantity >= 10
+                                }">
+                                    <span class="stock-icon">
+                                        @if (product.quantity === 0) {
+                                            ❌
+                                        }
+                                        @if (product.quantity > 0 && product.quantity < 10) {
+                                            ⚠️
+                                        }
+                                        @if (product.quantity >= 10) {
+                                            ✅
+                                        }
+                                    </span>
+                                    <span class="stock-text">
+                                        @if (product.quantity === 0) {
+                                            Épuisé
+                                        }
+                                        @if (product.quantity > 0 && product.quantity < 10) {
+                                            Stock limité: {{ product.quantity }} disponibles
+                                        }
+                                        @if (product.quantity >= 10) {
+                                            En stock: {{ product.quantity }} disponibles
+                                        }
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="product-actions">
+                                <div class="quantity-selector">
+                                    <label>Quantité:</label>
+                                    <div class="quantity-controls">
+                                        <button class="qty-btn" [disabled]="quantity <= 1">-</button>
+                                        <input type="number" [(ngModel)]="quantity" min="1" max="{{ product.quantity }}"
+                                               class="qty-input">
+                                        <button class="qty-btn" [disabled]="quantity >= product.quantity">+</button>
+                                    </div>
+                                </div>
+
+                                <div class="action-buttons">
+                                    <button class="btn-add-cart" [disabled]="product.quantity === 0">
+                                        🛒 Ajouter au panier
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>

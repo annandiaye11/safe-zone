@@ -1,0 +1,57 @@
+<aside class="sidebar">
+    <!-- Logo -->
+    <a [routerLink]="['/']" class="sidebar-logo">
+        <h1>
+            BUY-01
+        </h1>
+    </a>
+
+    <!-- Profil -->
+    <div class="sidebar-profile">
+        <img alt="avatar" class="avatar" src="{{ user?.avatar === null ? 'assets/podium.jpg' : user?.avatar }}">
+        <h4 class="username">{{ user?.name }}</h4>
+        <p class="email">{{ user?.email }}</p>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="sidebar-nav">
+        <a [ngClass]="['nav-link', setActiveLink(Link.HOME) ? 'active' : '']"
+           [routerLink]="Link.HOME">
+            <span>🛍️</span>
+            Home
+        </a>
+
+        <a [ngClass]="['nav-link', setActiveLink(Link.DashBoard) ? 'active' : '']"
+           [routerLink]="Link.DashBoard">
+
+            <span>📊</span>
+            Dashboard
+        </a>
+
+        <a [ngClass]="['nav-link', setActiveLink(Link.Account) ? 'active' : '']"
+           [routerLink]="Link.Account">
+
+            <span>👤</span>
+            Accounts
+        </a>
+    </nav>
+
+
+    <!-- Bouton Logout -->
+    <div class="sidebar-footer">
+        @if (!isAuthenticated) {
+            <a routerLink="/login" class="nav-link">
+                <span>🚪</span>
+                Connexion
+            </a>
+        }
+
+        @if (isAuthenticated) {
+            <button class="logout-btn" (click)="onLogout()">
+                <span>🚪</span>
+                Déconnexion
+            </button>
+        }
+    </div>
+
+</aside>

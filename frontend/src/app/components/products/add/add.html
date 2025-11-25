@@ -1,0 +1,199 @@
+@if (isFormOpen) {
+    <div class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>{{ modalTitle }}</h2>
+                <button class="close-btn" (click)="closeForm()">×</button>
+            </div>
+
+            <form (ngSubmit)="onSubmit()" #productForm="ngForm">
+                <div class="form-group">
+                    <label for="name">Nom du produit</label>
+                    <input
+                        id="name"
+                        type="text"
+                        [(ngModel)]="formData.name"
+                        name="name"
+                        required
+                        placeholder="Nom du produit"
+                    />
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea
+                        id="description"
+                        [(ngModel)]="formData.description"
+                        name="description"
+                        required
+                        placeholder="Description du produit"
+                        rows="4"
+                    ></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="price">Prix (fcfa)</label>
+                        <input
+                            id="price"
+                            type="number"
+                            [(ngModel)]="formData.price"
+                            name="price"
+                            required
+                            min="0"
+                            step="0.01"
+                            placeholder="0.00"
+                        />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="quantity">Quantité en stock</label>
+                        <input
+                            id="quantity"
+                            type="number"
+                            [(ngModel)]="formData.quantity"
+                            name="quantity"
+                            required
+                            min="0"
+                            placeholder="0"
+                        />
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" (click)="closeForm()">
+                        Annuler
+                    </button>
+                    <button type="submit" class="btn-primary">
+                        {{ submitButtonText }}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>{{ modalTitle }}</h2>
+                <button class="close-btn" (click)="closeForm()">×</button>
+            </div>
+
+            <form (ngSubmit)="onSubmit()" #productForm="ngForm" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="name">Nom du produit</label>
+                    <input
+                        id="name"
+                        type="text"
+                        [(ngModel)]="formData.name"
+                        name="name"
+                        required
+                        placeholder="Nom du produit"
+                    />
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea
+                        id="description"
+                        [(ngModel)]="formData.description"
+                        name="description"
+                        required
+                        placeholder="Description du produit"
+                        rows="4"
+                    ></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="price">Prix (fcfa)</label>
+                        <input
+                            id="price"
+                            type="number"
+                            [(ngModel)]="formData.price"
+                            name="price"
+                            required
+                            min="0"
+                            max="9999999"
+                            step="0.01"
+                            placeholder="0.00"
+                        />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="quantity">Quantité en stock</label>
+                        <input
+                            id="quantity"
+                            type="number"
+                            [(ngModel)]="formData.quantity"
+                            name="quantity"
+                            required
+                            min="0"
+                            max="999"
+                            placeholder="0"
+                        />
+                    </div>
+                </div>
+
+                <!-- Nouvelle section pour l'upload de fichiers -->
+                <div class="form-group">
+                    <label for="files">Images du produit</label>
+                    <div class="file-upload-container">
+                        <input
+                            id="files"
+                            type="file"
+                            multiple
+                            accept="image/jpeg,image/png,image/gif,image/webp"
+                            (change)="onFileSelect($event)"
+                            #fileInput
+                            class="file-input"
+                        />
+                        <label for="files" class="file-upload-btn">
+                            <i class="upload-icon">📁</i>
+                            Choisir des images
+                        </label>
+                        <span class="file-info">JPG, PNG, GIF, WEBP (Max 3 fichiers)</span>
+                    </div>
+
+                    <!-- Prévisualisation des fichiers sélectionnés -->
+                    @if (selectedFiles!.length > 0) {
+                        <div class="file-preview">
+                            <h4>Images sélectionnées :</h4>
+                            <div class="file-grid">
+                                @for (file of selectedFiles; track $index; let i = $index) {
+                                    <div class="file-item">
+                                        <div
+                                            class="file-thumbnail"
+                                            [ngStyle]="{'background-image': getFilePreview(file) ? 'url(' + getFilePreview(file) + ')' : 'none'}">
+                                        </div>
+                                        <div class="file-details">
+                                            <span class="file-name">{{ file.name || file }}</span>
+                                            @if (file.size) {
+                                                <span class="file-size">{{ formatFileSize(file.size) }}</span>
+                                            }
+
+                                        </div>
+                                        <button type="button" class="remove-file-btn" (click)="removeFile(i)"
+                                                title="Supprimer">×
+                                        </button>
+                                    </div>
+                                }
+                            </div>
+
+                        </div>
+                    }
+
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" (click)="closeForm()">
+                        Annuler
+                    </button>
+                    <button type="submit" class="btn-primary" [disabled]="!productForm.valid">
+                        {{ submitButtonText }}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+}
+

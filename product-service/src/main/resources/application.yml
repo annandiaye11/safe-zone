@@ -1,0 +1,32 @@
+spring:
+    config:
+        import: optional:file:./.env[.properties]
+
+    application:
+        name: product-service
+
+    web:
+        resources:
+            add-mappings: false
+
+    profiles:
+        active: ${SPRING_PROFILES_ACTIVE}
+
+    kafka:
+        bootstrap-servers: localhost:9092, localhost:9093
+        producer:
+            key-serializer: org.apache.kafka.common.serialization.StringSerializer
+            value-serializer: org.apache.kafka.common.serialization.StringSerializer
+        consumer:
+            group-id: product-service
+            auto-offset-reset: earliest
+            key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+            value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
+server:
+    port: ${PRODUCT_SERVICE_PORT}
+
+logging:
+    level:
+        org.apache.kafka: ERROR
+        kafka: ERROR

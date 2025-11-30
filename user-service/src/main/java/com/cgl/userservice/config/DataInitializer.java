@@ -1,6 +1,7 @@
 package com.cgl.userservice.config;
 
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -16,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 @Configuration
 @RequiredArgsConstructor
 @Slf4j
+@ConditionalOnBean(UserRepository.class)
 public class DataInitializer {
 
     private static final String DEFAULT_TEMP_CREDENTIAL = "TempPass123!";

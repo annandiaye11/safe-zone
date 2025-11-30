@@ -17,12 +17,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 @RestController
 @Slf4j
 public class MediaControllerImpl implements MediaController {
     private final MediaService mediaService;
     private final S3Service s3Service;
+    static final String MESSAGE_KEY = "message";
+    static final String MEDIA_KEY = "media";
 
     public MediaControllerImpl(MediaService mediaService, S3Service s3Service) {
         this.mediaService = mediaService;
@@ -34,10 +35,10 @@ public class MediaControllerImpl implements MediaController {
         HashMap<String, Object> response = new HashMap<>();
         List<Media> medias = mediaService.getAllMedias();
         if (medias.isEmpty()) {
-            response.put("message", "No medias found");
+            response.put(MESSAGE_KEY, "No medias found");
             return ResponseEntity.status(404).body(response);
         }
-        response.put("message", "Medias found");
+        response.put(MESSAGE_KEY, "Medias found");
         List<MediaResponse> mediaDtoAlls = medias.stream()
                 .map(MapperMedia::toDto)
                 .toList();
@@ -57,22 +58,22 @@ public class MediaControllerImpl implements MediaController {
         HashMap<String, Object> response = new HashMap<>();
         List<Media> media = mediaService.getByProductId(id);
         if (media == null) {
-            response.put("message", "Media not found");
+            response.put(MESSAGE_KEY, "Media not found");
             return ResponseEntity.status(404).body(response);
         }
         List<MediaResponse> mediaResponses = media.stream().map(MapperMedia::toDto).toList();
-        response.put("message", "Media found");
-        response.put("media", mediaResponses);
+        response.put(MESSAGE_KEY, "Media found");
+        response.put(MEDIA_KEY, mediaResponses);
         return ResponseEntity.status(200).body(response);
     }
 
     private ResponseEntity<Map<String, Object>> getMapResponseEntity(HashMap<String, Object> response, Media media) {
         if (media == null) {
-            response.put("message", "Media not found");
+            response.put(MESSAGE_KEY, "Media not found");
             return ResponseEntity.status(404).body(response);
         }
-        response.put("message", "Media found");
-        response.put("media", MapperMedia.toDto(media));
+        response.put(MESSAGE_KEY, "Media found");
+        response.put(MEDIA_KEY, MapperMedia.toDto(media));
 
         return ResponseEntity.status(200).body(response);
     }
@@ -80,7 +81,7 @@ public class MediaControllerImpl implements MediaController {
     @Override
     public ResponseEntity<Map<String, Object>> createMedia(List<MultipartFile> imageFile, String productId) {
         if (imageFile.size() > 3) {
-            return ResponseEntity.badRequest().body(Map.of("message", "You can't upload more than 3 images"));
+            return ResponseEntity.badRequest().body(Map.of(MESSAGE_KEY, "You can't upload more than 3 images"));
         }
 
         HashMap<String, Object> response = new HashMap<>();
@@ -91,8 +92,8 @@ public class MediaControllerImpl implements MediaController {
             media.setImagePath(imagePath);
             medias.add(mediaService.saveMedia(media));
         }
-        response.put("message", "Media created");
-        response.put("media", medias);
+        response.put(MESSAGE_KEY, "Media created");
+        response.put(MEDIA_KEY, medias);
         return ResponseEntity.status(201).body(response);
     }
 
@@ -106,8 +107,8 @@ public class MediaControllerImpl implements MediaController {
         media.setProductId(mediaDtoAll.getProductId());
         Media mediaCreated = mediaService.updateMedia(media);
         HashMap<String, Object> response = new HashMap<>();
-        response.put("message", "Media updated");
-        response.put("media", MapperMedia.toDto(mediaCreated));
+        response.put(MESSAGE_KEY, "Media updated");
+        response.put(MEDIA_KEY, MapperMedia.toDto(mediaCreated));
         return ResponseEntity.status(200).body(response);
     }
 
@@ -119,8 +120,8 @@ public class MediaControllerImpl implements MediaController {
         }
         Media mediaDeleted = mediaService.deleteMedia(media);
         HashMap<String, Object> response = new HashMap<>();
-        response.put("message", "Media deleted");
-        response.put("media", MapperMedia.toDto(mediaDeleted));
+        response.put(MESSAGE_KEY, "Media deleted");
+        response.put(MEDIA_KEY, MapperMedia.toDto(mediaDeleted));
         return ResponseEntity.status(200).body(response);
     }
 
@@ -139,8 +140,8 @@ public class MediaControllerImpl implements MediaController {
 
         Media mediaDeleted = mediaService.deleteMedia(media);
         HashMap<String, Object> response = new HashMap<>();
-        response.put("message", "This media has been deleted");
-        response.put("media", MapperMedia.toDto(mediaDeleted));
+        response.put(MESSAGE_KEY, "This media has been deleted");
+        response.put(MEDIA_KEY, MapperMedia.toDto(mediaDeleted));
         return ResponseEntity.ok().body(response);
     }
 

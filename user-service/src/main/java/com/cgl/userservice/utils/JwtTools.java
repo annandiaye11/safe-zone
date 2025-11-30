@@ -55,7 +55,7 @@ public class JwtTools {
         return extractClaims(token).get("role", String.class);
     }
 
-    public Collection<? extends GrantedAuthority> extractAuthorities(String token) {
+    public Collection<?extends GrantedAuthority> extractAuthorities(String token) {
         String role = extractRole(token);
         return Collections.singletonList(new SimpleGrantedAuthority(role));
     }

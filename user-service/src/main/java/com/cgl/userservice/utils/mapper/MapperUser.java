@@ -8,6 +8,10 @@ import com.cgl.userservice.web.dto.UserOneResponse;
 
 public class MapperUser {
 
+    private MapperUser() {
+        throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
+    }
+
     public static User toEntity(UserDto userDto) {
         User user = new User();
         user.setName(userDto.getName());

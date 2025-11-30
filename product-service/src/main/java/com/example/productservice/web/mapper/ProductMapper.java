@@ -5,6 +5,11 @@ import com.example.productservice.web.dto.ProductDto;
 
 public class ProductMapper {
 
+    private ProductMapper() {
+        // Private constructor to prevent instantiation
+        throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
+    }
+
     public static Product toEntity(ProductDto productDto) {
         return Product.builder()
                 .id(productDto.getId())

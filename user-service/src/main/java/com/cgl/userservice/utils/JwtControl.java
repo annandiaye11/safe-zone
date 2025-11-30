@@ -8,6 +8,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,6 +20,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.Collection;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class JwtControl extends OncePerRequestFilter {
@@ -26,9 +29,9 @@ public class JwtControl extends OncePerRequestFilter {
     private final LoginService loginService;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
         String requestPath = request.getRequestURI();
-        System.out.println("--- Request path: " + requestPath);
+        log.info("--- Request path: {}", requestPath);
 
         // Ignorer le filtre JWT pour les endpoints publics
         if ("/api/v1/auth/login".equals(requestPath) || "/api/v1/auth/register".equals(requestPath)) {
@@ -54,7 +57,7 @@ public class JwtControl extends OncePerRequestFilter {
                     }
                 }
             } catch (Exception e) {
-                System.err.println("Erreur lors du traitement du token JWT: " + e.getMessage());
+                log.error(e.getMessage());
             }
         }
 

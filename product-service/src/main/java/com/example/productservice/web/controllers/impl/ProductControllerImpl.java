@@ -9,7 +9,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,7 +23,7 @@ public class ProductControllerImpl implements ProductController {
     public ResponseEntity<ProductDto> create(@RequestBody @Valid ProductDto productDto) {
         Product product = ProductMapper.toEntity(productDto);
         if (productService.getByName(product.getName()) != null) {
-            return ResponseEntity.badRequest().body(null);
+            return ResponseEntity.badRequest().build();
         }
         Product productSaved = productService.create(product);
         productDto.setId(productSaved.getId());
@@ -38,9 +37,6 @@ public class ProductControllerImpl implements ProductController {
     }
 
     private ResponseEntity<List<ProductDto>> getListResponseEntity(List<Product> products) {
-        /*if (products == null || products.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }*/
         // Return emptyList if no products found
         if (products.isEmpty()) {
             return ResponseEntity.ok().body(List.of());
@@ -53,20 +49,20 @@ public class ProductControllerImpl implements ProductController {
     }
 
     @Override
-    public ResponseEntity<ProductDto> getById(@PathVariable("id") String id) {
+    public ResponseEntity<ProductDto> getById(String id) {
         Product product = productService.getById(id);
         if (product == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
         ProductDto productDto = ProductMapper.toDto(product);
         return new ResponseEntity<>(productDto, HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<ProductDto> update(@PathVariable("id") String id, @RequestBody @Valid ProductDto productDto) {
+    public ResponseEntity<ProductDto> update(String id, ProductDto productDto) {
         Product existingProduct = productService.getById(id);
         if (existingProduct == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
         productDto.setId(id);
         Product product = ProductMapper.toEntity(productDto);
@@ -75,7 +71,7 @@ public class ProductControllerImpl implements ProductController {
     }
 
     @Override
-    public ResponseEntity<Void> delete(@PathVariable("id") String id) {
+    public ResponseEntity<Void> delete(String id) {
         Product existingProduct = productService.getById(id);
         if (existingProduct == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -85,8 +81,11 @@ public class ProductControllerImpl implements ProductController {
     }
 
     @Override
-    public ResponseEntity<List<ProductDto>> getByUserId(@PathVariable("userId") String userId) {
+    public ResponseEntity<List<ProductDto>> getByUserId(String userId) {
         List<Product> products = productService.getByUserId(userId);
+        if (products == null) {
+            return ResponseEntity.ok().body(List.of());
+        }
         return getListResponseEntity(products);
     }
 

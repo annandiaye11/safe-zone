@@ -1,0 +1,3 @@
+com/example/common/config/S3Config.class
+com/example/common/services/S3Service.class
+com/example/common/exceptions/FileUploadException.class

@@ -2,6 +2,7 @@ package com.cgl.userservice.services.impl;
 
 import com.cgl.userservice.data.entities.User;
 import com.cgl.userservice.data.repositories.UserRepository;
+import com.cgl.userservice.exception.UnauthorizedException;
 import com.cgl.userservice.services.UserEventPublisher;
 import com.cgl.userservice.services.UserService;
 import com.cgl.userservice.web.dto.ChangePasswordRequest;
@@ -20,6 +21,8 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
+
+    static final String MESSAGE_KEY = "message";
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -85,19 +88,19 @@ public class UserServiceImpl implements UserService {
 
         User user = userRepository.findById(id).orElse(null);
         if (user == null) {
-            response.put("message", "Cet utilisateur n'existe pas");
+            response.put(MESSAGE_KEY, "Cet utilisateur n'existe pas");
             return response;
         }
 
         if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
-            response.put("message", "Le mot de passe actuel n'est pas correcte");
+            response.put(MESSAGE_KEY, "Le mot de passe actuel n'est pas correcte");
             return response;
         }
 
         String encodedNewPassword = passwordEncoder.encode(request.getNewPassword());
         user.setPassword(encodedNewPassword);
         userRepository.save(user);
-        response.put("message", "Le mot de passe a été changé");
+        response.put(MESSAGE_KEY, "Le mot de passe a été changé");
         response.put("user", user);
         return response;
     }
@@ -109,7 +112,7 @@ public class UserServiceImpl implements UserService {
                 && authentication.getPrincipal() instanceof UserDetails userDetails) {
             return userDetails.getUsername();
         } else {
-            throw new RuntimeException("User is not authenticated");
+            throw new UnauthorizedException("User is not authenticated");
         }
     }
 }

@@ -1,0 +1,42 @@
+spring:
+    autoconfigure:
+        exclude:
+            - org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration
+            - org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration
+            - org.springframework.boot.autoconfigure.data.mongo.MongoRepositoriesAutoConfiguration
+            - org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+            - org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
+    cloud:
+        discovery:
+            enabled: false
+    data:
+        mongodb:
+            repositories:
+                enabled: false
+    kafka:
+        bootstrap-servers: localhost:9092
+
+application:
+    security:
+        jwt:
+            secret: test-secret-key-for-testing-only-must-be-at-least-256-bits-long
+            expiration-ms: 3600000
+            refresh-expiration: 3600000
+
+eureka:
+    client:
+        enabled: false
+        register-with-eureka: false
+        fetch-registry: false
+
+server:
+    port: 0
+
+aws:
+    region: eu-north-1
+    s3:
+        bucket: test-bucket
+    credentials:
+        access-key: test-key
+        secret-key: test-secret
+

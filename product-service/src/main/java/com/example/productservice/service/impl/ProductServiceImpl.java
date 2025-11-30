@@ -3,6 +3,7 @@ package com.example.productservice.service.impl;
 import com.example.productservice.data.entities.Product;
 import com.example.productservice.data.repositories.ProductRepository;
 import com.example.productservice.service.ProductService;
+import java.util.Collections;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +34,7 @@ public class ProductServiceImpl implements ProductService {
     public List<Product> getByUserId(String userId) {
         List<Product> products = productRepository.findByUserId(userId);
         if (products.isEmpty()) {
-            return null;
+            return Collections.emptyList();
         }
         return products;
     }
@@ -44,7 +45,7 @@ public class ProductServiceImpl implements ProductService {
         if (products.isEmpty()) {
             return List.of();
         }
-        return productRepository.findAll();
+        return products;
     }
 
     @Override

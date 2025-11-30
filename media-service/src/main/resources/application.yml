@@ -10,7 +10,7 @@ spring:
             add-mappings: false
 
     profiles:
-        active: ${SPRING_PROFILES_ACTIVE}
+        active: ${SPRING_PROFILES_ACTIVE:dev}
 
     kafka:
         bootstrap-servers: localhost:9092, localhost:9093
@@ -24,15 +24,15 @@ spring:
             value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
 
 server:
-    port: ${MEDIA_SERVICE_PORT}
+    port: ${MEDIA_SERVICE_PORT:8083}
 
 aws:
     s3:
         bucket: hackaton-groupe10
     region: eu-north-1
     credentials:
-        access-key: ${AWS_ACCESS_KEY_ID}
-        secret-key: ${AWS_SECRET_ACCESS_KEY}
+        access-key: ${AWS_ACCESS_KEY_ID:dummy-key}
+        secret-key: ${AWS_SECRET_ACCESS_KEY:dummy-secret}
 
 logging:
     level:

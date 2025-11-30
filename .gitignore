@@ -4,3 +4,11 @@ logs/
 .env
 .env.local
 .env.*.local
+
+*.md
+*.log
+*.txt
+*.sh
+
+!README.md
+!analyze-sonar.sh

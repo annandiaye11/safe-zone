@@ -1,8 +1,8 @@
 spring:
     data:
         mongodb:
-            uri: mongodb+srv://${DB_USER}:${DB_PASSWORD}@buy0x.mqr2hhc.mongodb.net/?retryWrites=true&w=majority&appName=buy0x
-            database: ${DB_NAME}
+            uri: mongodb+srv://${DB_USER:user}:${DB_PASSWORD:password}@buy0x.mqr2hhc.mongodb.net/?retryWrites=true&w=majority&appName=buy0x
+            database: ${DB_NAME:testdb}
             auto-index-creation: true
 
 eureka:
@@ -10,4 +10,4 @@ eureka:
         register-with-eureka: true
         fetch-registry: true
         service-url:
-            defaultZone: http://localhost:${EUREKA_SERVER_PORT}/eureka/
+            defaultZone: http://localhost:${EUREKA_SERVER_PORT:8761}/eureka/

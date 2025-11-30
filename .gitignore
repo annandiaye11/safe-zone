@@ -6,9 +6,17 @@ logs/
 .env.*.local
 
 *.md
+*/**/*.md
 *.log
+*/**/*.log
 *.txt
+*/**/*.txt
 *.sh
+*/**/*.sh
 
 !README.md
+!*/**/README.md
 !analyze-sonar.sh
+
+target/
+*/**/target/

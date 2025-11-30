@@ -1,6 +1,0 @@
-projectKey=safe-zone
-serverUrl=http://localhost:9000
-serverVersion=25.11.0.114957
-dashboardUrl=http://localhost:9000/dashboard?id=safe-zone
-ceTaskId=634600c5-c914-40b6-b88f-629612c77664
-ceTaskUrl=http://localhost:9000/api/ce/task?id=634600c5-c914-40b6-b88f-629612c77664

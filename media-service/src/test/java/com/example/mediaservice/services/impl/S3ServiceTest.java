@@ -1,6 +1,6 @@
 package com.example.mediaservice.services.impl;
 
-import com.example.mediaservice.exceptions.FileUploadException;
+import com.example.common.exceptions.FileUploadException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -1,12 +1,11 @@
 package com.cgl.userservice.services.impl;
 
-import com.cgl.userservice.exception.FileUploadException;
+import com.example.common.exceptions.FileUploadException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
@@ -35,9 +34,7 @@ class S3ServiceTest {
 
     @BeforeEach
     void setUp() {
-        s3Service = new S3Service(s3Client);
-        ReflectionTestUtils.setField(s3Service, "bucketName", TEST_BUCKET);
-        ReflectionTestUtils.setField(s3Service, "region", TEST_REGION);
+        s3Service = new S3Service(s3Client, TEST_BUCKET, TEST_REGION);
     }
 
     @Test

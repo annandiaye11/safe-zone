@@ -260,7 +260,7 @@ class SecurityConfigTest {
         // Given
         HttpSecurity http = mock(HttpSecurity.class, RETURNS_DEEP_STUBS);
         SecurityFilterChain mockFilterChain = mock(SecurityFilterChain.class);
-
+        
         // Mock the fluent API chain
         doReturn(http).when(http).csrf(any());
         doReturn(http).when(http).authorizeHttpRequests(any());
@@ -275,7 +275,7 @@ class SecurityConfigTest {
         assertThat(result)
                 .isNotNull()
                 .isEqualTo(mockFilterChain);
-
+        
         // Verify the configuration methods were called
         verify(http, times(1)).csrf(any());
         verify(http, times(1)).authorizeHttpRequests(any());
@@ -289,7 +289,7 @@ class SecurityConfigTest {
         // Given
         HttpSecurity http = mock(HttpSecurity.class, RETURNS_DEEP_STUBS);
         SecurityFilterChain mockFilterChain = mock(SecurityFilterChain.class);
-
+        
         doReturn(http).when(http).csrf(any());
         doReturn(http).when(http).authorizeHttpRequests(any());
         doReturn(http).when(http).sessionManagement(any());
@@ -301,7 +301,7 @@ class SecurityConfigTest {
 
         // Then - Verify JWT filter is added before UsernamePasswordAuthenticationFilter
         verify(http).addFilterBefore(
-                same(jwtFilter),
+                same(jwtFilter), 
                 eq(org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class)
         );
     }

@@ -42,7 +42,7 @@ class ProductEventPublisherImplTest {
         String productId = "specific-product-123";
         ArgumentCaptor<String> topicCaptor = ArgumentCaptor.forClass(String.class);
         ArgumentCaptor<String> productIdCaptor = ArgumentCaptor.forClass(String.class);
-
+        
         when(kafkaTemplate.send(anyString(), nullable(String.class))).thenReturn(null);
 
         // When
@@ -50,7 +50,7 @@ class ProductEventPublisherImplTest {
 
         // Then
         verify(kafkaTemplate, times(1)).send(topicCaptor.capture(), productIdCaptor.capture());
-
+        
         assertThat(topicCaptor.getValue()).isEqualTo("delete-product-media");
         assertThat(productIdCaptor.getValue()).isEqualTo("specific-product-123");
     }
@@ -102,7 +102,7 @@ class ProductEventPublisherImplTest {
         String productId1 = "product-111";
         String productId2 = "product-222";
         String productId3 = "product-333";
-
+        
         when(kafkaTemplate.send(anyString(), nullable(String.class))).thenReturn(null);
 
         // When

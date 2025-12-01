@@ -132,7 +132,7 @@ class ProductMapperTest {
         // Verify constructor is private and throws exception when invoked via reflection
         var constructor = ProductMapper.class.getDeclaredConstructor();
         constructor.setAccessible(true);
-
+        
         try {
             constructor.newInstance();
             // Should not reach here

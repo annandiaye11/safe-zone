@@ -58,7 +58,7 @@ jobs:
             -Dsonar.junit.reportPaths=**/target/surefire-reports
       
       - name: 🎯 Quality Gate Check
-        uses: sonarqube-quality-gate-action@master
+        uses: sonarqube-quality-gate-action@main
         timeout-minutes: 5
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

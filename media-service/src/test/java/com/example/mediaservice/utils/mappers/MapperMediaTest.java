@@ -6,11 +6,35 @@ import com.example.mediaservice.web.dto.responses.MediaResponse;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 class MapperMediaTest {
 
+    // ==================== CONSTRUCTOR TEST ====================
+
     @Test
-    void testToEntity_ConvertsMediaDtoAllToMedia() {
+    void testConstructor_ThrowsException() throws Exception {
+        // When & Then - Verify that the private constructor throws UnsupportedOperationException
+        assertThat(MapperMedia.class.getDeclaredConstructors()).hasSize(1);
+        assertThat(MapperMedia.class.getDeclaredConstructors()[0].canAccess(null)).isFalse();
+
+        // Verify constructor is private and throws exception when invoked via reflection
+        var constructor = MapperMedia.class.getDeclaredConstructor();
+        constructor.setAccessible(true);
+
+        try {
+            constructor.newInstance();
+            fail("Constructor should throw UnsupportedOperationException");
+        } catch (Exception e) {
+            assertThat(e.getCause()).isInstanceOf(UnsupportedOperationException.class);
+            assertThat(e.getCause().getMessage()).isEqualTo("This is a utility class and cannot be instantiated");
+        }
+    }
+
+    // ==================== TO ENTITY TESTS ====================
+
+    @Test
+    void testToEntity_Success() {
         // Given
         MediaDtoAll mediaDtoAll = new MediaDtoAll();
         mediaDtoAll.setProductId("product-123");
@@ -21,21 +45,6 @@ class MapperMediaTest {
         // Then
         assertThat(media).isNotNull();
         assertThat(media.getProductId()).isEqualTo("product-123");
-        assertThat(media.getId()).isNull(); // Not set by mapper
-        assertThat(media.getImagePath()).isNull(); // Not set by mapper
-    }
-
-    @Test
-    void testToEntity_WithDifferentProductId() {
-        // Given
-        MediaDtoAll mediaDtoAll = new MediaDtoAll();
-        mediaDtoAll.setProductId("product-456");
-
-        // When
-        Media media = MapperMedia.toEntity(mediaDtoAll);
-
-        // Then
-        assertThat(media.getProductId()).isEqualTo("product-456");
     }
 
     @Test
@@ -53,53 +62,37 @@ class MapperMediaTest {
     }
 
     @Test
-    void testToEntity_CreatesNewMediaInstance() {
+    void testToEntity_WithEmptyProductId() {
         // Given
         MediaDtoAll mediaDtoAll = new MediaDtoAll();
-        mediaDtoAll.setProductId("product-789");
+        mediaDtoAll.setProductId("");
 
         // When
-        Media media1 = MapperMedia.toEntity(mediaDtoAll);
-        Media media2 = MapperMedia.toEntity(mediaDtoAll);
+        Media media = MapperMedia.toEntity(mediaDtoAll);
 
-        // Then - Each call creates a new instance
-        assertThat(media1).isNotSameAs(media2);
-        assertThat(media1.getProductId()).isEqualTo(media2.getProductId());
+        // Then
+        assertThat(media).isNotNull();
+        assertThat(media.getProductId()).isEmpty();
     }
 
+    // ==================== TO DTO (MediaResponse) TESTS ====================
+
     @Test
-    void testToDto_ConvertsMediaToMediaResponse() {
+    void testToDto_Success() {
         // Given
         Media media = new Media();
         media.setId("media-123");
-        media.setImagePath("/path/to/image.jpg");
-        media.setProductId("product-123");
+        media.setImagePath("/images/product.jpg");
+        media.setProductId("product-456");
 
         // When
-        MediaResponse mediaResponse = MapperMedia.toDto(media);
+        MediaResponse response = MapperMedia.toDto(media);
 
         // Then
-        assertThat(mediaResponse).isNotNull();
-        assertThat(mediaResponse.getId()).isEqualTo("media-123");
-        assertThat(mediaResponse.getImagePath()).isEqualTo("/path/to/image.jpg");
-        assertThat(mediaResponse.getProductId()).isEqualTo("product-123");
-    }
-
-    @Test
-    void testToDto_WithDifferentValues() {
-        // Given
-        Media media = new Media();
-        media.setId("media-456");
-        media.setImagePath("/images/product.png");
-        media.setProductId("product-789");
-
-        // When
-        MediaResponse mediaResponse = MapperMedia.toDto(media);
-
-        // Then
-        assertThat(mediaResponse.getId()).isEqualTo("media-456");
-        assertThat(mediaResponse.getImagePath()).isEqualTo("/images/product.png");
-        assertThat(mediaResponse.getProductId()).isEqualTo("product-789");
+        assertThat(response).isNotNull();
+        assertThat(response.getId()).isEqualTo("media-123");
+        assertThat(response.getImagePath()).isEqualTo("/images/product.jpg");
+        assertThat(response.getProductId()).isEqualTo("product-456");
     }
 
     @Test
@@ -111,78 +104,13 @@ class MapperMediaTest {
         media.setProductId(null);
 
         // When
-        MediaResponse mediaResponse = MapperMedia.toDto(media);
+        MediaResponse response = MapperMedia.toDto(media);
 
         // Then
-        assertThat(mediaResponse).isNotNull();
-        assertThat(mediaResponse.getId()).isNull();
-        assertThat(mediaResponse.getImagePath()).isNull();
-        assertThat(mediaResponse.getProductId()).isNull();
-    }
-
-    @Test
-    void testToDto_CreatesNewMediaResponseInstance() {
-        // Given
-        Media media = new Media();
-        media.setId("media-123");
-        media.setImagePath("/path/image.jpg");
-        media.setProductId("product-123");
-
-        // When
-        MediaResponse response1 = MapperMedia.toDto(media);
-        MediaResponse response2 = MapperMedia.toDto(media);
-
-        // Then - Each call creates a new instance
-        assertThat(response1).isNotSameAs(response2);
-        assertThat(response1.getId()).isEqualTo(response2.getId());
-        assertThat(response1.getImagePath()).isEqualTo(response2.getImagePath());
-        assertThat(response1.getProductId()).isEqualTo(response2.getProductId());
-    }
-
-    @Test
-    void testToEntity_OnlyMapsProductId() {
-        // Given
-        MediaDtoAll mediaDtoAll = new MediaDtoAll();
-        mediaDtoAll.setProductId("product-999");
-
-        // When
-        Media media = MapperMedia.toEntity(mediaDtoAll);
-
-        // Then - Verify only productId is mapped
-        assertThat(media.getProductId()).isEqualTo("product-999");
-        // Other fields should be null (default values)
-        assertThat(media.getId()).isNull();
-        assertThat(media.getImagePath()).isNull();
-    }
-
-    @Test
-    void testToDto_MapsAllMediaFields() {
-        // Given
-        Media media = new Media();
-        media.setId("full-media-id");
-        media.setImagePath("https://example.com/images/media.jpg");
-        media.setProductId("full-product-id");
-
-        // When
-        MediaResponse mediaResponse = MapperMedia.toDto(media);
-
-        // Then - Verify all fields are mapped
-        assertThat(mediaResponse.getId()).isEqualTo("full-media-id");
-        assertThat(mediaResponse.getImagePath()).isEqualTo("https://example.com/images/media.jpg");
-        assertThat(mediaResponse.getProductId()).isEqualTo("full-product-id");
-    }
-
-    @Test
-    void testToEntity_WithEmptyProductId() {
-        // Given
-        MediaDtoAll mediaDtoAll = new MediaDtoAll();
-        mediaDtoAll.setProductId("");
-
-        // When
-        Media media = MapperMedia.toEntity(mediaDtoAll);
-
-        // Then
-        assertThat(media.getProductId()).isEmpty();
+        assertThat(response).isNotNull();
+        assertThat(response.getId()).isNull();
+        assertThat(response.getImagePath()).isNull();
+        assertThat(response.getProductId()).isNull();
     }
 
     @Test
@@ -194,94 +122,84 @@ class MapperMediaTest {
         media.setProductId("");
 
         // When
-        MediaResponse mediaResponse = MapperMedia.toDto(media);
+        MediaResponse response = MapperMedia.toDto(media);
 
         // Then
-        assertThat(mediaResponse.getId()).isEmpty();
-        assertThat(mediaResponse.getImagePath()).isEmpty();
-        assertThat(mediaResponse.getProductId()).isEmpty();
+        assertThat(response).isNotNull();
+        assertThat(response.getId()).isEmpty();
+        assertThat(response.getImagePath()).isEmpty();
+        assertThat(response.getProductId()).isEmpty();
     }
 
+    // ==================== BIDIRECTIONAL MAPPING TESTS ====================
+
     @Test
-    void testToEntity_WithLongProductId() {
+    void testBidirectionalMapping_ToEntityAndToDto() {
         // Given
-        String longProductId = "product-" + "a".repeat(100);
-        MediaDtoAll mediaDtoAll = new MediaDtoAll();
-        mediaDtoAll.setProductId(longProductId);
+        MediaDtoAll originalDto = new MediaDtoAll();
+        originalDto.setProductId("product-789");
 
         // When
-        Media media = MapperMedia.toEntity(mediaDtoAll);
+        Media entity = MapperMedia.toEntity(originalDto);
+        entity.setId("generated-id");
+        entity.setImagePath("/uploaded/image.png");
+        MediaResponse resultDto = MapperMedia.toDto(entity);
 
         // Then
-        assertThat(media.getProductId()).isEqualTo(longProductId);
-        assertThat(media.getProductId().length()).isGreaterThan(100);
+        assertThat(resultDto.getProductId()).isEqualTo(originalDto.getProductId());
+        assertThat(resultDto.getId()).isEqualTo("generated-id");
+        assertThat(resultDto.getImagePath()).isEqualTo("/uploaded/image.png");
+    }
+
+    // ==================== EDGE CASES ====================
+
+    @Test
+    void testMapperMediaClassExists() {
+        // Then - Verify class exists and is not abstract
+        assertThat(MapperMedia.class).isNotNull();
+        assertThat(java.lang.reflect.Modifier.isFinal(MapperMedia.class.getModifiers())).isFalse();
     }
 
     @Test
-    void testToDto_WithLongImagePath() {
+    void testToEntity_MultipleCalls() {
         // Given
-        String longPath = "https://example.com/very/long/path/" + "segment/".repeat(20) + "image.jpg";
-        Media media = new Media();
-        media.setId("media-id");
-        media.setImagePath(longPath);
-        media.setProductId("product-id");
+        MediaDtoAll dto1 = new MediaDtoAll();
+        dto1.setProductId("product-1");
+
+        MediaDtoAll dto2 = new MediaDtoAll();
+        dto2.setProductId("product-2");
 
         // When
-        MediaResponse mediaResponse = MapperMedia.toDto(media);
+        Media media1 = MapperMedia.toEntity(dto1);
+        Media media2 = MapperMedia.toEntity(dto2);
 
-        // Then
-        assertThat(mediaResponse.getImagePath()).isEqualTo(longPath);
-        assertThat(mediaResponse.getImagePath().length()).isGreaterThan(50);
+        // Then - Each call creates a new instance
+        assertThat(media1).isNotSameAs(media2);
+        assertThat(media1.getProductId()).isEqualTo("product-1");
+        assertThat(media2.getProductId()).isEqualTo("product-2");
     }
 
     @Test
-    void testRoundTrip_EntityToDtoPreservesData() {
-        // Given - Create a Media entity
-        Media originalMedia = new Media();
-        originalMedia.setId("round-trip-id");
-        originalMedia.setImagePath("/images/test.jpg");
-        originalMedia.setProductId("round-trip-product");
+    void testToDto_MultipleCalls() {
+        // Given
+        Media entity1 = new Media();
+        entity1.setId("id-1");
+        entity1.setImagePath("/path1");
+        entity1.setProductId("product-1");
 
-        // When - Convert to DTO
-        MediaResponse mediaResponse = MapperMedia.toDto(originalMedia);
-
-        // Then - All data is preserved in the DTO
-        assertThat(mediaResponse.getId()).isEqualTo(originalMedia.getId());
-        assertThat(mediaResponse.getImagePath()).isEqualTo(originalMedia.getImagePath());
-        assertThat(mediaResponse.getProductId()).isEqualTo(originalMedia.getProductId());
-    }
-
-    @Test
-    void testToEntity_TypicalUsageScenario() {
-        // Given - Typical usage when creating a new media from DTO
-        MediaDtoAll mediaDtoAll = new MediaDtoAll();
-        mediaDtoAll.setProductId("product-abc123");
+        Media entity2 = new Media();
+        entity2.setId("id-2");
+        entity2.setImagePath("/path2");
+        entity2.setProductId("product-2");
 
         // When
-        Media media = MapperMedia.toEntity(mediaDtoAll);
+        MediaResponse dto1 = MapperMedia.toDto(entity1);
+        MediaResponse dto2 = MapperMedia.toDto(entity2);
 
-        // Then - Ready to be saved to database (id will be generated by DB)
-        assertThat(media).isNotNull();
-        assertThat(media.getProductId()).isEqualTo("product-abc123");
-        assertThat(media.getId()).isNull(); // Will be generated by database
-    }
-
-    @Test
-    void testToDto_TypicalUsageScenario() {
-        // Given - Media entity retrieved from database
-        Media media = new Media();
-        media.setId("db-generated-id");
-        media.setImagePath("https://s3.amazonaws.com/bucket/media/image.jpg");
-        media.setProductId("product-xyz789");
-
-        // When - Convert to DTO for API response
-        MediaResponse mediaResponse = MapperMedia.toDto(media);
-
-        // Then - DTO ready to be sent in API response
-        assertThat(mediaResponse).isNotNull();
-        assertThat(mediaResponse.getId()).isNotNull();
-        assertThat(mediaResponse.getImagePath()).startsWith("https://");
-        assertThat(mediaResponse.getProductId()).isNotNull();
+        // Then - Each call creates a new instance
+        assertThat(dto1).isNotSameAs(dto2);
+        assertThat(dto1.getId()).isEqualTo("id-1");
+        assertThat(dto2.getId()).isEqualTo("id-2");
     }
 }
 

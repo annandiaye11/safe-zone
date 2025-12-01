@@ -1,8 +1,8 @@
 package com.example.mediaservice.web.controllers.impl;
 
+import com.example.common.services.S3Service;
 import com.example.mediaservice.data.entities.Media;
 import com.example.mediaservice.services.MediaService;
-import com.example.mediaservice.services.impl.S3Service;
 import com.example.mediaservice.utils.mappers.MapperMedia;
 import com.example.mediaservice.web.controllers.MediaController;
 import com.example.mediaservice.web.dto.requests.MediaDtoAll;

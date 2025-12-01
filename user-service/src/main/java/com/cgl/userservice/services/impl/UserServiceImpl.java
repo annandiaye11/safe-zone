@@ -6,6 +6,7 @@ import com.cgl.userservice.exception.UnauthorizedException;
 import com.cgl.userservice.services.UserEventPublisher;
 import com.cgl.userservice.services.UserService;
 import com.cgl.userservice.web.dto.ChangePasswordRequest;
+import com.example.common.services.S3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

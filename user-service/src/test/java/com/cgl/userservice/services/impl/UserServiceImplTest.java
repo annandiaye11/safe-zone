@@ -6,6 +6,7 @@ import com.cgl.userservice.data.repositories.UserRepository;
 import com.cgl.userservice.exception.UnauthorizedException;
 import com.cgl.userservice.services.UserEventPublisher;
 import com.cgl.userservice.web.dto.ChangePasswordRequest;
+import com.example.common.services.S3Service;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
